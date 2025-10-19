@@ -1,0 +1,62 @@
+# Pre-commit hooks for Terraform code quality
+#
+# Install: pre-commit install
+# Run manually: pre-commit run --all-files
+# Update hooks: pre-commit autoupdate
+
+repos:
+  # Terraform formatting and validation
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.5
+    hooks:
+      # Format Terraform files
+      - id: terraform_fmt
+        name: Terraform fmt
+        description: Rewrites Terraform files to canonical format
+
+      # Validate Terraform configuration
+      - id: terraform_validate
+        name: Terraform validate
+        description: Validates Terraform configuration files
+
+      # Generate documentation
+      - id: terraform_docs
+        name: Terraform docs
+        description: Updates README.md with terraform-docs
+        args:
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+
+      # Lint with tflint
+      - id: terraform_tflint
+        name: Terraform tflint
+        description: Lints Terraform files with tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+
+      # Security scanning with tfsec
+      - id: terraform_tfsec
+        name: Terraform tfsec
+        description: Static analysis for security issues
+        args:
+          - --args=--config-file=__GIT_WORKING_DIR__/.tfsec.yml
+          - --args=--exclude-downloaded-modules
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: detect-private-key
+        name: Detect private keys

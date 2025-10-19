@@ -1,0 +1,1 @@
+# ai-iac-consumer-template
