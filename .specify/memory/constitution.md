@@ -68,17 +68,14 @@
 - HCP Terraform Workspace Name for Prod environment
 
 **Rules**:
-- The `/specify` command MUST always check if these configuration details are available
-- The Terraform MCP server MUST use these values for calling any tools
-- You MUST NOT proceed with Terraform operations without these prerequisites
-- All workspace references in generated code MUST use the specified workspace names
+- The MUST always check if these configuration details are available before invoking tools provided by Terraform MCP server.
+- The Terraform MCP server MUST use the organization, project and workspace values for calling any tools
 - Organization and project context MUST be validated before module registry access
 
 **Implementation**:
 - Configuration details MUST be provided during project initialization
 - Missing prerequisites MUST be surfaced to the user with clear instructions
-- Workspace naming MUST follow the pattern: `<project>-<app>-<environment>`
-- All HCP Terraform API calls MUST use the specified organization and project context
+- All HCP Terraform API calls for ephemeral workspace or workspace variables related operations MUST use the specified organization, project and workspace context.
 
 ---
 
@@ -89,7 +86,7 @@
 
 **Structure**:
 ```
-<app-name>-infrastructure/
+/
 ├── main.tf
 ├── variables.tf
 ├── outputs.tf
@@ -189,7 +186,7 @@ module "vpc" {
 - You MUST use version constraints (`~>`) to allow patch updates while preventing breaking changes
 - Module inputs MUST map to declared variables, NOT hardcoded values
 - You MUST include comments explaining non-obvious module configurations
-- Module source MUST explicitly reference the private registry, never generic registry shortcuts
+- Module source MUST explicitly reference the private registry e.g. `<app.terraform.io/<org-name>`, never generic registry shortcuts
 
 ---
 
@@ -295,10 +292,15 @@ module "vpc" {
 - You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
 - Ephemeral workspaces MUST be used to validate terraform plan and apply operations before promoting changes
 - Upon successful testing in the ephemeral workspace, you MUST create corresponding workspace variables for the dev workspace
+- You MUST use the following tools to test AI-generated Terraform code:
+  - `create_workspace` to create ephemeral workspace
+  - `create_workspace_variable` to create workspace level variables
+  - `create_run` to create a new Terraform run in the specified ephemeral workspace
+- Ephemeral workspaces MUST be deleted after successful testing to avoid unnecessary costs
 
 **Variable Promotion Workflow**:
 1. Test variables in ephemeral workspace connected to `feature/*` branch
-2. Validate successful terraform operations (plan and apply)
+2. Validate successful terraform run operations (plan and apply)
 3. Create identical workspace variables in the dev workspace
 4. Document variable requirements and values for staging and production promotion
 
@@ -564,11 +566,13 @@ terraform {
 - The current `feature/*` branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
 - Ephemeral workspaces MUST be created within the current HCP Terraform Organization and Project
 - Ephemeral workspace MUST be connected to the current `feature/*` branch of the application's GitHub remote repository to ensure code under test matches the current feature development state
+- Ephemeral workspace MUST be created with "auto-apply API, UI and VCS runs" setting turned ON to enable automatic apply after successful plan without human confirmation
+- Ephemeral workspace MUST be created with "Auto-Destroy" setting ON and configured to automatically delete after 2 hours
 - You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
 - Testing MUST include both `terraform plan` and `terraform apply` operations
 - All testing activities MUST be performed automatically against the ephemeral workspace
 - Upon successful testing, you MUST create corresponding workspace variables for the dev workspace
-- Ephemeral workspaces SHOULD be destroyed after successful validation to minimize costs
+- Ephemeral workspaces will be automatically destroyed after 2 hours via auto-destroy setting
 
 ### 10.2 Automated Testing Workflow
 **Standard**: Testing workflow MUST be fully automated using available Terraform MCP server tools.
@@ -578,6 +582,8 @@ terraform {
    - Create ephemeral workspace using Terraform MCP server
    - Workspace name MUST follow pattern: `test-<app-name>-<timestamp>` or similar unique identifier
    - Workspace MUST be created in the specified HCP Terraform Organization and Project
+   - Workspace MUST have "auto-apply API, UI and VCS runs" setting enabled (set `auto_apply` to `true`)
+   - Workspace MUST have "Auto-Destroy" setting enabled with 2-hour duration (`auto_destroy_at` set to 2 hours from creation)
 
 2. **Variable Configuration**:
    - Analyze `variables.tf` file in the `feature/*` branch to identify all required variables
@@ -588,16 +594,19 @@ terraform {
    - Document variable configuration for subsequent dev workspace setup
 
 3. **Terraform Execution**:
-   - Execute `terraform plan` against the ephemeral workspace
+   - **DO NOT run `terraform init`** - HCP Terraform VCS workflow handles this automatically
+   - Execute `terraform plan` against the ephemeral workspace (via `create_run` with auto-apply enabled)
    - Analyze plan output for potential issues or unexpected changes
-   - Execute `terraform apply` if plan validation passes
+   - Terraform apply will automatically start after successful plan due to auto-apply setting
    - Monitor apply operation for successful completion
 
 4. **Result Analysis**:
    - Verify successful completion of terraform run
    - If errors occur, analyze output and provide specific remediation suggestions
    - Document any issues found and resolution steps taken
-   - Upon successful testing, create identical workspace variables for the dev workspace
+   - Upon successful testing, prompt user to validate the created resources
+   - After user validation, create identical workspace variables for the dev workspace
+   - Delete the ephemeral workspace to minimize costs (auto-destroy will handle cleanup if manual deletion is not performed)
    - Provide clear success/failure status to the user
 
 ### 10.3 Variable Management for Testing
@@ -713,10 +722,12 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 **Standard**: Ephemeral testing resources MUST be properly cleaned up to avoid unnecessary costs.
 
 **Cleanup Requirements**:
-- Ephemeral workspaces SHOULD be destroyed after successful testing
-- If testing fails, workspace MAY be preserved for debugging (with user notification)
-- You MUST notify users about workspace cleanup status
-- Long-running ephemeral workspaces MUST be flagged for manual review
+- Ephemeral workspaces have auto-destroy enabled as a safety mechanism (2 hours after creation)
+- You MUST trigger workspace deletion after successful terraform apply AND user validation of resources
+- Manual cleanup after validation minimizes costs and prevents unnecessary resource retention
+- Auto-destroy serves as a failsafe if manual cleanup is not performed
+- You MUST notify users that the ephemeral workspace will auto-destroy in 2 hours if not manually cleaned up
+- If testing fails, workspace will still be destroyed after 2 hours but users are notified to review logs before destruction
 
 **Cost Optimization**:
 - Use minimal resource sizes for testing when possible
