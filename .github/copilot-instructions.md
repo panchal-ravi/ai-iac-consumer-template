@@ -414,7 +414,7 @@ repos:
    - Document variable configuration for subsequent dev workspace setup
 
 3. **Terraform Execution**:
-   - **DO NOT run `terraform init`** - HCP Terraform VCS workflow handles this automatically
+   - **DO NOT run `terraform init` or `terraform plan`** - HCP Terraform VCS workflow handles this automatically
    - Execute `terraform plan` against the ephemeral workspace (via `create_run` with auto-apply enabled)
    - Analyze plan output for potential issues or unexpected changes
    - Terraform apply will automatically start after successful plan due to auto-apply setting

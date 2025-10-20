@@ -351,7 +351,7 @@ module "vpc" {
   - Purpose and scope
   - Prerequisites (workspace setup, variable sets)
   - Module dependencies
-  - Deployment instructions
+  - Deployment instructions (excluding `terraform init` and `terraform plan` as these are automatically handled by HCP Terraform VCS workflow)
   - Troubleshooting guide
 - README.md MUST be automatically generated and updated using `terraform-docs` via Git pre-commit hooks
 - Complex logic MUST include inline comments explaining rationale
@@ -379,7 +379,8 @@ module "vpc" {
 
 **Validation Steps**:
 - You SHOULD recommend configuring pre-commit hooks in the development environment
-- You SHOULD recommend `terraform plan` in dev workspace before other environments
+- You MUST NOT recommend running `terraform init` or `terraform plan` locally as these are automatically performed by HCP Terraform VCS workflow
+- You SHOULD recommend reviewing the terraform plan output in the HCP Terraform UI for the dev workspace before promoting to other environments
 - You MUST encourage policy evaluation in lower environments first
 
 ### 5.4 Version Control
@@ -594,8 +595,9 @@ terraform {
    - Document variable configuration for subsequent dev workspace setup
 
 3. **Terraform Execution**:
-   - **DO NOT run `terraform init`** - HCP Terraform VCS workflow handles this automatically
-   - Execute `terraform plan` against the ephemeral workspace (via `create_run` with auto-apply enabled)
+   - **DO NOT run `terraform init` or `terraform plan` locally** - HCP Terraform VCS workflow handles these automatically
+   - Create a Terraform run against the ephemeral workspace (via `create_run` with auto-apply enabled)
+   - HCP Terraform will automatically execute `terraform init` and `terraform plan` as part of the run
    - Analyze plan output for potential issues or unexpected changes
    - Terraform apply will automatically start after successful plan due to auto-apply setting
    - Monitor apply operation for successful completion
@@ -746,8 +748,9 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 - [ ] Use `search_private_modules` tool to identify required modules from private registry
 - [ ] Configure IDE with AI assistant (Copilot, Claude Code, etc.)
 - [ ] Generate Terraform code following this constitution
-- [ ] Validate code with `terraform validate` and `terraform fmt`
-- [ ] Submit for workspace creation to platform team
+- [ ] Validate code with `terraform validate` and `terraform fmt` (note: do NOT run `terraform init` or `terraform plan` locally)
+- [ ] Commit and push code to trigger HCP Terraform VCS workflow
+- [ ] Review plan output in HCP Terraform UI
 - [ ] Deploy to dev environment and validate
 - [ ] Progress through staging to production with approval gates
 
