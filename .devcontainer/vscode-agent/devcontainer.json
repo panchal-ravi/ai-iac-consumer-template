@@ -1,0 +1,53 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "Ubuntu",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"build": {
+    "dockerfile": "Dockerfile"
+  },
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "uname -a",
+
+	// Configure tool-specific properties.
+"customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+        "ms-vscode.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "mcp": {
+        "servers": {
+        		"github-mcp": {
+              "type": "http",
+              "url": "https://api.githubcopilot.com/mcp/"
+            },
+            "terraform": {
+              "type": "stdio",
+              "command": "/usr/local/bin/terraform-mcp-server"
+            },
+            "context7": {
+              "command": "npx",
+              "args": [
+                "-y",
+                "@upstash/context7-mcp"
+              ]
+            }
+        }
+      }
+		}
+	}
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
