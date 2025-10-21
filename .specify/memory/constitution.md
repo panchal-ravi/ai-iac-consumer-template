@@ -58,24 +58,26 @@
 ## II. HCP Terraform Prerequisites
 
 ### 2.1 Required Configuration Details
-**Standard**: HCP Terraform configuration details MUST be available before any Terraform operations.
+**Standard**: HCP Terraform configuration details MUST be determined from the current remote git repository or provided by user before any Terraform operations.
 
 **Prerequisites**:
 - HCP Terraform Organization Name
 - HCP Terraform Project Name
 - HCP Terraform Workspace Name for Dev environment
-- HCP Terraform Workspace Name for Staging environment
-- HCP Terraform Workspace Name for Prod environment
 
 **Rules**:
-- The MUST always check if these configuration details are available before invoking tools provided by Terraform MCP server.
+- You MUST use Terraform MCP server tools to determine organization, project and dev workspace name based on the current remote git repository
+- If multiple options exist or details cannot be determined automatically, you MUST prompt user to select/provide these configuration details
+- You MUST always validate that these configuration details are available before invoking any tools provided by Terraform MCP server
 - The Terraform MCP server MUST use the organization, project and workspace values for calling any tools
 - Organization and project context MUST be validated before module registry access
 
 **Implementation**:
-- Configuration details MUST be provided during project initialization
-- Missing prerequisites MUST be surfaced to the user with clear instructions
-- All HCP Terraform API calls for ephemeral workspace or workspace variables related operations MUST use the specified organization, project and workspace context.
+- Configuration details MUST be automatically detected from the current git repository using Terraform MCP server tools
+- When automatic detection is not possible or returns multiple options, you MUST present choices to the user for selection
+- Missing prerequisites MUST be surfaced to the user with clear instructions and options
+- All HCP Terraform API calls for ephemeral workspace or workspace variables related operations MUST use the specified organization, project and workspace context
+- User-provided configuration details MUST be validated against available HCP Terraform resources before proceeding
 
 ---
 

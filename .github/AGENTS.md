@@ -264,8 +264,8 @@ If MCP tools return no results or errors:
 - Suggest alternative search terms or approaches
 - Ask clarifying questions about requirements
 - **For authentication failures against HCP Terraform**: Do NOT fall back to public registry modules. Instead:
-  - Explain why HCP Terraform authentication is required
-  - Prompt user to provide TFE_TOKEN environment variable if HCP Terraform access is required
+  - Check if TFE_TOKEN environment variable is already available
+  - If TFE_TOKEN is not set, explain why HCP Terraform authentication is required and prompt user to provide TFE_TOKEN environment variable
   - Only proceed with public modules if user explicitly approves after understanding the implications
 
 ## Example Interaction Pattern
