@@ -1,65 +1,133 @@
-FROM mcr.microsoft.com/devcontainers/base:noble
+FROM node:20
 
-# Install terraform CLI, tflint, terraform-docs, tfsec
+ARG TZ
+ENV TZ="$TZ"
+# Set versions as arguments
+ARG TERRAFORM_VERSION="1.12.1"
+ARG TERRAFORM_DOCS_VERSION="0.20.0"
+ARG TFSEC_VERSION="1.28.13"
+ARG TERRASCAN_VERSION="1.19.9"
+ARG TFLINT_VERSION="0.48.0"
+ARG TFLINT_AWS_RULESET_VERSION="0.23.1"
+ARG TFLINT_AZURE_RULESET_VERSION="0.23.0"
+ARG TFLINT_GCP_RULESET_VERSION="0.23.1"
+ARG INFRACOST_VERSION="0.10.41"
+ARG CHECKOV_VERSION="3.2.439"
+ARG TERRAFORM_ALPHA="true"
+# Install basic development tools and iptables/ipset
+RUN apt update && apt install -y less \
+  git \
+  procps \
+  sudo \
+  fzf \
+  zsh \
+  man-db \
+  unzip \
+  gnupg2 \
+  gh \
+  iptables \
+  ipset \
+  iproute2 \
+  dnsutils \
+  aggregate \
+  python3 \
+  python3-pip \
+  python3-venv \
+  python3-full \
+  jq \
+  curl
 
-# Set architecture variable
-ARG TARGETARCH=arm64
+# Ensure default node user has access to /usr/local/share
+RUN mkdir -p /usr/local/share/npm-global && \
+  chown -R node:node /usr/local/share && \
+  rm -rf /var/lib/apt/lists/*
 
-# Install required packages
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    curl \
-    gnupg \
-    npm \
-    software-properties-common \
-    && rm -rf /var/lib/apt/lists/*
+ARG USERNAME=node
 
-# Install Terraform CLI
-RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list \
-    && apt-get update \
-    && apt-get install -y terraform \
-    && rm -rf /var/lib/apt/lists/*
+# Persist bash history.
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+  && mkdir /commandhistory \
+  && touch /commandhistory/.bash_history \
+  && chown -R $USERNAME /commandhistory
 
-# Install terraform-docs
-RUN TERRAFORM_DOCS_VERSION=$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep tag_name | cut -d '"' -f 4) \
-    && wget https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-${TARGETARCH}.tar.gz \
-    && tar -xzf terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-${TARGETARCH}.tar.gz \
-    && chmod +x terraform-docs \
-    && mv terraform-docs /usr/local/bin/ \
-    && rm terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-${TARGETARCH}.tar.gz
+# Set `DEVCONTAINER` environment variable to help with orientation
+ENV DEVCONTAINER=true
 
-# Install tflint
-RUN curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+# Create workspace and config directories and set permissions
+RUN mkdir -p /workspace /home/node/.claude && \
+  chown -R node:node /workspace /home/node/.claude
 
-# Install tfsec
-RUN TFSEC_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep tag_name | cut -d '"' -f 4 | sed 's/v//') \
-    && wget https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec_${TFSEC_VERSION}_linux_${TARGETARCH}.tar.gz \
-    && tar -xzf tfsec_${TFSEC_VERSION}_linux_${TARGETARCH}.tar.gz \
-    && chmod +x tfsec \
-    && mv tfsec /usr/local/bin/tfsec \
-    && rm tfsec_${TFSEC_VERSION}_linux_${TARGETARCH}.tar.gz
+WORKDIR /workspace
 
-# Install go
-RUN GO_VERSION=1.21.3 \
-    && wget https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz \
-    && tar -xzf go${GO_VERSION}.linux-${TARGETARCH}.tar.gz \
-    && mv go /usr/local/ \
-    && rm go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
+RUN ARCH=$(dpkg --print-architecture) && \
+  wget "https://github.com/dandavison/delta/releases/download/0.18.2/git-delta_0.18.2_${ARCH}.deb" && \
+  sudo dpkg -i "git-delta_0.18.2_${ARCH}.deb" && \
+  rm "git-delta_0.18.2_${ARCH}.deb"
 
-# Set Go environment variables
-ENV PATH="/usr/local/go/bin:${PATH}"
-ENV GOPATH="/go"
-ENV PATH="${GOPATH}/bin:${PATH}"
+# Set up non-root user
+USER node
 
-# Install terraform-mcp-server from source
-RUN go install github.com/hashicorp/terraform-mcp-server/cmd/terraform-mcp-server@latest \
-    && mv ${GOPATH}/bin/terraform-mcp-server /usr/local/bin/terraform-mcp-server
+# Install global packages
+ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
+ENV PATH=$PATH:/usr/local/share/npm-global/bin
 
-USER vscode
-# Install uv and pre-commit for the vscode user
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
-    && echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc \
-    && $HOME/.local/bin/uv tool install pre-commit \
-    && echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+# Set the default shell to zsh rather than sh
+ENV SHELL=/bin/zsh
+
+# Default powerline10k theme
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.0/zsh-in-docker.sh)" -- \
+  -p git \
+  -p fzf \
+  -a "source /usr/share/doc/fzf/examples/key-bindings.zsh" \
+  -a "source /usr/share/doc/fzf/examples/completion.zsh" \
+  -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+  -x
+
+# Install Claude
+RUN npm install -g @anthropic-ai/claude-code
+
+USER root
+# Install uv system-wide before terraform tools (needed by terraform-tools.sh)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+# Create wheel group if it doesn't exist and add node user to it
+RUN groupadd -f wheel && usermod -aG wheel node
+
+# Add the wheel group to sudoers with NOPASSWD
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/wheel-group && \
+    chmod 0440 /etc/sudoers.d/wheel-group
+
+# Copy library scripts
+COPY library-scripts/*.sh /tmp/library-scripts/
+# COPY ALPHA library files
+COPY library-scripts/alpha/* /tmp/library-scripts/alpha/
+RUN chmod +x /tmp/library-scripts/*.sh
+
+# Install cloud CLI tools
+RUN /tmp/library-scripts/cloud-cli-tools.sh
+
+RUN /tmp/library-scripts/terraform-tools.sh \
+    "${TERRAFORM_VERSION}" \
+    "${TERRAFORM_DOCS_VERSION}" \
+    "${TFSEC_VERSION}" \
+    "${TERRASCAN_VERSION}" \
+    "${TFLINT_VERSION}" \
+    "${TFLINT_AWS_RULESET_VERSION}" \
+    "${TFLINT_AZURE_RULESET_VERSION}" \
+    "${TFLINT_GCP_RULESET_VERSION}" \
+    "${INFRACOST_VERSION}" \
+    "${CHECKOV_VERSION}" \
+    "${TERRAFORM_ALPHA}"
+
+
+RUN mkdir -p /home/node/.config && chown -R node:node /home/node/.config
+# Switch back to node user and install uv for them too
+USER node
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add uv tools to node user's PATH
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+
+# Install pre-commit for the node user so they can use it
+RUN ~/.local/bin/uv tool install pre-commit --with pre-commit-uv

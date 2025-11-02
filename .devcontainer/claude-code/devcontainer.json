@@ -1,46 +1,68 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
-	"name": "Ubuntu",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"build": {
-    "dockerfile": "Dockerfile"
+  "name": "Claude Code Sandbox",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:Australia/Sydney}"
+    }
   },
-  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
+  "runArgs": [
+    "--env-file", 
+    ".devcontainer/devcontainer.env"
+    "--cap-add=NET_ADMIN", 
+    "--cap-add=NET_RAW",
+    "--privileged"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2.12.2": {}
+    },
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
-
-	// Configure tool-specific properties.
-"customizations": {
+  "customizations": {
     "vscode": {
       "extensions": [
-        "ms-vscode.vscode-json",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "hashicorp.terraform",
+        "Anthropic.claude-code",
         "redhat.vscode-yaml",
-				"GitHub.copilot",
-				"GitHub.copilot-chat",
-        "ms-vscode.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "ms-azuretools.vscode-azure-github-copilot",
+        "HashiCorp.HCL"
       ],
-      "mcp": {
-        "servers": {
-        		"github-mcp": {
-              "type": "http",
-              "url": "https://api.githubcopilot.com/mcp/"
-            },
-            "terraform": {
-              "type": "stdio",
-              "command": "/usr/local/bin/terraform-mcp-server"
-            }
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
         }
       }
-		}
-	}
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+    }
+  },
+  "remoteUser": "node",
+  "mounts": [
+    "source=claude-code-bashhistory,target=/commandhistory,type=volume",
+    "source=claude-code-config,target=/home/node/.claude,type=volume"
+  ],
+  "remoteEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
+    "CLAUDE_GITHUB_MCP_ENABLED": "true",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "AWS_ACCESS_KEY_ID": "${localEnv:AWS_ACCESS_KEY_ID}",
+    "AWS_SECRET_ACCESS_KEY": "${localEnv:AWS_SECRET_ACCESS_KEY}",
+    "AWS_SESSION_TOKEN": "${localEnv:AWS_SESSION_TOKEN}",
+    "AWS_SESSION_EXPIRATION": "${localEnv:AWS_SESSION_EXPIRATION}"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
 }
