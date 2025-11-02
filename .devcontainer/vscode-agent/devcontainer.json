@@ -25,7 +25,9 @@
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
         "ms-vscode.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "HashiCorp.HCL",
+        "hashicorp.terraform"
       ],
       "mcp": {
         "servers": {
