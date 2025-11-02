@@ -101,7 +101,7 @@ RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/wheel-group && \
 # Copy library scripts
 COPY library-scripts/*.sh /tmp/library-scripts/
 # COPY ALPHA library files
-COPY library-scripts/alpha/* /tmp/library-scripts/alpha/
+#COPY library-scripts/alpha/* /tmp/library-scripts/alpha/
 RUN chmod +x /tmp/library-scripts/*.sh
 
 # Install cloud CLI tools
