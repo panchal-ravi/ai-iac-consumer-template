@@ -16,45 +16,12 @@ INFRACOST_VERSION=${9:-"0.10.41"}
 CHECKOV_VERSION=${10:-"3.2.439"}
 TERRAFORM_ALPHA=${11:-"false"}
 
-if [ "$TERRAFORM_ALPHA" = "true" ]; then
-    # echo "Installing Terraform Alpha binaries from library-scripts/alpha directory..."
-    
-    # # Get the directory where this script is located
-    # SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-    # ALPHA_DIR="${SCRIPT_DIR}/alpha"
-    # ls -la "${ALPHA_DIR}/"
-    
-    # # Find terraform alpha binary (pre-extracted, accepting Darwin binaries for Mac-only setup)
-    # if [ -f "${ALPHA_DIR}/terraform" ]; then
-    #     echo "Found Terraform alpha binary: terraform"
-    #     sudo cp "${ALPHA_DIR}/terraform" /usr/local/bin/
-    #     sudo chmod +x /usr/local/bin/terraform
-    #     echo "Terraform alpha binary installed to /usr/local/bin/"
-    # else
-    #     echo "Error: No Terraform alpha binary found in ${ALPHA_DIR}"
-    #     echo "Looking for: terraform (pre-extracted binary)"
-    #     echo "Available files:"
-    #     ls -la "${ALPHA_DIR}/" 2>/dev/null || echo "Directory not accessible"
-    #     exit 1
-    # fi
-    
-    # # Find tfpolicy alpha binary if it exists (pre-extracted)
-    # if [ -f "${ALPHA_DIR}/tfpolicy" ]; then
-    #     echo "Found TFPolicy alpha binary: tfpolicy"
-    #     sudo cp "${ALPHA_DIR}/tfpolicy" /usr/local/bin/
-    #     sudo chmod +x /usr/local/bin/tfpolicy
-    #     echo "TFPolicy alpha binary installed to /usr/local/bin/"
-    # else
-    #     echo "Warning: No TFPolicy alpha binary found in ${ALPHA_DIR}"
-    #     echo "Looking for: tfpolicy (pre-extracted binary)"
-    # fi
-else
-    echo "Installing Terraform v${TERRAFORM_VERSION}..."
-    curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
-    unzip -qq /tmp/terraform.zip -d /tmp
-    sudo mv /tmp/terraform /usr/local/bin/
-    rm -f /tmp/terraform.zip
-fi
+
+echo "Installing Terraform v${TERRAFORM_VERSION}..."
+curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+unzip -qq /tmp/terraform.zip -d /tmp
+sudo mv /tmp/terraform /usr/local/bin/
+rm -f /tmp/terraform.zip
 
 echo "Installing terraform-docs v${TERRAFORM_DOCS_VERSION}..."
 curl -sSLo /tmp/terraform-docs.tar.gz "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
@@ -94,17 +61,6 @@ echo "Installing TFLint GCP ruleset v${TFLINT_GCP_RULESET_VERSION}..."
 curl -sSLo /tmp/tflint-gcp-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-google/releases/download/v${TFLINT_GCP_RULESET_VERSION}/tflint-ruleset-google_linux_amd64.zip"
 unzip -qq /tmp/tflint-gcp-ruleset.zip -d ~/.tflint.d/plugins
 rm -f /tmp/tflint-gcp-ruleset.zip
-
-# Install Go if not already installed
-# if ! command -v go &> /dev/null; then
-#     echo "Installing Go (required for Terratest)..."
-#     GO_VERSION="1.20.5"
-#     curl -sSLo /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"
-#     sudo tar -C /usr/local -xzf /tmp/go.tar.gz
-#     echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/node/.bashrc
-#     echo 'export PATH=$PATH:$HOME/go/bin' >> /home/node/.bashrc
-#     rm -f /tmp/go.tar.gz
-# fi
 
 echo "Installing Infracost v${INFRACOST_VERSION}..."
 curl -sSLo /tmp/infracost.tar.gz "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-amd64.tar.gz"
