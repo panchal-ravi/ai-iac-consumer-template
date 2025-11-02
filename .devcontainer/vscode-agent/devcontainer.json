@@ -38,13 +38,6 @@
             "terraform": {
               "type": "stdio",
               "command": "/usr/local/bin/terraform-mcp-server"
-            },
-            "context7": {
-              "command": "npx",
-              "args": [
-                "-y",
-                "@upstash/context7-mcp"
-              ]
             }
         }
       }
