@@ -92,7 +92,9 @@
 ├── main.tf
 ├── variables.tf
 ├── outputs.tf
-├── terraform.tf
+├── providers.tf
+├── versions.tf
+├── locals.tf
 ├── README.md
 └── .gitignore
 ```
@@ -121,7 +123,10 @@
 - `main.tf`: Module instantiations and core infrastructure logic
 - `variables.tf`: Input variable declarations with descriptions, types, and validation
 - `outputs.tf`: Output declarations with descriptions for downstream consumption
-- `terraform.tf`: Terraform and provider version constraints
+- `providers.tf`: provider configuration blocks
+- `versions.tf` : terraform block required_version, required_providers
+- `locals.tf` : Terraform locals
+-
 
 **Prohibitions**:
 - You MUST NOT create monolithic single-file configurations exceeding 300 lines
