@@ -25,7 +25,6 @@
         "hashicorp.terraform",
         "Anthropic.claude-code",
         "redhat.vscode-yaml",
-        "ms-azuretools.vscode-azure-github-copilot",
         "HashiCorp.HCL"
       ],
       "settings": {

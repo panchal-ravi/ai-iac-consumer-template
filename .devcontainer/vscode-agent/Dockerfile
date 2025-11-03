@@ -63,3 +63,5 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
     && echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc \
     && $HOME/.local/bin/uv tool install pre-commit \
     && echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+
+RUN ~/.local/bin/uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
