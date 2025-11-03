@@ -27,7 +27,14 @@
       "mcp__terraform__create_run",
       "mcp__terraform__get_workspace_details",
       "Bash(terraform plan:*)",
-      "Bash(terraform apply:*)"
+      "Bash(terraform apply:*)",
+      "Bash(.specify/scripts/bash/update-agent-context.sh:*)",
+      "SlashCommand(/speckit.specify)",
+      "SlashCommand(/speckit.plan)",
+      "SlashCommand(/speckit.tasks)",
+      "SlashCommand(/speckit.analyze)",
+      "SlashCommand(/speckit.checklist)",
+      "SlashCommand(/speckit.implement)"
     ]
   },
   "enableAllProjectMcpServers": true,
