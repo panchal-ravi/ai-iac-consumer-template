@@ -61,7 +61,7 @@ The development process follows these distinct phases, each with specific comman
 - Integration points with existing infrastructure
 - Cost or performance constraints
 
-**Output**: `spec.md` ready for clarification and planning
+**Output**: `spec.md` ready for clarification and planning. Next step `/speckit.clarify`
 
 ---
 
