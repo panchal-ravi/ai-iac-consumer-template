@@ -7,8 +7,6 @@
     }
   },
   "runArgs": [
-    "--env-file", 
-    ".devcontainer/devcontainer.env",
     "--cap-add=NET_ADMIN", 
     "--cap-add=NET_RAW",
     "--privileged"
