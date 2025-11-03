@@ -38,3 +38,29 @@ secrets.yml
 config.yaml
 config.json
 credentials.json
+
+# Lock files
+.terraform.lock.hcl
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+crash.*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# SSH keys and certificates
+*.pem
+*.key
+*.crt
