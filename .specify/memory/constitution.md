@@ -116,6 +116,28 @@
 - Environment-specific values MUST be managed through workspace variables, NOT hardcoded in code
 - Shared configuration MAY be extracted to local modules if needed for composition
 
+# Initialize TFLint and pre-commit (always available in devcontainer)
+
+```
+echo "Initializing TFLint..."
+if ! tflint --init; then
+    echo "WARNING: TFLint initialization failed, but continuing..."
+fi
+
+# Enable pre-commit hooks if available (optional step)
+if command -v pre-commit &> /dev/null; then
+    echo "Installing pre-commit hooks..."
+    pre-commit install
+else
+    echo "Pre-commit not available - skipping (this is optional)"
+fi
+```
+
+# Verify directory structure
+echo "Module directory structure:"
+ls -la
+
+
 ### 3.2 File Organization
 **Standard**: Terraform files MUST follow organizational conventions.
 
