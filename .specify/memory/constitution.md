@@ -303,7 +303,7 @@ module "vpc" {
     {
       "credentials": {
         "app.terraform.io": {
-          "token": "$TFE_TOKEN"
+          "token": $TFE_TOKEN
         }
       }
     }
@@ -312,6 +312,7 @@ module "vpc" {
 
 - Run terraform validate to confirm code is syntactically correct
 - The current feature branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
+- ensure the terraform variables are validated by the user before proceeding, including regions values and other required inputs.
 - You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
 - Ephemeral workspaces MUST be used to validate terraform plan and apply operations before promoting changes
 - Upon successful testing in the ephemeral workspace, you MUST create corresponding workspace variables for the dev workspace
@@ -323,9 +324,10 @@ module "vpc" {
 
 **Variable Promotion Workflow**:
 1. Test variables in ephemeral workspace connected to `feature/*` branch
-2. Validate successful terraform run operations (plan and apply)
-3. Create identical workspace variables in the dev workspace
-4. Document variable requirements and values for staging and production promotion
+2. Confirm variable value with user in prompt before proceeding
+3. Validate successful terraform run operations (plan and apply)
+4. Create identical workspace variables in the dev workspace
+5. Document variable requirements and values for staging and production promotion
 
 ### 4.2 Variable Sets
 **Standard**: Leverage organization-wide variable sets for common configuration.
@@ -374,7 +376,7 @@ module "vpc" {
   - Purpose and scope
   - Prerequisites (workspace setup, variable sets)
   - Module dependencies
-  - Deployment instructions (excluding `terraform init` and `terraform plan` as these are automatically handled by HCP Terraform VCS workflow)
+  - Deployment instructions (including `terraform init` and `terraform plan` as these are automatically handled by HCP Terraform VCS workflow)
   - Troubleshooting guide
 - README.md MUST be automatically generated and updated using `terraform-docs` via Git pre-commit hooks
 - Complex logic MUST include inline comments explaining rationale
@@ -385,7 +387,8 @@ module "vpc" {
 **Standard**: Generated code MUST follow HashiCorp Style Guide.
 
 **Rules**:
-- Use `terraform fmt` compatible formatting
+- Use `terraform fmt` for formatting
+- User `terraform init` then `terraform validate` for syntax validation 
 - Alphabetize arguments within blocks for consistency
 - Use consistent argument ordering: required args first, optional args second, meta-args last
 - You MUST run `terraform fmt` on generated code before presenting to users
@@ -399,12 +402,13 @@ module "vpc" {
 - Git pre-commit hook MUST be configured to validate syntax using `terraform validate` for configuration validation
 - Git pre-commit hook MUST be configured with `tflint` to perform linting and identify configuration errors
 - Git pre-commit hook MUST be configured with `tfsec` to perform static code analysis for security vulnerabilities
+- pre-commit should not be bypassed unless the user has authorized
 
 **Validation Steps**:
 - You SHOULD recommend configuring pre-commit hooks in the development environment
-- You MUST NOT recommend running `terraform init` or `terraform plan` locally as these are automatically performed by HCP Terraform VCS workflow
-- You SHOULD recommend reviewing the terraform plan output in the HCP Terraform UI for the dev workspace before promoting to other environments
-- You MUST encourage policy evaluation in lower environments first
+-  run `terraform init` or `terraform plan` using a cloud block to specify the workspace in your specified HCP terraform project
+- Reviewing the terraform plan output in the HCP Terraform UI for the dev workspace before promoting to other environments
+- Review and resolve any detailed workspace output or warnings from the workspace.
 
 ### 5.4 Version Control
 **Standard**: Generated code MUST be version controlled with meaningful commits.
@@ -618,7 +622,8 @@ terraform {
    - Document variable configuration for subsequent dev workspace setup
 
 3. **Terraform Execution**:
-   - **DO NOT run `terraform init` or `terraform plan` locally** - HCP Terraform VCS workflow handles these automatically
+   - Ensure 
+   - Run `terraform init`, then  `terraform plan` locally** - HCP Terraform VCS workflow handles these automatically
    - Create a Terraform run against the ephemeral workspace (via `create_run` with auto-apply enabled)
    - HCP Terraform will automatically execute `terraform init` and `terraform plan` as part of the run
    - Analyze plan output for potential issues or unexpected changes
