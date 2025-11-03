@@ -1,6 +1,29 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(git fetch:*)",
+      "Bash(.specify/scripts/bash/create-new-feature.sh:*)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(.specify/scripts/bash/setup-plan.sh:*)",
+      "mcp__terraform__list_terraform_orgs",
+      "mcp__terraform__search_private_modules",
+      "mcp__terraform__list_terraform_projects",
+      "mcp__terraform__get_private_module_details",
+      "Bash(then echo \"EXISTS\")",
+      "Bash(else echo \"NOT_FOUND\")",
+      "Bash(fi)",
+      "Bash(git rev-parse:*)",
+      "Bash(if [ -f /workspace/.gitignore ])",
+      "Bash(if [ -f /workspace/.pre-commit-config.yaml ])",
+      "Bash(pre-commit install:*)",
+      "Bash(terraform fmt:*)",
+      "Bash(pre-commit run:*)",
+      "Bash(git add:*)",
+      "Bash(terraform init:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "terraform"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }
