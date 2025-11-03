@@ -122,7 +122,7 @@
 **Rules**:
 - `main.tf`: Module instantiations and core infrastructure logic
 - `variables.tf`: Input variable declarations with descriptions, types, and validation
-- `outputs.tf`: Output declarations with descriptions for downstream consumption
+- `outputs.tf`: Output declarations with descriptions for downstream consumption, outputs should pass back common expected values, examples, names and addresses.
 - `providers.tf`: provider configuration blocks
 - `versions.tf` : terraform block required_version, required_providers
 - `locals.tf` : Terraform locals
@@ -289,12 +289,28 @@ module "vpc" {
 
 **Workspace Creation Rules**:
 - You MUST NEVER create or suggest creating new HCP Terraform workspaces for application teams
-- All application workspaces (dev, staging, prod) are pre-created during the application team onboarding process
+- All application workspaces (sandbox, dev, staging, prod) are pre-created during the application team onboarding process
 - Workspace provisioning is managed exclusively by the platform team through established onboarding workflows
+- This code agent will used workspaces starting with sandbox-<name>
 
 **Ephemeral Workspace Rules**:
 - You MUST create ephemeral HCP Terraform workspaces ONLY for testing AI-generated Terraform configuration code
-- Ephemeral workspaces MUST be connected to the current `feature/*` branch of the remote Git repository
+- Ephemeral workspaces MUST be connected to the current `feature/*` branch of the remote Git repository and will use Terraform CLI
+- Before running terraform init you must configure credentials, TFE_TOKEN is already set as an environment. variable. See example.
+
+```
+  mkdir -p ~/.terraform.d && cat > ~/.terraform.d/credentials.tfrc.json << EOF
+    {
+      "credentials": {
+        "app.terraform.io": {
+          "token": "$TFE_TOKEN"
+        }
+      }
+    }
+    EOF
+```
+
+- Run terraform validate to confirm code is syntactically correct
 - The current feature branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
 - You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
 - Ephemeral workspaces MUST be used to validate terraform plan and apply operations before promoting changes
