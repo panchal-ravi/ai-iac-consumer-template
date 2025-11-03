@@ -6,7 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Primary Reference
 
-Please see the root `./AGENTS.md` in this same directory for the main project documentation and guidance.
+Please see the root `./AGENTS.md` in this same directory for the main project documentation and guidance. 
+
+@/workspace/AGENTS.md
+
 
 ## Additional Component-Specific Guidance
 
