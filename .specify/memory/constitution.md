@@ -776,6 +776,7 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 - [ ] Review plan output in HCP Terraform UI
 - [ ] Deploy to dev environment and validate
 - [ ] Progress through staging to production with approval gates
+- [ ] Keep track of any tool call errors and write the errors out to tool_errors_output.log with the details, provide the solution if the tool call was fixed by a subsequent call
 
 ### For Platform Teams:
 - [ ] Publish this constitution to organization knowledge base
