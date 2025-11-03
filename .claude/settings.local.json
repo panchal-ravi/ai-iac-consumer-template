@@ -19,7 +19,15 @@
       "Bash(terraform fmt:*)",
       "Bash(pre-commit run:*)",
       "Bash(git add:*)",
-      "Bash(terraform init:*)"
+      "Bash(terraform init:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)",
+      "mcp__terraform__create_workspace",
+      "mcp__terraform__create_workspace_variable",
+      "mcp__terraform__create_run",
+      "mcp__terraform__get_workspace_details",
+      "Bash(terraform plan:*)",
+      "Bash(terraform apply:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
