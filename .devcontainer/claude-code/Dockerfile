@@ -130,3 +130,5 @@ RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 
 # Install pre-commit for the node user so they can use it
 RUN ~/.local/bin/uv tool install pre-commit --with pre-commit-uv
+
+RUN ~/.local/bin/uv tool install specify-cli --from git+https://github.com/github/spec-kit.git

@@ -8,7 +8,7 @@
   },
   "runArgs": [
     "--env-file", 
-    ".devcontainer/devcontainer.env"
+    ".devcontainer/devcontainer.env",
     "--cap-add=NET_ADMIN", 
     "--cap-add=NET_RAW",
     "--privileged"
@@ -64,5 +64,5 @@
     "AWS_SESSION_EXPIRATION": "${localEnv:AWS_SESSION_EXPIRATION}"
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspace"
 }
