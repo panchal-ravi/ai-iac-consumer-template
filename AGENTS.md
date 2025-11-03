@@ -441,7 +441,7 @@ fi
 ```yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -449,7 +449,7 @@ repos:
       - id: check-added-large-files
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.83.5
+    rev: v1.103.0
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
