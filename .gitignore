@@ -38,3 +38,7 @@ secrets.yml
 config.yaml
 config.json
 credentials.json
+
+# exclude agent sandbox files backend and tfvars
+sandbox.auto.tfvars
+sandbox.backend.tf
