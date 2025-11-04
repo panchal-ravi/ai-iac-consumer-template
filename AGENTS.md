@@ -242,13 +242,15 @@ The development process follows these distinct phases, each with specific comman
 **Workflow**:
 
 1. Confirm implementation of approved plan
-2. Generate production-ready Terraform code and testing files:
+2. Generate Terraform code in the root directory:
    - `main.tf`: Module declarations using MCP-verified specs
    - `variables.tf`: Variable definitions with validation rules
    - `outputs.tf`: Output exports
-   - `versions.tf`: Provider and Terraform version constraints
-   - `sandbox.backend.tf`: Backend configuration for testing in an ephemeral workspace.
+   - `provider.tf`: Provider and configurations
+   - `terraform.tf`: Terraform block, backend configuration for testing
+   - `override.tf`: Terraform block, backend configuration for testing in a HCP Terraform workspace and project. Import ensure sandbox_<> project is utlised 
    - `sandbox.auto.tfvars.example`: An example variables file for the user to populate.
+   - `sandbox.auto.tfvars`: An variables file for the user/ai agent to populate for terraform cli testing using cloud backend.
 3. Set up project infrastructure:
    - Install/update pre-commit framework
    - Configure `.git/hooks/pre-commit`
@@ -332,7 +334,7 @@ output "output_name" {
 - Group related resources together
 - Use locals for computed values and transformations
 - Keep resources focused and modular
-- For testing, create a `sandbox.backend.tf` file to specify the HCP Cloud backend, including the project.
+- For testing, create a `override.tf` file to specify the HCP Cloud backend, including the workspace HCP terraform project.
 
 ### 4. Documentation
 
@@ -370,11 +372,12 @@ terraform {
 
 1. **`sandbox.auto.tfvars.example`**: Create this file to provide a template for users to populate with runtime variable information for testing. Do not include sensitive data.
 2. **`sandbox.auto.tfvars`**: Create this file to provide values for testing the configuration
-3. **`sandbox.backend.tf`**: Use this for specifying the HCP Cloud backend for testing, as shown in the example below.
+3. **`override.tf`**: Use this for specifying the HCP Cloud backend for testing, as shown in the example below.
 
 These files are for testing using the Terraform CLI and will result in a remote HCP Terraform run.
+### Important: user the override.tf to specify a cloud backend for sandbox testing without issues
 
-```hcl
+```hcl override.tf
 terraform {
   cloud {
     organization = "<HCP_TERRAFORM_ORG>"  # Replace with your organization name
@@ -549,7 +552,7 @@ variable "environment" {
   description = "Deployment environment"
   type        = string
   validation {
-    condition     = contains(["dev", "staging", "prod"], var.environment)
+    condition     = contains(["sandbox", "dev", "staging", "prod"], var.environment)
     error_message = "Environment must be dev, staging, or prod."
   }
 }
