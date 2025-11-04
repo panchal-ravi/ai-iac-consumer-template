@@ -136,10 +136,11 @@ The development process follows these distinct phases, each with specific comman
    - Integration patterns
    - Security & compliance architecture
    - Cost considerations
+   - region preference supplied by the user
 3. Generate supporting artifacts:
    - `data-model.md`: Entity definitions and relationships
    - `contracts/`: API/module contracts
-   - `research.md`: Decisions and alternatives considered
+   - `research.md`: Decisions and alternatives considered. **Important** For AWS infrastructure use aws-security-advisor subagent
 
 **Key Terraform Planning**:
 
