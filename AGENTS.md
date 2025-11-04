@@ -163,7 +163,7 @@ The development process follows these distinct phases, each with specific comman
 3. If private registry yields nothing, only consider public modules with user approval
 4. For each candidate, retrieve full specs including:
    - Required/optional input variables
-   - Output values and naming
+   - Output values and naming, include key resources attributes, examples, names and address details that are relevant to an end user
    - Version constraints
    - Module dependencies
 
