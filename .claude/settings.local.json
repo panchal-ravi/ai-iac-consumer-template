@@ -39,7 +39,7 @@
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "terraform"
-  ],
-  "model": "claude-haiku-4-5-20251001"
+    "terraform",
+    "aws-knowledge-mcp-server"
+  ]
 }
