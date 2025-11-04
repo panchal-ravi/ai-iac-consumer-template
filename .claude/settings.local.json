@@ -34,7 +34,8 @@
       "SlashCommand(/speckit.tasks)",
       "SlashCommand(/speckit.analyze)",
       "SlashCommand(/speckit.checklist)",
-      "SlashCommand(/speckit.implement)"
+      "SlashCommand(/speckit.implement)",
+      "Bash(cat:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
