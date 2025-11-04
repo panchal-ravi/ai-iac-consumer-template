@@ -369,7 +369,7 @@ terraform {
 ## For testing the sandbox terraform configuration, create the following configuration files:
 
 1. **`sandbox.auto.tfvars.example`**: Create this file to provide a template for users to populate with runtime variable information for testing. Do not include sensitive data.
-2. **`sandbox.auto.tfvarse`**: Create this file to provide values for testing the configuration
+2. **`sandbox.auto.tfvars`**: Create this file to provide values for testing the configuration
 3. **`sandbox.backend.tf`**: Use this for specifying the HCP Cloud backend for testing, as shown in the example below.
 
 These files are for testing using the Terraform CLI and will result in a remote HCP Terraform run.
@@ -496,7 +496,7 @@ These are pre-existing in the git repository template only hooks need to be conf
 
 1. **Ephemeral Workspace Creation**:
    - Create ephemeral workspace using Terraform MCP server
-   - Workspace name MUST follow pattern: `sandbox-<GITHUB_REPO_NAME>` or similar unique identifier
+   - Workspace name MUST follow pattern: `sandbox_<GITHUB_REPO_NAME>` or similar unique identifier
    - Workspace MUST be created in the specified HCP Terraform Organization and Project
    - Workspace MUST have "auto-apply API, UI and VCS runs" setting enabled (set `auto_apply` to `true`)
    - Workspace MUST have "Auto-Destroy" setting enabled with 2-hour duration (`auto_destroy_at` set to 2 hours from creation)
@@ -504,12 +504,12 @@ These are pre-existing in the git repository template only hooks need to be conf
    - Analyze `variables.tf` file in the `feature/*` branch to identify all required variables
    - Create workspace variables at the ephemeral workspace level using Terraform MCP server tools
    - Prompt user for variable values when not determinable (DO NOT guess values)
-   - EXCLUDE cloud provider credentials (these are pre-configured at a workspace level)
+   - EXCLUDE cloud provider credentials (these are pre-configured at the workspace level)
    - Include all application-specific and environment-specific variables
-   - Document variable configuration for subsequent dev workspace setup
+   - Document variable configuration for subsequent sandbox workspace setup
 3. **Terraform Execution**:
-   - Run `terraform init`, `terraform validate`, `terraform plan`, and `terraform apply`.
-   - Execute `terraform plan` against the ephemeral workspace `sandbox-GITHUB_REPO_NAME>` using Terraform CLI run with cloud backend including project
+   - Run `terraform init`, `terraform validate`, `terraform plan`, and `terraform apply`
+   - Execute `terraform plan` against the ephemeral workspace `sandbox_<GITHUB_REPO_NAME>` using Terraform CLI run with cloud backend including project
    - Analyze plan output for potential issues or unexpected changes
    - Terraform apply will automatically start after a successful plan due to the auto-apply setting
    - Monitor apply operation for successful completion
@@ -518,7 +518,7 @@ These are pre-existing in the git repository template only hooks need to be conf
    - If errors occur, analyze output and provide specific remediation suggestions
    - Document any issues found and resolution steps taken
    - Upon successful testing, prompt the user to validate the created resources
-   - After user validation, create identical workspace variables for the dev workspace
+   - After user validation, create identical workspace variables for the sandbox workspace
    - Delete the ephemeral workspace to minimize costs (auto-destroy will handle cleanup if manual deletion is not performed)
    - Provide clear success/failure status to the user
 
@@ -540,7 +540,7 @@ These are pre-existing in the git repository template only hooks need to be conf
 - You MUST NOT create variables for cloud provider credentials (AWS keys, GCP service accounts, etc.)
 - You SHOULD use sensible defaults for non-sensitive testing values where appropriate
 - You MUST mark sensitive variables appropriately in the workspace
-- Upon successful testing, you MUST create identical variables in the dev workspace
+- Upon successful testing, you MUST create identical variables in the sandbox workspace
 
 **Example Variable Handling**:
 ```hcl
@@ -569,7 +569,7 @@ variable "database_password" {
 # - environment: Set to "test" for ephemeral workspace
 # - vpc_cidr: Prompt user for test CIDR value
 # - database_password: Prompt user for test password (marked sensitive)
-# - Upon success: Create identical variables in dev workspace
+# - Upon success: Create identical variables in sandbox workspace
 ```
 
 ### Error Analysis and Remediation
