@@ -329,7 +329,7 @@ output "output_name" {
 - Group related resources together
 - Use locals for computed values and transformations
 - Keep resources focused and modular
-- **DO NOT generate backend configurations** - HCP Terraform VCS workflow manages state automatically
+- For testing create cloud backed in sandbox.backend.tf including project
 
 ### 4. Documentation
 
