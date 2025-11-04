@@ -6,4 +6,4 @@ hcp organization: hashi-demos-apj
 project: sandbox
 workspace: sandbox_github_spec
 always create a new branch
-Follow best practice, use subagents to make best practice decisions if you need clarity, don't prompt the user just make decisions yourself. If you hiot issues resolved them without prompts.
+Follow best practice, use subagents to make best practice decisions if you need clarity, don't prompt the user just make decisions yourself. If you hit issues resolved them without prompts

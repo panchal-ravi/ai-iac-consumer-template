@@ -105,7 +105,7 @@ Configuration is in [.mcp.json](.mcp.json). No additional setup needed if using 
 
 Open your AI assistant and begin with a specification:
 
-```
+```text
 /speckit.specify
 
 I need to deploy a highly available web application infrastructure in AWS:
@@ -327,11 +327,13 @@ Quality gates run automatically on every commit:
 | Standard checks | Trailing whitespace, YAML syntax, large files, secrets |
 
 **Run manually**:
+
 ```bash
 pre-commit run --all-files
 ```
 
 **Update hooks**:
+
 ```bash
 pre-commit autoupdate
 ```
@@ -341,32 +343,38 @@ pre-commit autoupdate
 Specialized AI agents for enhanced capabilities:
 
 ### terraform-test
+
 Comprehensive guide for writing and running Terraform tests.
 
 **When to use**: Creating test files, validating modules, troubleshooting test syntax.
 
 **Invoke**:
-```
+
+```text
 Use the terraform-test skill to help me write tests for this module
 ```
 
 ### terraform-stacks
+
 HashiCorp Terraform Stacks configuration support.
 
 **When to use**: Working with stack components, multi-region deployments, stack syntax.
 
 **Invoke**:
-```
+
+```text
 Use the terraform-stacks skill to help configure my deployment stack
 ```
 
 ### github-speckit-tester
+
 Non-interactive workflow validation and testing harness.
 
 **When to use**: Testing complete Speckit pipeline, automating specification workflows.
 
 **Invoke**:
-```
+
+```text
 Use the github-speckit-tester skill to validate my workflow
 ```
 
@@ -396,7 +404,7 @@ The AI can use this during planning for AWS infrastructure.
 
 ## Project Structure
 
-```
+```text
 .
 ├── .claude/                      # AI assistant configuration
 │   ├── CLAUDE.md                # AI agent instructions
@@ -444,6 +452,7 @@ Don't skip to code generation. Each phase builds on the previous:
 ### 2. Be Specific in Requirements
 
 **Vague**: "I need a secure, scalable VPC"
+
 **Better**: "I need a VPC with /16 CIDR, 3 AZs, public/private subnets, NAT gateways, and network ACLs for defense-in-depth"
 
 ### 3. Use Clarification Actively
@@ -470,7 +479,7 @@ Update [AGENTS.md](AGENTS.md) when you learn new patterns or solutions.
 
 ### Creating a New Infrastructure Component
 
-```
+```text
 # Phase 0: Requirements
 /speckit.specify
 [Describe your infrastructure needs]
@@ -498,7 +507,7 @@ Update [AGENTS.md](AGENTS.md) when you learn new patterns or solutions.
 
 ### Updating Existing Infrastructure
 
-```
+```text
 # Update spec.md with new requirements
 /speckit.clarify
 [Clarify new requirements]
@@ -518,7 +527,7 @@ Update [AGENTS.md](AGENTS.md) when you learn new patterns or solutions.
 
 ### Testing a Module
 
-```
+```text
 Use the terraform-test skill to help me write tests for the VPC module
 ```
 
@@ -529,6 +538,7 @@ Use the terraform-test skill to help me write tests for the VPC module
 **Problem**: "Cannot connect to Terraform MCP server"
 
 **Solution**:
+
 ```bash
 # Verify Docker is running
 docker ps
@@ -548,6 +558,7 @@ terraform login
 **Problem**: Commit blocked by pre-commit hooks
 
 **Solution**:
+
 ```bash
 # Run hooks manually to see details
 pre-commit run --all-files
@@ -563,7 +574,8 @@ pre-commit autoupdate       # Update hook versions
 **Problem**: "Authentication failed" during testing
 
 **Solution**:
-```bash
+
+``` bash
 # Set token environment variable
 export TFE_TOKEN="your-token-here"
 
