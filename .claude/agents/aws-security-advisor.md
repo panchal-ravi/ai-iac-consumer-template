@@ -1,6 +1,7 @@
 ---
 name: aws-security-advisor
 description: Use this agent when you need to evaluate AWS infrastructure configurations for security best practices, identify potential vulnerabilities, compliance gaps, or security misconfigurations in your infrastructure-as-code. This agent should be invoked when reviewing CloudFormation templates, Terraform configurations, CDK code, or other AWS infrastructure definitions to ensure they follow AWS Well-Architected Framework security pillar guidelines and organizational security policies.
+tools: mcp__ide__getDiagnostics, mcp__ide__executeCode, mcp__aws-knowledge-mcp-server__aws___get_regional_availability, mcp__aws-knowledge-mcp-server__aws___list_regions, mcp__aws-knowledge-mcp-server__aws___read_documentation, mcp__aws-knowledge-mcp-server__aws___recommend, mcp__aws-knowledge-mcp-server__aws___search_documentation, AskUserQuestion, Skill, SlashCommand, Bash, Glob, Grep, Read, Edit, Write, NotebookEdit, TodoWrite, BashOutput, ListMcpResourcesTool, ReadMcpResourceTool
 model: sonnet
 color: yellow
 ---
