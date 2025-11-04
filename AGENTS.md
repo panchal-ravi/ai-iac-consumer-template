@@ -255,9 +255,6 @@ The development process follows these distinct phases, each with specific comman
 5. Run tests (see Testing & Validation Framework below)
 
 **DO NOT**:
-
-- ❌ Include `terraform init` (HCP Terraform VCS workflow handles this)
-- ❌ Include backend configuration (auto-managed by HCP Terraform)
 - ❌ Guess module specifications (use MCP tools from planning phase)
 
 **Output**: Complete production-ready Terraform configuration
@@ -265,6 +262,7 @@ The development process follows these distinct phases, each with specific comman
 ## Code Generation Standards
 
 ### Module Declaration Format
+
 ```hcl
 module "descriptive_name" {
   source  = "app.terraform.io/org-name/module-name/provider"
@@ -283,6 +281,7 @@ module "descriptive_name" {
 ```
 
 ### Variable Definitions
+
 ```hcl
 variable "var_name" {
   description = "Clear description of the variable's purpose"
@@ -297,6 +296,7 @@ variable "var_name" {
 ```
 
 ### Output Definitions
+
 ```hcl
 output "output_name" {
   description = "Clear description of what this output represents"
@@ -308,12 +308,14 @@ output "output_name" {
 ## Best Practices to Follow
 
 ### 1. Module Usage
+
 - Always specify version constraints for modules
 - Use semantic versioning constraints (e.g., `~> 1.0`)
 - Reference modules using their full registry path
 - Document why specific modules were chosen
 
 ### 2. Variable Management
+
 - Define variables at the appropriate level (root vs module)
 - Use clear, consistent naming conventions (snake_case)
 - Provide descriptions for all variables
@@ -322,6 +324,7 @@ output "output_name" {
 - Add validation rules for critical variables
 
 ### 3. Code Organization
+
 - Separate concerns into logical files (main.tf, variables.tf, outputs.tf, versions.tf)
 - Group related resources together
 - Use locals for computed values and transformations
@@ -329,21 +332,24 @@ output "output_name" {
 - **DO NOT generate backend configurations** - HCP Terraform VCS workflow manages state automatically
 
 ### 4. Documentation
+
 - Add comments explaining complex logic or design decisions
 - Document module purposes and relationships
 - Include examples of usage in comments
 - Note any prerequisites or dependencies
 
 ### 5. Security & Compliance
+
 - Mark sensitive outputs appropriately
 - Avoid hardcoding credentials or secrets
 - Use variable references for sensitive data
 - Follow principle of least privilege
 
 ### 6. Terraform Configuration
+
 ```hcl
 terraform {
-  required_version = ">= 1.0"
+  required_version = ">= 1.8"
   
   required_providers {
     # List all required providers with version constraints
@@ -353,8 +359,27 @@ terraform {
     }
   }
   
-  # DO NOT include backend configuration - HCP Terraform VCS workflow handles this
-  # Backend is automatically configured by HCP Terraform
+  # DO NOT include backend configuration in this file
+}
+```
+
+## For testing the sandbox terraform configuration use the following configuration files
+
+1. sandbox.auto.tfvars - Use this to populate run time varable information for testing your configuraiton
+2. sandbox.backend.tf - Use this for specifying the HCP Cloud backend, see example below.
+
+Both these files are for testing using Terraform Cli and will result in remote HCP terraform run.
+
+```hcl
+terraform {
+  cloud {
+    organization = "<HCP_TERRAFORM_ORG>"  # Replace with your organization name
+    workspaces {
+      name = "sandbox_<GITHUB_REPO_NAME>"  # Replace with actual repo name
+      project = "<PROJECT_NAME>"  # Replace with actual project name
+    }
+    
+  }
 }
 ```
 
@@ -437,57 +462,37 @@ else
 fi
 ```
 
-**Pre-commit Configuration File** (`.pre-commit-config.yaml`):
-```yaml
-repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-added-large-files
-
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.103.0
-    hooks:
-      - id: terraform_fmt
-      - id: terraform_validate
-      - id: terraform_docs
-        args:
-          - --hook-config=--path-to-file=README.md
-          - --hook-config=--add-to-existing-file=true
-          - --hook-config=--create-file-if-not-exist=true
-      - id: terraform_tflint
-      - id: terraform_tfsec
-```
+**Pre-commit Configuration File** 
+These are pre-existing in the git repository template only hooks need to be configured
 
 ## Testing and Validation Framework
 
 ### Ephemeral Workspace Testing
+
 **Standard**: All AI-generated Terraform code MUST be validated in ephemeral testing environments before promotion.
 
 **Rationale**: Ephemeral workspaces provide safe, isolated environments for testing infrastructure changes without impacting existing environments or incurring long-term costs.
 
 **Implementation Requirements**:
+
 - You MUST create ephemeral HCP Terraform workspaces ONLY for testing AI-generated Terraform configuration code
 - The current `feature/*` branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
 - Ephemeral workspaces MUST be created within the current HCP Terraform Organization and Project
 - Ephemeral workspace MUST be connected to the current `feature/*` branch of the application's GitHub remote repository to ensure code under test matches the current feature development state
-- Ephemeral workspace MUST be created with "auto-apply API, UI and VCS runs" setting turned ON to enable automatic apply after successful plan without human confirmation
-- Ephemeral workspace MUST be created with "Auto-Destroy" setting ON and configured to automatically delete after 2 hours
 - You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
 - Testing MUST include both `terraform plan` and `terraform apply` operations
 - All testing activities MUST be performed automatically against the ephemeral workspace
 - Ephemeral workspaces will be automatically destroyed after 2 hours via auto-destroy setting
 
 ### Automated Testing Workflow
+
 **Standard**: Testing workflow MUST be fully automated using available Terraform MCP server tools.
 
 **Testing Process**:
 1. **Ephemeral Workspace Creation**:
+
    - Create ephemeral workspace using Terraform MCP server
-   - Workspace name MUST follow pattern: `sandbox-<app-name>-<timestamp>` or similar unique identifier
+   - Workspace name MUST follow pattern: `sandbox-<GITHUB_REPO_NAME>` or similar unique identifier
    - Workspace MUST be created in the specified HCP Terraform Organization and Project
    - Workspace MUST have "auto-apply API, UI and VCS runs" setting enabled (set `auto_apply` to `true`)
    - Workspace MUST have "Auto-Destroy" setting enabled with 2-hour duration (`auto_destroy_at` set to 2 hours from creation)
@@ -501,8 +506,8 @@ repos:
    - Document variable configuration for subsequent dev workspace setup
 
 3. **Terraform Execution**:
-   - Run `terraform init` or `terraform plan`** - HCP Terraform VCS workflow handles this automatically
-   - Execute `terraform plan` against the ephemeral workspace `sandbox-<app-name>-<timestamp>` (via `create_run` with auto-apply enabled)
+   - Run `terraform init` then ``terraform validate` then `terraform plan` and finally `terraform apply`
+   - Execute `terraform plan` against the ephemeral workspace `sandbox-GITHUB_REPO_NAME>` using Terraform CLI run with cloud backend including project
    - Analyze plan output for potential issues or unexpected changes
    - Terraform apply will automatically start after successful plan due to auto-apply setting
    - Monitor apply operation for successful completion
@@ -517,14 +522,17 @@ repos:
    - Provide clear success/failure status to the user
 
 ### Variable Management for Testing
+
 **Standard**: Test workspace variables MUST be derived from generated configuration files.
 
 **Variable Source Priority**:
+
 1. **variables.tf**: Primary source for identifying required variables, validation rules and type constraints
 2. **User Input**: Values for application-specific variables (when not determinable)
 3. **Workspace Variable Sets**: Pre-configured organizational standards (DO NOT duplicate)
 
 **Variable Creation Rules**:
+
 - You MUST create workspace variables for all required variables defined in variables.tf from the `feature/*` branch
 - You MUST respect variable types and validation rules defined in variables.tf
 - You MUST prompt user for values when they cannot be reasonably determined
@@ -564,10 +572,12 @@ variable "database_password" {
 ```
 
 ### Error Analysis and Remediation
+
 **Standard**: Test failures MUST be analyzed systematically with actionable remediation guidance.
 
 **Failure Analysis Process**:
 1. **Plan Failures**:
+
    - Analyze terraform plan errors for configuration issues
    - Check for missing variables or invalid variable values
    - Verify module sources and version constraints
@@ -585,6 +595,7 @@ variable "database_password" {
    - Validate variable types and constraint violations
 
 **Remediation Guidance**:
+
 - You MUST provide specific, actionable remediation steps for identified issues
 - You SHOULD suggest code changes to resolve configuration problems
 - You MUST distinguish between issues requiring code changes vs. workspace configuration
@@ -594,6 +605,7 @@ variable "database_password" {
 **Standard**: All testing activities MUST be documented for audit and troubleshooting purposes.
 
 **Documentation Requirements**:
+
 - Testing process MUST be documented in the README.md
 - Variable requirements MUST be clearly explained
 - Prerequisites for testing MUST be listed
@@ -611,7 +623,7 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 - Terraform MCP server configured
 
 ### Testing Process
-1. Ephemeral workspace created: `<workspace-name>`
+1. Ephemeral workspace created: `sandbox_<GITHUB_REPO_NAME>`
 2. Variables configured from terraform.tfvars.example
 3. Terraform plan executed successfully
 4. Terraform apply completed without errors
