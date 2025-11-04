@@ -25,4 +25,9 @@ When you discover new information that would be helpful for future development w
 - **Create new AGENTS.md files** in relevant directories when working with areas that don't yet have documentation
 - **Add valuable insights** such as common pitfalls, debugging techniques, dependency relationships, or implementation patterns
 
+## Important use subagents liberally
+
+When performing any research concurrent subagents can be used for performance and isolation
+
+Once completed all tasks and Terraform is fully deployed, logs any issues in memory in the feature branch as deployment_log_<timestamp>.log
 This helps build a comprehensive knowledge base for the codebase over time.
