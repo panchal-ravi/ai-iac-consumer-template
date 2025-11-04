@@ -544,19 +544,7 @@ component "database" {
 
 ## Troubleshooting
 
-### File Extension Warnings
 
-Newer versions use `.tfcomponent.hcl` instead of `.tfstack.hcl`:
-
-```
-Warning: Deprecated filename usage
-This configuration is using the deprecated .tfstack.hcl file extensions.
-Update files to use .tfcomponent.hcl or .tfcomponent.json extensions.
-```
-
-**Solution**: Rename component configuration files:
-- `components.tfstack.hcl` → `components.tfcomponent.hcl`
-- Keep deployment files as `.tfdeploy.hcl`
 
 ### Provider Configuration Errors
 
