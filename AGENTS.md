@@ -163,7 +163,7 @@ The development process follows these distinct phases, each with specific comman
 3. If private registry yields nothing, only consider public modules with user approval
 4. For each candidate, retrieve full specs including:
    - Required/optional input variables
-   - Output values and naming, include key resources attributes, examples, names and address details that are relevant to an end user
+   - Output values and naming. For key resources, include attributes relevant to the end-user, such as resource IDs, DNS names, or IP addresses.
    - Version constraints
    - Module dependencies
 
@@ -242,15 +242,17 @@ The development process follows these distinct phases, each with specific comman
 **Workflow**:
 
 1. Confirm implementation of approved plan
-2. Generate production-ready Terraform code:
+2. Generate production-ready Terraform code and testing files:
    - `main.tf`: Module declarations using MCP-verified specs
    - `variables.tf`: Variable definitions with validation rules
    - `outputs.tf`: Output exports
    - `versions.tf`: Provider and Terraform version constraints
+   - `sandbox.backend.tf`: Backend configuration for testing in an ephemeral workspace.
+   - `sandbox.auto.tfvars.example`: An example variables file for the user to populate.
 3. Set up project infrastructure:
    - Install/update pre-commit framework
    - Configure `.git/hooks/pre-commit`
-   - Create `.pre-commit-config.yaml`
+   - Ensure `.pre-commit-config.yaml` includes required hooks
 4. Provide deployment instructions
 5. Run tests (see Testing & Validation Framework below)
 
@@ -329,7 +331,7 @@ output "output_name" {
 - Group related resources together
 - Use locals for computed values and transformations
 - Keep resources focused and modular
-- For testing create cloud backed in sandbox.backend.tf including project
+- For testing, create a `sandbox.backend.tf` file to specify the HCP Cloud backend, including the project.
 
 ### 4. Documentation
 
@@ -363,12 +365,13 @@ terraform {
 }
 ```
 
-## For testing the sandbox terraform configuration create the following configuration files
+## For testing the sandbox terraform configuration, create the following configuration files:
 
-1. sandbox.auto.tfvars - Use this to populate run time varable information for testing your configuraiton
-2. sandbox.backend.tf - Use this for specifying the HCP Cloud backend, see example below.
+1. **`sandbox.auto.tfvars.example`**: Create this file to provide a template for users to populate with runtime variable information for testing. Do not include sensitive data.
+2. **`sandbox.auto.tfvarse`**: Create this file to provide values for testing the configuration
+3. **`sandbox.backend.tf`**: Use this for specifying the HCP Cloud backend for testing, as shown in the example below.
 
-Both these files are for testing using Terraform Cli and will result in remote HCP terraform run.
+These files are for testing using the Terraform CLI and will result in a remote HCP Terraform run.
 
 ```hcl
 terraform {
@@ -391,12 +394,11 @@ Follow these rules strictly throughout all phases:
 
 ### Spec-Driven Development Mandates
 
-1. **NEVER generate Terraform code** without `/speckit.implement` command
-2. **Always use MCP tools** to search and verify module specifications
-3. **Never guess module capabilities**—verify all inputs, outputs, and versions
-4. **Do include** cloud backend configurations before initialising with `terraform init`
-5. **Always validate code changes** using `terraform validate`
-6. **Ground all decisions** in actual specification requirements, not assumptions
+1. **NEVER generate Terraform code** without the `/speckit.implement` command.
+2. **Always use MCP tools** to search and verify module specifications.
+3. **Never guess module capabilities**—verify all inputs, outputs, and versions.
+4. **Always validate code changes** using `terraform validate`.
+5. **Ground all decisions** in actual specification requirements, not assumptions.
 
 ### Module Search & Verification
 
@@ -434,10 +436,10 @@ If MCP tools fail or return no results:
 
 **Installation Requirements**:
 
-- You MUST install or update pre-commit framework if not already present
-- You MUST configure `.git/hooks/pre-commit` to use pre-commit framework
-- The precomit yaml should already exist `.pre-commit-config.yaml` with appropriate hooks
-- Pre-commit hooks SHOULD include terraform formatting, validation, and security scanning
+- You MUST install or update the pre-commit framework if it is not already present.
+- You MUST configure `.git/hooks/pre-commit` to use the pre-commit framework.
+- The `.pre-commit-config.yaml` file is expected to exist in the repository. 
+- Pre-commit hooks SHOULD include `terraform_fmt`, `terraform_docs`, `terraform_validate`, `terraform_tflint`, and `checkov`.
 
 **Pre-commit Hook Configuration**:
 
