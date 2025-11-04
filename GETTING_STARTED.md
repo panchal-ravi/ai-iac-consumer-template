@@ -2,6 +2,10 @@
 
 Welcome to the AI-assisted Terraform development template! This guide will help you get started with spec-driven infrastructure development using AI assistants (Claude Code or VS Code Agent) and the Speckit workflow framework.
 
+> **⚠️ ACTIVE DEVELOPMENT WARNING**
+>
+> This template is currently under active development. Features, workflows, and configurations may change without notice. Use with caution in production environments and be prepared for potential breaking changes. Feedback and contributions are welcome!
+
 ## Overview
 
 This template provides a structured approach to Terraform development where specifications drive implementation through AI assistance. You'll create detailed specifications first, then let AI generate production-ready Terraform code based on those specs.
