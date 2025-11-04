@@ -42,7 +42,7 @@ my-stack/
     └── compute/
 ```
 
-## Component Configuration (.tfstack.hcl)
+## Component Configuration (.tfcomponent.hcl)
 
 ### Variable Block
 
@@ -479,16 +479,16 @@ terraform stacks apply --deployment=production
 ### Multi-Region Deployment
 
 ```hcl
-# variables.tfstack.hcl
+# variables.tfcomponent.hcl
 variable "regions" {
   type = set(string)
   default = ["us-west-1", "us-east-1", "eu-west-1"]
 }
 
-# providers.tfstack.hcl
+# providers.tfcomponent.hcl
 provider "aws" "regional" {
   for_each = var.regions
-  
+
   config {
     region = each.value
     assume_role_with_web_identity {
@@ -498,7 +498,7 @@ provider "aws" "regional" {
   }
 }
 
-# components.tfstack.hcl
+# components.tfcomponent.hcl
 component "regional_infra" {
   for_each = var.regions
   source   = "./modules/regional"
@@ -561,7 +561,7 @@ Update files to use .tfcomponent.hcl or .tfcomponent.json extensions.
 ### Provider Configuration Errors
 
 **Issue**: Providers defined inside modules
-**Solution**: Move all provider configurations to Stack-level `.tfstack.hcl` files
+**Solution**: Move all provider configurations to Stack-level `.tfcomponent.hcl` files
 
 ### Circular Dependencies
 

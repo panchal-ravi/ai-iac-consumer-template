@@ -154,7 +154,7 @@ Guide them to:
 
 ### "Deprecated filename usage" Warning
 
-**Issue**: Files use `.tfstack.hcl` extension
+**Issue**: Files use deprecated `.tfstack.hcl` extension
 **Solution**: Rename to `.tfcomponent.hcl` for component files; keep `.tfdeploy.hcl` for deployments
 
 ### Provider Configuration Errors

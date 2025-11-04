@@ -20,9 +20,9 @@ Basic Stack with a single environment deployment.
 ### File Structure
 ```
 simple-stack/
-├── variables.tfstack.hcl
-├── providers.tfstack.hcl
-├── components.tfstack.hcl
+├── variables.tfcomponent.hcl
+├── providers.tfcomponent.hcl
+├── components.tfcomponent.hcl
 ├── deployments.tfdeploy.hcl
 └── modules/
     └── webapp/
@@ -31,7 +31,7 @@ simple-stack/
         └── outputs.tf
 ```
 
-### variables.tfstack.hcl
+### variables.tfcomponent.hcl
 ```hcl
 variable "aws_region" {
   type    = string
@@ -52,7 +52,7 @@ variable "app_name" {
 }
 ```
 
-### providers.tfstack.hcl
+### providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -73,7 +73,7 @@ provider "aws" "main" {
 }
 ```
 
-### components.tfstack.hcl
+### components.tfcomponent.hcl
 ```hcl
 component "webapp" {
   source = "./modules/webapp"
@@ -384,7 +384,7 @@ deployment_group "production" {
 
 Stack with development, staging, and production deployments.
 
-### variables.tfstack.hcl
+### variables.tfcomponent.hcl
 ```hcl
 variable "aws_region" {
   type = string
@@ -412,7 +412,7 @@ variable "role_arn" {
 }
 ```
 
-### providers.tfstack.hcl
+### providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -440,7 +440,7 @@ provider "aws" "this" {
 }
 ```
 
-### components.tfstack.hcl
+### components.tfcomponent.hcl
 ```hcl
 locals {
   name_prefix = "myapp-${var.environment}"
@@ -476,7 +476,7 @@ component "compute" {
 }
 ```
 
-### outputs.tfstack.hcl
+### outputs.tfcomponent.hcl
 ```hcl
 output "vpc_id" {
   type  = string
@@ -578,7 +578,7 @@ deployment_auto_approve "dev_auto" {
 
 Stack that deploys identical infrastructure across multiple AWS regions.
 
-### variables.tfstack.hcl
+### variables.tfcomponent.hcl
 ```hcl
 variable "regions" {
   type = set(string)
@@ -598,7 +598,7 @@ variable "app_name" {
 }
 ```
 
-### providers.tfstack.hcl
+### providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -629,7 +629,7 @@ provider "aws" "regional" {
 }
 ```
 
-### components.tfstack.hcl
+### components.tfcomponent.hcl
 ```hcl
 component "regional_infrastructure" {
   for_each = var.regions
@@ -666,7 +666,7 @@ component "global_route53" {
 }
 ```
 
-### outputs.tfstack.hcl
+### outputs.tfcomponent.hcl
 ```hcl
 output "regional_endpoints" {
   type = map(string)
@@ -713,7 +713,7 @@ Two Stacks where the application Stack depends on the network Stack.
 
 ### Network Stack
 
-#### network-stack/variables.tfstack.hcl
+#### network-stack/variables.tfcomponent.hcl
 ```hcl
 variable "vpc_cidr" {
   type = string
@@ -737,7 +737,7 @@ variable "role_arn" {
 }
 ```
 
-#### network-stack/providers.tfstack.hcl
+#### network-stack/providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -758,7 +758,7 @@ provider "aws" "this" {
 }
 ```
 
-#### network-stack/components.tfstack.hcl
+#### network-stack/components.tfcomponent.hcl
 ```hcl
 component "vpc" {
   source = "./modules/vpc"
@@ -787,7 +787,7 @@ component "security_groups" {
 }
 ```
 
-#### network-stack/outputs.tfstack.hcl
+#### network-stack/outputs.tfcomponent.hcl
 ```hcl
 output "vpc_id" {
   type  = string
@@ -859,7 +859,7 @@ deployment_group "network" {
 
 ### Application Stack
 
-#### application-stack/variables.tfstack.hcl
+#### application-stack/variables.tfcomponent.hcl
 ```hcl
 variable "vpc_id" {
   type = string
@@ -891,7 +891,7 @@ variable "role_arn" {
 }
 ```
 
-#### application-stack/providers.tfstack.hcl
+#### application-stack/providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -912,7 +912,7 @@ provider "aws" "this" {
 }
 ```
 
-#### application-stack/components.tfstack.hcl
+#### application-stack/components.tfcomponent.hcl
 ```hcl
 component "application" {
   source = "./modules/app"
@@ -964,7 +964,7 @@ deployment_group "application" {
 
 Stack that deploys to both AWS and Azure.
 
-### variables.tfstack.hcl
+### variables.tfcomponent.hcl
 ```hcl
 variable "aws_region" {
   type = string
@@ -1005,7 +1005,7 @@ variable "app_name" {
 }
 ```
 
-### providers.tfstack.hcl
+### providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -1043,7 +1043,7 @@ provider "azurerm" "this" {
 }
 ```
 
-### components.tfstack.hcl
+### components.tfcomponent.hcl
 ```hcl
 component "aws_infrastructure" {
   source = "./modules/aws-infra"
@@ -1106,7 +1106,7 @@ deployment_group "multi_cloud" {
 
 Full production-grade Stack with VPC, RDS, ECS, and monitoring.
 
-### variables.tfstack.hcl
+### variables.tfcomponent.hcl
 ```hcl
 variable "aws_region" {
   type        = string
@@ -1148,7 +1148,7 @@ variable "role_arn" {
 }
 ```
 
-### providers.tfstack.hcl
+### providers.tfcomponent.hcl
 ```hcl
 required_providers {
   aws = {
@@ -1185,7 +1185,7 @@ provider "random" "this" {
 }
 ```
 
-### components.tfstack.hcl
+### components.tfcomponent.hcl
 ```hcl
 locals {
   name_prefix = "${var.app_name}-${var.environment}"
@@ -1294,7 +1294,7 @@ component "cloudwatch" {
 }
 ```
 
-### outputs.tfstack.hcl
+### outputs.tfcomponent.hcl
 ```hcl
 output "load_balancer_url" {
   type        = string
