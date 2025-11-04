@@ -140,7 +140,7 @@ The development process follows these distinct phases, each with specific comman
 3. Generate supporting artifacts:
    - `data-model.md`: Entity definitions and relationships
    - `contracts/`: API/module contracts
-   - `research.md`: Decisions and alternatives considered. **Important** For AWS infrastructure use aws-security-advisor subagent
+   - `research.md`: Decisions and alternatives considered. **Important** For AWS infrastructure use aws-security-advisor subagent. When performing research multiple subagents can be used concurrently for isolation and performance.
 
 **Key Terraform Planning**:
 
