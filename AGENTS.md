@@ -257,6 +257,7 @@ The development process follows these distinct phases, each with specific comman
 5. Run tests (see Testing & Validation Framework below)
 
 **DO NOT**:
+
 - ❌ Guess module specifications (use MCP tools from planning phase)
 
 **Output**: Complete production-ready Terraform configuration
@@ -464,7 +465,8 @@ else
 fi
 ```
 
-**Pre-commit Configuration File** 
+### Pre-commit Configuration File
+
 These are pre-existing in the git repository template only hooks need to be configured
 
 ## Testing and Validation Framework
@@ -491,34 +493,31 @@ These are pre-existing in the git repository template only hooks need to be conf
 **Standard**: Testing workflow MUST be fully automated using available Terraform MCP server tools.
 
 **Testing Process**:
-1. **Ephemeral Workspace Creation**:
 
+1. **Ephemeral Workspace Creation**:
    - Create ephemeral workspace using Terraform MCP server
    - Workspace name MUST follow pattern: `sandbox-<GITHUB_REPO_NAME>` or similar unique identifier
    - Workspace MUST be created in the specified HCP Terraform Organization and Project
    - Workspace MUST have "auto-apply API, UI and VCS runs" setting enabled (set `auto_apply` to `true`)
    - Workspace MUST have "Auto-Destroy" setting enabled with 2-hour duration (`auto_destroy_at` set to 2 hours from creation)
-
 2. **Variable Configuration**:
    - Analyze `variables.tf` file in the `feature/*` branch to identify all required variables
    - Create workspace variables at the ephemeral workspace level using Terraform MCP server tools
    - Prompt user for variable values when not determinable (DO NOT guess values)
-   - EXCLUDE cloud provider credentials (these are pre-configured at workspace level)
+   - EXCLUDE cloud provider credentials (these are pre-configured at a workspace level)
    - Include all application-specific and environment-specific variables
    - Document variable configuration for subsequent dev workspace setup
-
 3. **Terraform Execution**:
-   - Run `terraform init` then ``terraform validate` then `terraform plan` and finally `terraform apply`
+   - Run `terraform init`, `terraform validate`, `terraform plan`, and `terraform apply`.
    - Execute `terraform plan` against the ephemeral workspace `sandbox-GITHUB_REPO_NAME>` using Terraform CLI run with cloud backend including project
    - Analyze plan output for potential issues or unexpected changes
-   - Terraform apply will automatically start after successful plan due to auto-apply setting
+   - Terraform apply will automatically start after a successful plan due to the auto-apply setting
    - Monitor apply operation for successful completion
-
 4. **Result Analysis**:
    - Verify successful completion of terraform run
    - If errors occur, analyze output and provide specific remediation suggestions
    - Document any issues found and resolution steps taken
-   - Upon successful testing, prompt user to validate the created resources
+   - Upon successful testing, prompt the user to validate the created resources
    - After user validation, create identical workspace variables for the dev workspace
    - Delete the ephemeral workspace to minimize costs (auto-destroy will handle cleanup if manual deletion is not performed)
    - Provide clear success/failure status to the user
@@ -529,15 +528,15 @@ These are pre-existing in the git repository template only hooks need to be conf
 
 **Variable Source Priority**:
 
-1. **variables.tf**: Primary source for identifying required variables, validation rules and type constraints
+1. **`variables.tf`**: Primary source for identifying required variables, validation rules and type constraints
 2. **User Input**: Values for application-specific variables (when not determinable)
 3. **Workspace Variable Sets**: Pre-configured organizational standards (DO NOT duplicate)
 
 **Variable Creation Rules**:
 
-- You MUST create workspace variables for all required variables defined in variables.tf from the `feature/*` branch
-- You MUST respect variable types and validation rules defined in variables.tf
-- You MUST prompt user for values when they cannot be reasonably determined
+- You MUST create workspace variables for all required variables defined in `variables.tf` from the `feature/*` branch
+- You MUST respect variable types and validation rules defined in `variables.tf`
+- You MUST prompt the user for values when they cannot be reasonably determined
 - You MUST NOT create variables for cloud provider credentials (AWS keys, GCP service accounts, etc.)
 - You SHOULD use sensible defaults for non-sensitive testing values where appropriate
 - You MUST mark sensitive variables appropriately in the workspace
@@ -578,19 +577,17 @@ variable "database_password" {
 **Standard**: Test failures MUST be analyzed systematically with actionable remediation guidance.
 
 **Failure Analysis Process**:
-1. **Plan Failures**:
 
+1. **Plan Failures**:
    - Analyze terraform plan errors for configuration issues
    - Check for missing variables or invalid variable values
    - Verify module sources and version constraints
    - Validate provider configuration and authentication
-
 2. **Apply Failures**:
    - Analyze resource creation errors for infrastructure constraints
    - Check for quota limits, permission issues, or resource conflicts
    - Verify network connectivity and security group configurations
    - Examine resource dependencies and ordering issues
-
 3. **Validation Failures**:
    - Check terraform validation errors for syntax or configuration issues
    - Verify required provider versions and constraints
@@ -604,6 +601,7 @@ variable "database_password" {
 - You SHOULD provide alternative approaches when the original approach has fundamental issues
 
 ### Testing Documentation Requirements
+
 **Standard**: All testing activities MUST be documented for audit and troubleshooting purposes.
 
 **Documentation Requirements**:
@@ -640,9 +638,11 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 ```
 
 ### Cleanup and Resource Management
+
 **Standard**: Ephemeral testing resources MUST be properly cleaned up to avoid unnecessary costs.
 
 **Cleanup Requirements**:
+
 - Ephemeral workspaces have auto-destroy enabled as a safety mechanism (2 hours after creation)
 - You MUST trigger workspace deletion after successful terraform apply AND user validation of resources
 - Manual cleanup after validation minimizes costs and prevents unnecessary resource retention
@@ -651,6 +651,7 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 - If testing fails, workspace will still be destroyed after 2 hours but users are notified to review logs before destruction
 
 **Cost Optimization**:
+
 - Use minimal resource sizes for testing when possible
 - Prefer regions with lower costs for ephemeral testing
 - Document cost implications of extended testing periods
