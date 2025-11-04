@@ -7,6 +7,7 @@ Welcome to the AI-assisted Terraform development template! This guide will help 
 This template provides a structured approach to Terraform development where specifications drive implementation through AI assistance. You'll create detailed specifications first, then let AI generate production-ready Terraform code based on those specs.
 
 **Compatible AI Assistants**:
+
 - **Claude Code** - Anthropic's AI coding assistant
 - **VS Code Agent** - AI agent integrated with Visual Studio Code
 
@@ -35,6 +36,7 @@ export TFE_TOKEN="your-hcp-terraform-token"
 ```
 
 To get your token:
+
 1. Visit [HCP Terraform](https://app.terraform.io/)
 2. Go to User Settings → Tokens
 3. Create a new API token
@@ -66,6 +68,7 @@ The devcontainer configuration is validated for both VS Code Agent and Claude Co
 4. The environment includes all required tools pre-installed
 
 **Available devcontainer configurations**:
+
 - `.devcontainer/vscode-agent/` - Optimized for VS Code Agent
 - `.devcontainer/claude-code/` - Optimized for Claude Code
 
@@ -123,10 +126,12 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: Starting any new infrastructure feature or component.
 
 **Example output**:
+
 - `spec.md` - Detailed feature specification
 - Checklist template for requirements validation
 
 **What to provide**:
+
 - Infrastructure requirements and goals
 - Target cloud provider and region
 - Compliance or security requirements
@@ -142,6 +147,7 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: After creating `spec.md` and before planning.
 
 **Example questions you might get**:
+
 - "Should the VPC use single or multi-region deployment?"
 - "What backup strategy is required for stateful resources?"
 - "Which Terraform state backend: S3, HCP Terraform, or local?"
@@ -157,6 +163,7 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: After clarification, before technical planning.
 
 **Important**: Checklists test requirements, NOT implementation:
+
 - ✅ "Are VPC CIDR ranges explicitly specified?"
 - ✅ "Are high-availability requirements quantified (e.g., 99.99%)?"
 - ❌ NOT "Verify VPC is created successfully" (that's implementation testing)
@@ -172,12 +179,14 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: After requirements are validated and clear.
 
 **Example output**:
+
 - `plan.md` - Complete architecture and module selections
 - `data-model.md` - Resource relationships and data structures
 - `contracts/` - Module interface contracts
 - `research.md` - Decision rationale and alternatives considered
 
 **What the AI does**:
+
 - Searches private Terraform registry for relevant modules
 - Retrieves complete module specifications
 - Maps requirements to module capabilities
@@ -193,6 +202,7 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: After `plan.md` is approved.
 
 **Example output**: `tasks.md` with:
+
 - Phase-grouped tasks
 - Task dependencies
 - Acceptance criteria linked to requirements
@@ -207,6 +217,7 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: Before implementation to catch issues early.
 
 **What it checks**:
+
 - Every requirement has corresponding tasks
 - No conflicts between artifacts
 - Module selections match spec capabilities
@@ -226,6 +237,7 @@ The development process follows distinct phases. **Never skip directly to code g
 **When to use**: Only after all prior phases are complete.
 
 **Prerequisites checklist**:
+
 - ✅ `/speckit.specify` completed
 - ✅ `/speckit.clarify` completed (if needed)
 - ✅ `/speckit.plan` completed and approved
@@ -233,6 +245,7 @@ The development process follows distinct phases. **Never skip directly to code g
 - ✅ `/speckit.analyze` passed (or issues acknowledged)
 
 **What gets generated**:
+
 - `main.tf` - Module declarations and resources
 - `variables.tf` - Input variables with validation
 - `outputs.tf` - Output values
@@ -244,6 +257,7 @@ The development process follows distinct phases. **Never skip directly to code g
 - `sandbox.auto.tfvars` - Testing variable values
 
 **What happens next**:
+
 1. Pre-commit hooks are installed/updated
 2. Code is automatically tested in ephemeral HCP Terraform workspace
 3. Results are validated
@@ -259,6 +273,7 @@ The development process follows distinct phases. **Never skip directly to code g
 All generated code is automatically tested before you use it:
 
 **How it works**:
+
 1. AI commits code to your `feature/*` branch
 2. Pushes to remote repository
 3. Creates ephemeral workspace: `sandbox_<repo-name>`
@@ -269,6 +284,7 @@ All generated code is automatically tested before you use it:
 8. Auto-destroys workspace after 2 hours
 
 **Benefits**:
+
 - Safe testing in isolated environment
 - No impact on existing infrastructure
 - Automatic cleanup to minimize costs
@@ -355,6 +371,7 @@ Use the github-speckit-tester skill to validate my workflow
 ### Terraform MCP Server
 
 Provides direct access to:
+
 - Private Terraform registry modules
 - Module specifications and documentation
 - HCP Terraform workspace management
@@ -365,6 +382,7 @@ The AI uses this automatically during `/speckit.plan` to search and verify modul
 ### AWS Knowledge MCP Server
 
 Provides access to:
+
 - AWS service documentation
 - Architectural best practices
 - Regional service availability
@@ -416,6 +434,7 @@ The AI can use this during planning for AWS infrastructure.
 ### 1. Always Follow the Workflow Phases
 
 Don't skip to code generation. Each phase builds on the previous:
+
 - Spec → Clarify → Checklist → Plan → Tasks → Analyze → Implement
 
 ### 2. Be Specific in Requirements
@@ -556,6 +575,7 @@ terraform workspace list
 **Problem**: Automated testing fails to create workspace
 
 **Solution**:
+
 1. Verify `TFE_TOKEN` is set and valid
 2. Check you have permissions in HCP Terraform organization
 3. Verify the repository is connected to HCP Terraform
@@ -566,6 +586,7 @@ terraform workspace list
 **Problem**: "Module not found in private registry"
 
 **Solution**:
+
 1. Verify `TFE_TOKEN` has access to private registry
 2. Try broader search terms in `/speckit.plan`
 3. Consider using public registry modules (with approval)
@@ -604,6 +625,7 @@ Choose the assistant that best fits your workflow - both are fully supported!
 ## Support
 
 For issues or questions:
+
 - Review [AGENTS.md](AGENTS.md) for detailed guidance
 - Check command documentation in [.claude/commands/](.claude/commands/)
 - Consult skill documentation in [.claude/skills/](.claude/skills/)

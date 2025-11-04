@@ -1,1 +1,5 @@
-# terraform block required_version, required_providers
+# provider configuration blocks
+# example:
+# provider "aws" {
+#   region = var.aws_region
+# }   
