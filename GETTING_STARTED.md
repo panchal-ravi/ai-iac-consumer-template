@@ -76,21 +76,6 @@ The devcontainer configuration is validated for both VS Code Agent and Claude Co
 - `.devcontainer/vscode-agent/` - Optimized for VS Code Agent
 - `.devcontainer/claude-code/` - Optimized for Claude Code
 
-#### Option B: Local Setup
-
-Install dependencies locally:
-
-```bash
-# Install pre-commit
-pip install pre-commit
-pre-commit install
-
-# Verify Terraform installation
-terraform version
-
-# Verify Docker is running
-docker ps
-```
 
 ### 3. Configure MCP Servers
 
