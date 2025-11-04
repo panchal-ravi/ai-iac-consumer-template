@@ -363,7 +363,7 @@ terraform {
 }
 ```
 
-## For testing the sandbox terraform configuration use the following configuration files
+## For testing the sandbox terraform configuration create the following configuration files
 
 1. sandbox.auto.tfvars - Use this to populate run time varable information for testing your configuraiton
 2. sandbox.backend.tf - Use this for specifying the HCP Cloud backend, see example below.
@@ -436,7 +436,7 @@ If MCP tools fail or return no results:
 
 - You MUST install or update pre-commit framework if not already present
 - You MUST configure `.git/hooks/pre-commit` to use pre-commit framework
-- You MUST create or update `.pre-commit-config.yaml` with appropriate hooks
+- The precomit yaml should already exist `.pre-commit-config.yaml` with appropriate hooks
 - Pre-commit hooks SHOULD include terraform formatting, validation, and security scanning
 
 **Pre-commit Hook Configuration**:
