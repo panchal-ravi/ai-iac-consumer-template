@@ -506,12 +506,28 @@ These are pre-existing in the git repository template only hooks need to be conf
 
 - You MUST create ephemeral HCP Terraform workspaces ONLY for testing AI-generated Terraform configuration code
 - The current `feature/*` branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
-- Ephemeral workspaces MUST be created within the current HCP Terraform Organization and Project
+- Ephemeral workspaces MUST be created within the user specified HCP Terraform Organization and Project
 - Ephemeral workspace MUST be connected to the current `feature/*` branch of the application's GitHub remote repository to ensure code under test matches the current feature development state
 - You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
 - Testing MUST include both `terraform plan` and `terraform apply` operations
 - All testing activities MUST be performed automatically against the ephemeral workspace
 - Ephemeral workspaces will be automatically destroyed after 2 hours via auto-destroy setting
+
+To specify project and workspace see example below
+
+## Example: terraform override.tf
+
+```hcl
+terraform {
+  cloud {
+    organization = "hashi-demos-apj"
+    workspaces {
+      name    = "sandbox_appa1-agent-test"
+      project = "sandbox"
+    }
+  }
+}
+```
 
 ### Automated Testing Workflow
 
@@ -649,6 +665,7 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 
 ### Testing Process
 1. Ephemeral workspace created: `sandbox_<GITHUB_REPO_NAME>`
+2. Project specified in override.tf terraform block
 2. Variables configured from terraform.tfvars.example
 3. Terraform plan executed successfully
 4. Terraform apply completed without errors
@@ -742,6 +759,7 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 - Generate complete, production-ready Terraform code
 - Reference back to spec and plan
 - Install/update pre-commit framework and hooks
+- confirm HCP terraform workspace and project have been set to the correct format in override.tf for testing.
 - Configure HCP Terraform integration
 - Run automated testing in ephemeral workspace
 - Update README.md with terraform-docs
