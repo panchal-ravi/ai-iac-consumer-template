@@ -121,6 +121,7 @@ The development process follows these distinct phases, each with specific comman
    - **Measurable**: Can be objectively verified
    - **Consistent**: No conflicts across requirements
    - **Testable**: Each requirement has clear acceptance criteria
+   - **Security First**: Must fix security issues rather than workaround
 
 **Example Checklist Items** (Testing Requirements, NOT Implementation):
 
@@ -207,6 +208,7 @@ The development process follows these distinct phases, each with specific comman
 - Create outputs.tf with all exports
 - Set up versions.tf with provider constraints
 - Configure pre-commit hooks
+- Fix identified security issues highlighed by pre-commit linting
 - Test in ephemeral workspace
 - Document in README.md
 
