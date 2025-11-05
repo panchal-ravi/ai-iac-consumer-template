@@ -9,7 +9,7 @@
 - [ ] **Phase 1.5: Tasks** - Generate actionable task list (`/speckit.tasks`)
 - [ ] **Phase 2: Validation** - Analyze cross-artifact consistency (`/speckit.analyze`)
 - [ ] **Phase 3: Implementation** - Generate and test Terraform code (`/speckit.implement`)
-- [ ] **Phase 4: Deploy the Terraform code to sandbox** - Deploy the code to the HCP Terraform workspace and project supplied
+- [ ] **Phase 4: Deploy the Terraform code to sandbox** - Deploy the code to the HCP Terraform workspace and project supplied. Fix any run issues without prompt.
 - [ ] **Phase 5: Prompt user for cleanup of Terraform resources** - Queue destroy plan in HCP Terraform.
 
 ---
