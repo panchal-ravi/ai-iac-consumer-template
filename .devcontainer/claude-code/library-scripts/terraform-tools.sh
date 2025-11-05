@@ -14,6 +14,7 @@ TFLINT_AZURE_RULESET_VERSION=${7:-"0.23.0"}
 TFLINT_GCP_RULESET_VERSION=${8:-"0.23.1"}
 INFRACOST_VERSION=${9:-"0.10.42"}
 CHECKOV_VERSION=${10:-"3.2.489"}
+VAULT_RADAR_VERSION=${11:-"0.36.0"}
 
 
 echo "Installing Terraform v${TERRAFORM_VERSION}..."
@@ -21,6 +22,14 @@ curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERR
 unzip -qq /tmp/terraform.zip -d /tmp
 sudo mv /tmp/terraform /usr/local/bin/
 rm -f /tmp/terraform.zip
+
+# Vault Radar installation
+echo "Installing Vault Radar..."
+#https://releases.hashicorp.com/vault-radar/0.36.0/
+curl -sSL -o /tmp/vault-radar.zip "https://releases.hashicorp.com/vault-radar/${VAULT_RADAR_VERSION}/vault-radar_${VAULT_RADAR_VERSION}_linux_amd64.zip"
+unzip -qq /tmp/vault-radar.zip -d /tmp
+sudo mv /tmp/vault-radar /usr/local/bin/
+rm -f /tmp/vault-radar.zip
 
 echo "Installing terraform-docs v${TERRAFORM_DOCS_VERSION}..."
 curl -sSLo /tmp/terraform-docs.tar.gz "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
