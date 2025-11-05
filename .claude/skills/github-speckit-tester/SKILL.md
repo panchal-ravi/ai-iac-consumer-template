@@ -5,7 +5,7 @@ description: Test harness for executing Speckit workflows non-interactively usin
 
 # GitHub Speckit Tester
 
-A comprehensive test harness for validating the Speckit workflow system by executing all phases non-interactively using subagents.
+A comprehensive test harness for validating the Speckit workflow system by executing all phases non-interactively using subagents. After each phase clear the context using /clear
 
 ## Overview
 
@@ -54,6 +54,7 @@ After each phase, validate generated artifacts:
 ### Full Pipeline Test
 
 Execute all phases sequentially from Phase 0 to Phase 3:
+After each phase clear the context using /clear
 
 ```
 Phase 0: Specification
