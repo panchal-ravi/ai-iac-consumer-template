@@ -764,3 +764,9 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 - Run automated testing in ephemeral workspace
 - Update README.md with terraform-docs
 - Document any post-deployment steps
+
+### Troubleshooting
+
+# credentials issues
+If Terraform is failing with credentials problems, check you are in the correct HCP Terraform project
+The default project should be sandbox.
