@@ -768,5 +768,8 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 ### Troubleshooting
 
 # credentials issues
-If Terraform is failing with credentials problems, check you are in the correct HCP Terraform project
+
+* If Terraform is failing with credentials problems, check you are in the correct HCP Terraform project
 The default project should be sandbox.
+
+* If you need to fix code and perform a new run as your using CLI workspaces run, you need to use Terraform cli again to ensure the changes are updated on the HCP Terraform workspace
