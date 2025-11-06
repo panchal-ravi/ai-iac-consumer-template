@@ -10,6 +10,7 @@ Provision using Terraform:
 - ALB with HTTPS
 - AWS Region: `ap-southeast-2`
 - Use existing default VPC
+- Environment: Development (minimal cost)
 
 ## HCP Terraform Configuration
 

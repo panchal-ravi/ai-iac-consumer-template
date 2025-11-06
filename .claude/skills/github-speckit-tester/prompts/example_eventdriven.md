@@ -1,24 +1,21 @@
-# Example: EC2 Instance with ALB and Nginx
-
-**IMPORTANT**: Do not prompt me - make best practice decisions independently
+# Example: Event-Driven Architecture
 
 Using the **github-speckit-tester** skill non-interactively.
 
 ## Infrastructure Requirements
 
 Provision using Terraform:
-- EC2 instances across 2 AZs
-- HTTPS and Nginx
-- ALB (Application Load Balancer)
+- ElastiCache Redis cluster in private subnets
+- ECS across 2 AZs for application tier
+- ALB with HTTPS
 - AWS Region: `ap-southeast-2`
 - Use existing default VPC
-- enviromnment development minimal cost
 
 ## HCP Terraform Configuration
 
 - **Organization**: `hashi-demos-apj`
 - **Project**: `sandbox`
-- **Workspace**: `sandbox_ec2<GITHUB_REPO_NAME>`
+- **Workspace**: `sandbox_elastic<GITHUB_REPO_NAME>`
 
 ## Workflow Instructions
 
