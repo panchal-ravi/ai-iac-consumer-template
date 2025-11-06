@@ -42,6 +42,7 @@ Important to include the following (table formats are preferred):
 - **HCP Terraform Organization**: The organization name used
 - **HCP Terraform Project**: The project name used
 - **HCP Terraform Workspace**: The workspace name(s) used
+- **Private Modules Utilsed** Include all modules and full source address for Terraform module
 - **Git Branch**: The feature branch that was created
 - **Claude Token Usage**: Total tokens consumed during the session
 - **Failed Tool Calls**: Any failed tool calls and remediation attempts made
