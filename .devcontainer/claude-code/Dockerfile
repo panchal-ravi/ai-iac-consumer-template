@@ -13,6 +13,7 @@ ARG TFLINT_AZURE_RULESET_VERSION="0.23.0"
 ARG TFLINT_GCP_RULESET_VERSION="0.23.1"
 ARG INFRACOST_VERSION="0.10.42"
 ARG CHECKOV_VERSION="3.2.489"
+ARG VAULT_RADAR_VERSION="0.36.0"
 ARG INSTALL_VAULT_RADAR="true"
 # Install basic development tools and iptables/ipset
 RUN apt update && apt install -y less \
@@ -129,7 +130,8 @@ RUN /tmp/library-scripts/terraform-tools.sh \
     "${TFLINT_GCP_RULESET_VERSION}" \
     "${INFRACOST_VERSION}" \
     "${CHECKOV_VERSION}" \
-    "${TERRAFORM_ALPHA}"
+    "${VAULT_RADAR_VERSION}" \
+    "${INSTALL_VAULT_RADAR}"
 
 
 RUN mkdir -p /home/node/.config && chown -R node:node /home/node/.config
