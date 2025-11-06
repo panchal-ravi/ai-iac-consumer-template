@@ -35,13 +35,11 @@ repos:
         args:
           - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
 
-      # Security scanning with tfsec
-      - id: terraform_tfsec
-        name: Terraform tfsec
-        description: Static analysis for security issues
+      # Security scanning with trivy
+      - id: terraform_trivy
         args:
-          - --args=--config-file=__GIT_WORKING_DIR__/.tfsec.yml
-          - --args=--exclude-downloaded-modules
+          - --args=--format=json
+          - --args=--skip-dirs="**/.terraform"
 
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
