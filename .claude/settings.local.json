@@ -38,7 +38,11 @@
       "Bash(cat:*)",
       "Bash(env)",
       "Bash(git log:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Skill(github-speckit-tester)",
+      "Skill(terraform-style-guide)",
+      "Skill(terraform-test)",
+      "Skill(terraform-stacks)"
     ]
   },
   "enableAllProjectMcpServers": true,
