@@ -552,4 +552,4 @@ This skill provides comprehensive automated testing for the Speckit workflow sys
 3. **Iterate**: Use failures to improve Speckit commands
 4. **Monitor**: Track quality metrics over time
 
-The goal is to ensure Speckit workflows produce consistent, high-quality artifacts from specification through implementation, with minimal human intervention required during testing.
+The goal is to ensure Speckit workflows produce consistent, high-quality artifacts from specification through implementation, with minimal human intervention required during testing and deployment.
