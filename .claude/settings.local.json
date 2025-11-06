@@ -36,6 +36,7 @@
       "Bash(.specify/scripts/bash/update-agent-context.sh:*)",
       "SlashCommand(/speckit.specify)",
       "SlashCommand(/speckit.plan)",
+      "SlashCommand(/speckit.clarify)",
       "SlashCommand(/speckit.tasks)",
       "SlashCommand(/speckit.analyze)",
       "SlashCommand(/speckit.checklist)",
