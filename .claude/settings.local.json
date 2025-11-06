@@ -37,7 +37,8 @@
       "SlashCommand(/speckit.implement)",
       "Bash(cat:*)",
       "Bash(env)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(echo:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
