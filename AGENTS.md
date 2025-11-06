@@ -508,7 +508,7 @@ These are pre-existing in the git repository template only hooks need to be conf
 - The current `feature/*` branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
 - Ephemeral workspaces MUST be created within the user specified HCP Terraform Organization and Project
 - Ephemeral workspace MUST be connected to the current `feature/*` branch of the application's GitHub remote repository to ensure code under test matches the current feature development state
-- You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
+- You MUST create all necessary workspace variables using sandbox.auto.tfvars based on required variables defined in `variables.tf` in the `feature/*` branch. This file is intentionally in gitignore but can be used for Terraform CLI execution using cloud backend.
 - Testing MUST include both `terraform plan` and `terraform apply` operations
 - All testing activities MUST be performed automatically against the ephemeral workspace
 - Ephemeral workspaces will be automatically destroyed after 2 hours via auto-destroy setting
@@ -543,9 +543,9 @@ terraform {
    - Workspace MUST have "Auto-Destroy" setting enabled with 2-hour duration (`auto_destroy_at` set to 2 hours from creation)
 2. **Variable Configuration**:
    - Analyze `variables.tf` file in the `feature/*` branch to identify all required variables
-   - Create workspace variables at the ephemeral workspace level using Terraform MCP server tools
+   - Create workspace variables using sandbox.auto.tfvars, this file is intentionally ignored in gitignore but can be used for Terraform CLI run variables.
    - Prompt user for variable values when not determinable (DO NOT guess values)
-   - EXCLUDE cloud provider credentials (these are pre-configured at the workspace level)
+   - EXCLUDE cloud provider credentials (these are pre-configured at the workspace level and never required)
    - Include all application-specific and environment-specific variables
    - Document variable configuration for subsequent sandbox workspace setup
 3. **Terraform Execution**:
@@ -575,12 +575,11 @@ terraform {
 
 **Variable Creation Rules**:
 
-- You MUST create workspace variables for all required variables defined in `variables.tf` from the `feature/*` branch
+- You MUST populate sandbox.auto.tfvars for all required variables defined in `variables.tf` from the `feature/*` branch
 - You MUST respect variable types and validation rules defined in `variables.tf`
 - You MUST prompt the user for values when they cannot be reasonably determined
 - You MUST NOT create variables for cloud provider credentials (AWS keys, GCP service accounts, etc.)
 - You SHOULD use sensible defaults for non-sensitive testing values where appropriate
-- You MUST mark sensitive variables appropriately in the workspace
 - Upon successful testing, you MUST create identical variables in the sandbox workspace
 
 **Example Variable Handling**:
