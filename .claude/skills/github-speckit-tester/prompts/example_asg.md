@@ -1,0 +1,27 @@
+# Example: Auto-Scaling Group with ALB
+
+Using the **github-speckit-tester** skill non-interactively.
+
+## Infrastructure Requirements
+
+Provision using Terraform:
+- Auto-scaling group with launch template
+- Target tracking policies
+- ALB with health checks across 2 AZs
+- CloudWatch dashboards
+- AWS Region: `ap-southeast-2`
+- Environment: Development (minimal cost)
+
+## HCP Terraform Configuration
+
+- **Organization**: `hashi-demos-apj`
+- **Project**: `sandbox`
+- **Workspace**: `sandbox*asg*<GITHUB_REPO_NAME>`
+
+## Workflow Instructions
+
+- Always create a new branch
+- Follow best practice
+- Use subagents to make best practice decisions if you need clarity
+- Don't prompt the user - make decisions yourself
+- If you hit issues, resolve them without prompting
