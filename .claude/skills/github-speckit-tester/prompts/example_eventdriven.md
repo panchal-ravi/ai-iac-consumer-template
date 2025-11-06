@@ -1,5 +1,7 @@
 # Example: Event-Driven Architecture
 
+**IMPORTANT** - Do not prompt me, make best practice decisions independently
+
 Using the **github-speckit-tester** skill non-interactively.
 
 ## Infrastructure Requirements

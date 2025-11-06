@@ -1,5 +1,7 @@
 # Example: ElastiCache Redis with Application Tier
 
+**IMPORTANT** - Do not prompt me, make best practice decisions independently
+
 Using the **github-speckit-tester** skill non-interactively.
 
 ## Infrastructure Requirements
@@ -25,5 +27,3 @@ Provision using Terraform:
 - Use subagents to make best practice decisions if you need clarity
 - Don't prompt the user - make decisions yourself
 - If you hit issues, resolve them without prompting
-
-**IMPORTANT** - Do not prompt me, make best practice decisions independently
