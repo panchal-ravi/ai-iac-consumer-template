@@ -18,7 +18,7 @@ Provision using Terraform:
 
 - **Organization**: `hashi-demos-apj`
 - **Project**: `sandbox`
-- **Workspace**: `sandbox*asg*<GITHUB_REPO_NAME>`
+- **Workspace**: `sandbox_asg<GITHUB_REPO_NAME>`
 
 ## Workflow Instructions
 
