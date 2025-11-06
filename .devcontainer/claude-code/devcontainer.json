@@ -15,7 +15,7 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2.12.4": {}
     },
 
-  "postCreateCommand": "bash -c 'mkdir -p ~/.terraform.d && cat > ~/.terraform.d/credentials.tfrc.json << EOF\n{\n  \"credentials\": {\n    \"app.terraform.io\": {\n      \"token\": \"${TFE_TOKEN}\"\n    }\n  }\n}\nEOF\n\nif [ -n \"${VAULT_RADAR_LICENSE}\" ]; then\n  echo \"Configuring Vault Radar license...\"\n  mkdir -p ~/.config/vault-radar\n  echo \"${VAULT_RADAR_LICENSE}\" > ~/.config/vault-radar/license.hclic\n  echo \"Vault Radar license configured at ~/.config/vault-radar/license.hclic\"\nelse\n  echo \"Skipping Vault Radar license configuration (VAULT_RADAR_LICENSE not set)\"\nfi'",
+  "postCreateCommand": "bash -c 'mkdir -p ~/.terraform.d && cat > ~/.terraform.d/credentials.tfrc.json << EOF\n{\n  \"credentials\": {\n    \"app.terraform.io\": {\n      \"token\": \"${TFE_TOKEN}\"\n    }\n  }\n}\nEOF'",
 
   "customizations": {
     "vscode": {
