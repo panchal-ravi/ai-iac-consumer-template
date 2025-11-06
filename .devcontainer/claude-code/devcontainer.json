@@ -57,7 +57,7 @@
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
     "CLAUDE_GITHUB_MCP_ENABLED": "true",
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
-    "TFE_TOKEN": "${localEnv:TFE_TOKEN}",
+    "TFE_TOKEN": "${localEnv:TEAM_TFE_TOKEN}",
     "AWS_ACCESS_KEY_ID": "${localEnv:AWS_ACCESS_KEY_ID}",
     "AWS_SECRET_ACCESS_KEY": "${localEnv:AWS_SECRET_ACCESS_KEY}",
     "AWS_SESSION_TOKEN": "${localEnv:AWS_SESSION_TOKEN}",
