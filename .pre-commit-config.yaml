@@ -60,3 +60,14 @@ repos:
         name: Check for merge conflicts
       - id: detect-private-key
         name: Detect private keys
+
+  # Vault Radar security scanning
+  - repo: local
+    hooks:
+      - id: vault-radar-scan
+        name: Vault Radar scan
+        description: Scans for secrets and sensitive data with HashiCorp Vault Radar
+        entry: bash -c 'if [ -n "$VAULT_RADAR_LICENSE" ]; then vault-radar scan git pre-commit "$@" || { exit "$?"; }; else echo "Vault Radar scan skipped (VAULT_RADAR_LICENSE not set)"; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
