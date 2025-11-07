@@ -1,13 +1,13 @@
 name: "🚀 Terraform Deployment Requirements"
 description: "Template for capturing infrastructure deployment requirements for consumers using HCP Terraform"
-title: "[DEPLOYMENT] New Infrastructure Deployment"
-labels: ["deployment", "infrastructure", "needs-review"]
+title: "New Terraform Infrastructure Deployment"
+labels: ["terraform", "infrastructure", "needs-review"]
 assignees: []
 body:
   - type: markdown
     attributes:
       value: |
-        # Terraform Deployment Requirements
+        # Terraform Configuration Requirements
 
         Use this template to capture requirements for deploying infrastructure using Terraform.
         This can be used as input for /specify with Spec-Kit for implementation planning.
@@ -65,32 +65,6 @@ body:
       placeholder: "e.g., sandbox"
     validations:
       required: true
-
-  - type: textarea
-    id: workspace_strategy
-    attributes:
-      label: "🔧 Workspace Strategy"
-      description: "Workspace naming and environment strategy"
-      placeholder: |
-        Example:
-        - Workspace naming pattern: <project>-<environment>-<region>
-        - Environments: dev, staging, production
-        - Regions: us-east-1, eu-west-1
-        - Workspace count: 6 (3 environments × 2 regions)
-    validations:
-      required: true
-
-  - type: checkboxes
-    id: environments
-    attributes:
-      label: "🌍 Target Environments"
-      description: "Which environments will this infrastructure be deployed to?"
-      options:
-        - label: "Development"
-        - label: "Staging/QA"
-        - label: "Production"
-        - label: "DR/Backup"
-        - label: "Sandbox"
 
   - type: textarea
     id: cloud_accounts_regions
@@ -192,30 +166,6 @@ body:
         - Company security policies
 
   - type: textarea
-    id: sentinel_policies
-    attributes:
-      label: "🛡️ Sentinel Policy Requirements"
-      description: "HCP Terraform Sentinel policies that must pass"
-      placeholder: |
-        Example:
-        - enforce-mandatory-tags (hard-mandatory)
-        - restrict-instance-types (soft-mandatory)
-        - require-vpc-flow-logs (hard-mandatory)
-        - cost-estimation-limit (advisory)
-
-  - type: textarea
-    id: variable_sets
-    attributes:
-      label: "📋 Variable Sets"
-      description: "HCP Terraform variable sets to apply to workspaces"
-      placeholder: |
-        Example:
-        - aws-credentials-dev (sensitive)
-        - common-tags (shared across all workspaces)
-        - region-configs-us-east-1
-        - compliance-settings
-
-  - type: textarea
     id: configuration_parameters
     attributes:
       label: "⚙️ Key Configuration Parameters"
@@ -237,6 +187,7 @@ body:
       placeholder: |
         Example:
         - Environment: dev/staging/prod
+        - Application: my-aap
         - Project: customer-portal
         - Owner: platform-team@company.com
         - CostCenter: 12345
@@ -255,19 +206,6 @@ body:
         - Enable S3 Intelligent-Tiering
         - Use Spot instances for non-critical workloads
         - Cost anomaly alerts at 20% variance
-
-  - type: textarea
-    id: deployment_workflow
-    attributes:
-      label: "🔄 Deployment Workflow"
-      description: "How deployments should be executed and approved"
-      placeholder: |
-        Example:
-        - CLI-driven workflow
-        - Auto-apply for dev environment
-        - Manual approval required for production
-        - Deployment windows: Prod changes only during maintenance windows
-        - Run triggers: downstream workspace dependencies
 
   - type: textarea
     id: monitoring_alerting
@@ -307,18 +245,6 @@ body:
         - PrivateLink endpoints for AWS services
         - Direct Connect for high-throughput workloads
         - DNS resolution between VPCs
-
-  - type: textarea
-    id: iam_permissions
-    attributes:
-      label: "🔐 IAM & Permissions"
-      description: "IAM roles, policies, and access requirements"
-      placeholder: |
-        Example:
-        - HCP Terraform execution role: TerraformExecutionRole
-        - ECS task roles with least privilege
-        - Cross-account role assumptions
-        - Service control policies (SCPs)
 
   - type: textarea
     id: additional_context
