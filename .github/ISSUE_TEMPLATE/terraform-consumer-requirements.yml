@@ -93,14 +93,22 @@ body:
         - label: "Sandbox"
 
   - type: textarea
-    id: aws_accounts_regions
+    id: cloud_accounts_regions
     attributes:
-      label: "🗺️ AWS Accounts & Regions"
-      description: "Target AWS accounts and regions (if applicable)"
+      label: "🗺️ Cloud Accounts & Regions"
+      description: "Target cloud accounts/subscriptions and regions/locations"
       placeholder: |
-        Example:
+        Example (AWS):
         - Dev Account: 123456789012 (us-east-1, eu-west-1)
         - Prod Account: 987654321098 (us-east-1, us-west-2, eu-west-1)
+
+        Example (Azure):
+        - Dev Subscription: sub-dev-12345 (eastus, westeurope)
+        - Prod Subscription: sub-prod-67890 (eastus, westus2, westeurope)
+
+        Example (GCP):
+        - Dev Project: my-project-dev (us-east1, europe-west1)
+        - Prod Project: my-project-prod (us-east1, us-west1, europe-west1)
 
   - type: textarea
     id: infrastructure_components
@@ -119,17 +127,24 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: dropdown
     id: modules_to_consume
     attributes:
       label: "📚 Terraform Modules to Use"
-      description: "Which Terraform modules will be consumed? (Public Registry, Private Registry, or custom)"
-      placeholder: |
-        Example:
-        - terraform-aws-modules/vpc/aws (v5.0)
-        - app.terraform.io/my-org/ecs-service/aws (v2.1.0)
-        - terraform-aws-modules/rds/aws (v6.0)
-        - Custom module: ../modules/monitoring
+      description: "Which Terraform modules will be consumed from the private registry?"
+      multiple: true
+      options:
+        - app.terraform.io/<hcp_org_name>/acm/aws
+        - app.terraform.io/<hcp_org_name>/alb/aws
+        - app.terraform.io/<hcp_org_name>/autoscaling/aws
+        - app.terraform.io/<hcp_org_name>/ec2-instance/aws
+        - app.terraform.io/<hcp_org_name>/iam/aws
+        - app.terraform.io/<hcp_org_name>/kms/aws
+        - app.terraform.io/<hcp_org_name>/route53/aws
+        - app.terraform.io/<hcp_org_name>/s3-bucket/aws
+        - app.terraform.io/<hcp_org_name>/security-group/aws
+        - app.terraform.io/<hcp_org_name>/vpc/aws
+        - Other (specify in Additional Context)
 
   - type: textarea
     id: existing_infrastructure
