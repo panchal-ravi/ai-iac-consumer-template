@@ -4,7 +4,7 @@
 
 - [ ] ***pre-validation Step 1: Input validation** - **REQUIRED FIRST** - Validate HCP Terraform organization name and project name
 - [ ] **pre-validation Step 2: Environment validation** - **REQUIRED SECOND**
-Before executing any Terraform operations, you MUST validate that required environment variables are set using the `validate-env.sh` script.
+Before executing any operations, you MUST validate that required environment variables are set using the `validate-env.sh` script.
 
   ```bash
   .specify/scripts/bash/validate-env.sh
