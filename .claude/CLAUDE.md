@@ -32,7 +32,7 @@ use subagents whenever you can and clear context between spec-kit phases using /
 
 # Final deployment report
 
-Once completed all tasks and Terraform is fully deployed, logs any issues in memory in the feature branch as deployment_log_<timestamp>.log
+Once completed all tasks and Terraform is fully deployed, log any issues in memory in the feature branch as deployment_log_<timestamp>.log
 
 Important to include the following (table formats are preferred):
 
@@ -55,6 +55,6 @@ Important to include the following (table formats are preferred):
 
 - **Workarounds vs Fixes**: What issues were worked around instead of properly fixing. These need to be clearly itemized with explanations of why a workaround was chosen over a fix.
 - **Security Reports**: Include all available security reports. Use a separate table for pre-commit reports (terraform_validate, tfsec, checkov, trivy, etc.)
-- **Sentinel Policy Advisories**: Document advisory details from Sentinel policy output in workspace runs
+- **Sentinel Policy Advisories**: Document advisory details from Sentinel policy output in workspace runs, must include include advisory warnings and failures
 
 This helps build a comprehensive knowledge base for the codebase over time.
