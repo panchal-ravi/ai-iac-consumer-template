@@ -29,6 +29,7 @@
 ### 3. Calibrated Scoring
 
 **Scores must be consistent and comparable:**
+
 - Use the full 1-10 scale (avoid clustering at 7-8)
 - Score against industry standards, not project-specific baselines
 - Re-evaluation of unchanged content should yield consistent scores (±0.5 variance)
@@ -234,6 +235,7 @@ Each evaluation dimension uses a 1-10 scale with specific criteria. Scores shoul
 - `actions = ["*"]` in IAM policies
 - `0.0.0.0/0` ingress on sensitive ports
 - `publicly_accessible = true` on databases
+- modules sourced from public registry
 - Unencrypted S3 buckets
 - Missing `sensitive = true` on secrets
 - No CloudTrail or logging
