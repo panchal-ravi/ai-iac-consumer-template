@@ -84,7 +84,7 @@ The development process follows these distinct phases, each with specific comman
 **How to Invoke**:
 ```
 Use Task tool with:
-- subagent_type: "general-purpose"
+- subagent_type: "code-quality-judge"
 - description: "Evaluate specification quality"
 - prompt: "You are the spec-quality-judge agent defined in .claude/agents/spec-quality-judge.md.
            Evaluate the specification at specs/[FEATURE]/spec.md using the agent-as-a-judge pattern.
@@ -125,7 +125,7 @@ Use Task tool with:
 **How to Invoke**:
 ```
 Use Task tool with:
-- subagent_type: "general-purpose"
+- subagent_type: "code-quality-judge"
 - description: "Evaluate Terraform code quality"
 - prompt: "You are the code-quality-judge agent defined in .claude/agents/code-quality-judge.md.
            Evaluate the Terraform code in the current feature branch using the agent-as-a-judge pattern.
