@@ -17,11 +17,13 @@ This skill provides automated testing capabilities for the complete Speckit pipe
 |-------|---------|---------|--------|---------|
 | **Phase 0** | `/speckit.specify` | Create feature specifications from requirements | Feature description | `spec.md`, checklist template |
 | **Phase 0** | `/speckit.clarify` | Resolve specification ambiguities | Ambiguous `spec.md` | Updated `spec.md` with clarifications |
+| **Phase 0** | `/speckit.review-spec` | **[NEW]** Agent-as-a-Judge spec quality evaluation | `spec.md` | Quality score, dimension analysis, improvement recommendations |
 | **Phase 0** | `/speckit.checklist` | Validate requirement quality | `spec.md` | `checklists/*.md` (requirements quality tests) |
 | **Phase 1** | `/speckit.plan` | Design technical implementation | `spec.md`, `constitution.md` | `plan.md`, `data-model.md`, contracts/ |
 | **Phase 1** | `/speckit.tasks` | Generate actionable task list | `plan.md` | `tasks.md` |
-| **Phase 2** | `/speckit.analyze` | Validate cross-artifact consistency | `spec.md`, `plan.md`, `tasks.md` | Analysis report (read-only) |
+| **Phase 2** | `/speckit.analyze` | Validate cross-artifact consistency + Technical quality (dual-pass) | `spec.md`, `plan.md`, `tasks.md` | Analysis report + Technical quality score |
 | **Phase 3** | `/speckit.implement` | Execute implementation | `plan.md`, `tasks.md` | Production code |
+| **Phase 3** | `/speckit.review-code` | **[NEW]** Agent-as-a-Judge code quality evaluation | `*.tf` files | Security analysis, quality score, recommendations |
 
 ## Core Concepts
 
@@ -59,6 +61,7 @@ After each phase clear the context using /clear
 ```
 Phase 0: Specification
 ├── /speckit.specify → spec.md
+├── /speckit.review-spec → Quality evaluation (score + recommendations)
 ├── /speckit.clarify → Updated spec.md (if needed)
 └── /speckit.checklist → checklists/*.md
 
@@ -66,11 +69,12 @@ Phase 1: Planning
 ├── /speckit.plan → plan.md, data-model.md
 └── /speckit.tasks → tasks.md
 
-Phase 2: Analysis
-└── /speckit.analyze → Validation report
+Phase 2: Analysis (Dual-Pass)
+└── /speckit.analyze → Consistency report + Technical quality evaluation
 
-Phase 3: Implementation
-└── /speckit.implement → Production code
+Phase 3: Implementation & Validation
+├── /speckit.implement → Production code
+└── /speckit.review-code → Security analysis + Quality score
 ```
 
 ### Phase-Specific Testing
@@ -115,6 +119,10 @@ feature_description: "Your test feature description"
 auto_clarify: true | false  # Default: true
 cleanup_after: true | false  # Default: false
 validation_level: strict | normal | minimal  # Default: normal
+enable_judge_evaluation: true | false  # Default: true (NEW)
+judge_score_threshold: 7.0 | 8.0  # Min score to pass (NEW)
+auto_refine_on_failure: true | false  # Default: false (NEW)
+max_refinement_iterations: 3  # Default: 3 (NEW)
 ```
 
 ### Example Test Scenarios
@@ -204,6 +212,14 @@ Required elements:
 - [ ] No implementation details
 - [ ] No [NEEDS CLARIFICATION] markers remaining
 
+**[NEW] Agent-as-a-Judge Quality Dimensions**:
+- [ ] Clarity & Completeness score ≥ 7.0/10
+- [ ] Testability & Measurability score ≥ 7.0/10
+- [ ] Technology Agnosticism score ≥ 7.0/10
+- [ ] Constitution Alignment score ≥ 7.0/10
+- [ ] User-Centricity & Value score ≥ 7.0/10
+- [ ] Overall Quality Score ≥ 7.0/10
+
 ### plan.md Validation
 
 Required elements:
@@ -234,6 +250,27 @@ Validation checks:
 - [ ] Success criteria testable via implementation
 - [ ] No orphaned tasks (no parent in plan)
 - [ ] No missing implementations (plan without tasks)
+
+**[NEW] Technical Quality Evaluation (Dual-Pass)**:
+- [ ] Architecture Soundness score ≥ 7.0/10
+- [ ] Security & Compliance Design score ≥ 7.0/10
+- [ ] Task Quality & Feasibility score ≥ 7.0/10
+- [ ] Testing Strategy score ≥ 7.0/10
+- [ ] Documentation & Knowledge Transfer score ≥ 7.0/10
+- [ ] Overall Technical Quality Score ≥ 7.0/10
+
+### Production Code Validation (Phase 3)
+
+**[NEW] Agent-as-a-Judge Code Quality**:
+- [ ] Module Usage & Architecture score ≥ 8.0/10
+- [ ] Security & Compliance score ≥ 8.0/10 (30% weight - critical)
+- [ ] Code Quality & Maintainability score ≥ 8.0/10
+- [ ] Variable & Output Management score ≥ 8.0/10
+- [ ] Testing & Validation score ≥ 8.0/10
+- [ ] Constitution & Plan Alignment score ≥ 8.0/10
+- [ ] Overall Code Quality Score ≥ 8.0/10
+- [ ] Zero CRITICAL (P0) security findings
+- [ ] All pre-commit hooks pass (tfsec, trivy, checkov)
 
 ## Subagent Execution Strategy
 
@@ -274,41 +311,80 @@ After test execution, generate comprehensive report:
 **Test Date**: [Timestamp]
 **Test Mode**: [full|phase0|phase1|phase2|phase3]
 **Feature**: [Feature description]
+**Judge Evaluation**: [Enabled/Disabled]
 
 ## Execution Summary
 
-| Phase | Command | Status | Duration | Artifacts |
-|-------|---------|--------|----------|-----------|
-| Phase 0 | /speckit.specify | ✓ Pass | 45s | spec.md |
-| Phase 0 | /speckit.clarify | ⊘ Skipped | - | - |
-| Phase 0 | /speckit.checklist | ✓ Pass | 12s | checklists/requirements.md |
-| Phase 1 | /speckit.plan | ✓ Pass | 120s | plan.md, data-model.md |
-| Phase 1 | /speckit.tasks | ✓ Pass | 60s | tasks.md |
-| Phase 2 | /speckit.analyze | ✓ Pass | 30s | Analysis report |
-| Phase 3 | /speckit.implement | ✗ Fail | 90s | Partial code |
+| Phase | Command | Status | Duration | Artifacts | Quality Score |
+|-------|---------|--------|----------|-----------|---------------|
+| Phase 0 | /speckit.specify | ✓ Pass | 45s | spec.md | - |
+| Phase 0 | /speckit.review-spec | ✓ Pass | 30s | Evaluation report | 7.8/10 ✅ |
+| Phase 0 | /speckit.clarify | ⊘ Skipped | - | - | - |
+| Phase 0 | /speckit.checklist | ✓ Pass | 12s | checklists/requirements.md | - |
+| Phase 1 | /speckit.plan | ✓ Pass | 120s | plan.md, data-model.md | - |
+| Phase 1 | /speckit.tasks | ✓ Pass | 60s | tasks.md | - |
+| Phase 2 | /speckit.analyze | ✓ Pass | 45s | Analysis + Technical quality | 8.2/10 ✅ |
+| Phase 3 | /speckit.implement | ✓ Pass | 90s | Production code | - |
+| Phase 3 | /speckit.review-code | ✓ Pass | 60s | Security analysis | 8.5/10 ✅ |
 
 ## Validation Results
 
-### spec.md
+### spec.md (Structural + Judge Evaluation)
 - ✓ All required sections present
 - ✓ No implementation details
 - ✓ Success criteria measurable
-- ✗ Found 1 [NEEDS CLARIFICATION] marker
+- ✓ No [NEEDS CLARIFICATION] markers
 
-### plan.md
+**Agent-as-a-Judge Quality Scores**:
+- Clarity & Completeness: 8.0/10 ✅
+- Testability & Measurability: 7.5/10 ✅
+- Technology Agnosticism: 8.5/10 ✅
+- Constitution Alignment: 7.0/10 ✅
+- User-Centricity & Value: 7.8/10 ✅
+- **Overall: 7.8/10** - Production Ready ✅
+
+### plan.md & tasks.md (Technical Quality - Dual Pass)
 - ✓ Architecture defined
 - ✓ Components identified
 - ✓ Technology stack documented
-
-### tasks.md
 - ✓ Tasks dependency-ordered
 - ✓ Clear acceptance criteria
-- ✗ Found 2 circular dependencies
+
+**Technical Quality Evaluation**:
+- Architecture Soundness: 8.5/10 ✅
+- Security & Compliance Design: 8.0/10 ✅
+- Task Quality & Feasibility: 8.0/10 ✅
+- Testing Strategy: 7.5/10 ✅
+- Documentation & Knowledge Transfer: 8.5/10 ✅
+- **Overall: 8.2/10** - Excellent Design ✅
+
+### Production Code (Code Quality Judge)
+- ✓ Module-first architecture (private registry)
+- ✓ Semantic versioning on all modules
+- ✓ No hardcoded credentials
+- ✓ Encryption enabled (at rest & in transit)
+- ✓ IAM least privilege applied
+- ✓ All pre-commit hooks pass
+
+**Code Quality Scores**:
+- Module Usage & Architecture: 9.0/10 ✅
+- Security & Compliance: 8.5/10 ✅
+- Code Quality & Maintainability: 8.0/10 ✅
+- Variable & Output Management: 8.5/10 ✅
+- Testing & Validation: 8.0/10 ✅
+- Constitution & Plan Alignment: 9.0/10 ✅
+- **Overall: 8.5/10** - Production Ready ✅
+
+**Security Analysis**:
+- ✅ Zero CRITICAL (P0) findings
+- ✅ Zero HIGH (P1) vulnerabilities
+- ✓ 2 MEDIUM findings (addressed via recommendations)
 
 ### Cross-Artifact Consistency
 - ✓ All requirements mapped to plan
-- ✗ 3 plan components missing tasks
+- ✓ All plan components have tasks
 - ✓ Task dependencies valid
+- ✓ No orphaned elements
 
 ## Errors and Warnings
 
@@ -336,6 +412,24 @@ After test execution, generate comprehensive report:
 2. **Clarification Q2**: User role structure
    - Auto-selected: Option B (Simple: Admin/User)
    - Reason: Conservative choice for MVP
+
+## Judge Evaluation Tracking
+
+**Spec Quality Improvement**:
+- Iteration 1: 6.5/10 → Auto-refinement applied
+- Iteration 2: 7.8/10 ✅ (Δ +1.3) - Threshold met
+
+**Technical Quality Assessment**:
+- First evaluation: 8.2/10 ✅ - Excellent design, high confidence
+
+**Code Quality Assessment**:
+- First evaluation: 8.5/10 ✅ - Production ready
+- Security score: 8.5/10 (30% weight) - No critical issues
+
+**Judge-Human Agreement**:
+- Evaluations tracked: 15
+- Pearson correlation: 0.83 ✅ (Target: >0.80)
+- Average delta: 0.4 points
 
 ## Recommendations
 
@@ -509,12 +603,14 @@ fi
 
 Full pipeline execution sequence:
 1. `/speckit.specify` - Create initial spec
-2. `/speckit.clarify` - Resolve ambiguities (conditional)
-3. `/speckit.checklist` - Validate spec quality
-4. `/speckit.plan` - Design implementation
-5. `/speckit.tasks` - Generate task list
-6. `/speckit.analyze` - Cross-validate artifacts
-7. `/speckit.implement` - Execute implementation
+2. `/speckit.review-spec` - **[NEW]** Agent-as-a-Judge quality evaluation (optional but recommended)
+3. `/speckit.clarify` - Resolve ambiguities (conditional)
+4. `/speckit.checklist` - Validate spec quality
+5. `/speckit.plan` - Design implementation
+6. `/speckit.tasks` - Generate task list
+7. `/speckit.analyze` - Cross-validate artifacts + **[NEW]** Technical quality evaluation (dual-pass)
+8. `/speckit.implement` - Execute implementation
+9. `/speckit.review-code` - **[NEW]** Agent-as-a-Judge code quality & security evaluation
 
 ### File Paths
 
@@ -528,9 +624,14 @@ specs/
 │   ├── data-model.md        # Phase 1
 │   ├── checklists/
 │   │   └── requirements.md  # Phase 0
-│   └── contracts/           # Phase 1
-│       ├── api-*.md
-│       └── interface-*.md
+│   ├── contracts/           # Phase 1
+│   │   ├── api-*.md
+│   │   └── interface-*.md
+│   └── evaluations/         # NEW: Agent-as-a-Judge tracking
+│       ├── spec-reviews.jsonl
+│       ├── code-reviews.jsonl
+│       ├── technical-quality.jsonl
+│       └── judge-human-correlation.jsonl
 ```
 
 ### Validation Checklist

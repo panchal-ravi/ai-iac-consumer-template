@@ -60,6 +60,148 @@ The development process follows these distinct phases, each with specific comman
 
 ---
 
+## Quality Evaluation with Judge Subagents
+
+**Agent-as-a-Judge Pattern**: Use specialized subagents for objective quality assessment at key workflow gates. These agents provide scored feedback (1-10 scale) with actionable recommendations.
+
+### When to Use Quality Judge Subagents
+
+| Workflow Point | Subagent | Purpose | Threshold | Invocation |
+|----------------|----------|---------|-----------|------------|
+| **After `/speckit.specify`** | `spec-quality-judge` | Evaluate specification quality | ≥7.0/10 for production readiness | Optional but recommended |
+| **After `/speckit.implement`** | `code-quality-judge` | Evaluate Terraform code quality & security | ≥8.0/10 for production readiness | Recommended before deployment |
+
+### Spec Quality Judge Subagent
+
+**File**: `.claude/agents/spec-quality-judge.md`
+
+**When to Invoke**:
+- After `/speckit.specify` completes
+- Before `/speckit.plan` starts
+- When iterating on requirements
+- To validate spec quality before committing
+
+**How to Invoke**:
+```
+Use Task tool with:
+- subagent_type: "general-purpose"
+- description: "Evaluate specification quality"
+- prompt: "You are the spec-quality-judge agent defined in .claude/agents/spec-quality-judge.md.
+           Evaluate the specification at specs/[FEATURE]/spec.md using the agent-as-a-judge pattern.
+           Provide scored feedback across five dimensions and offer iterative refinement if score < 7.0."
+```
+
+**Evaluation Dimensions** (5 total):
+1. Clarity & Completeness (25% weight)
+2. Testability & Measurability (20% weight)
+3. Technology Agnosticism (20% weight)
+4. Constitution Alignment (20% weight)
+5. User-Centricity & Value (15% weight)
+
+**Output**:
+- Overall quality score (1-10)
+- Dimension-by-dimension analysis
+- Prioritized improvement roadmap (P0/P1/P2/P3)
+- Iterative refinement options (auto-fix, interactive, manual)
+- Evaluation history tracking (`.jsonl`)
+
+**Benefits**:
+- Catches ambiguities early (before planning phase)
+- Ensures testable, measurable success criteria
+- Validates constitution alignment
+- Reduces downstream rework
+- Fully isolated context (no bias from generation)
+
+### Code Quality Judge Subagent
+
+**File**: `.claude/agents/code-quality-judge.md`
+
+**When to Invoke**:
+- After `/speckit.implement` completes
+- Before committing Terraform code
+- Before creating pull request
+- After addressing security findings
+
+**How to Invoke**:
+```
+Use Task tool with:
+- subagent_type: "general-purpose"
+- description: "Evaluate Terraform code quality"
+- prompt: "You are the code-quality-judge agent defined in .claude/agents/code-quality-judge.md.
+           Evaluate the Terraform code in the current feature branch using the agent-as-a-judge pattern.
+           Provide security-first scored feedback across six dimensions and offer iterative refinement if score < 8.0."
+```
+
+**Evaluation Dimensions** (6 total):
+1. Module Usage & Architecture (25% weight)
+2. **Security & Compliance (30% weight)** - Highest priority
+3. Code Quality & Maintainability (15% weight)
+4. Variable & Output Management (10% weight)
+5. Testing & Validation (10% weight)
+6. Constitution & Plan Alignment (10% weight)
+
+**Output**:
+- Overall code quality score (1-10)
+- Security analysis summary (P0/P1/P2 findings)
+- File-by-file analysis with line references
+- Constitution compliance report
+- Pre-commit hook integration status
+- Iterative refinement options
+
+**Benefits**:
+- Security-first evaluation (30% weight)
+- Identifies hardcoded credentials, overly permissive IAM
+- Validates module-first architecture
+- Checks pre-commit hook configuration
+- Provides code examples for fixes
+- Fully isolated context (objective evaluation)
+
+### Quality Gate Recommendations
+
+**Phase 0 (Specification)**:
+- Gate: Spec quality ≥7.0/10
+- Action: If <7.0, use spec-quality-judge for iterative refinement
+- Enforcement: Recommended (user choice)
+
+**Phase 2 (Analysis)**:
+- Gate: Technical quality ≥7.0/10 AND Consistency CRITICAL = 0
+- Action: `/speckit.analyze` now includes dual-pass evaluation (built-in)
+- Enforcement: Warning if not met
+
+**Phase 3 (Implementation)**:
+- Gate: Code quality ≥8.0/10 AND Security P0 issues = 0
+- Action: Use code-quality-judge for evaluation + refinement
+- Enforcement: Strong recommendation (blocking for P0 security)
+
+### Subagent Invocation Best Practices
+
+1. **Use dedicated subagents** for quality evaluation (not inline in main agent)
+2. **Run in parallel** when possible (generation + evaluation)
+3. **Clear context** between generation and evaluation (prevents bias)
+4. **Track evaluation history** (`.jsonl` files in `evaluations/` directory)
+5. **Iterate until thresholds met** (max 3 iterations recommended)
+6. **Use judge feedback** to improve specifications and code
+
+### Evaluation History Tracking
+
+Judge subagents create `.jsonl` files in `FEATURE_DIR/evaluations/`:
+
+```
+specs/N-feature-name/evaluations/
+├── spec-reviews.jsonl          # Spec quality evaluations
+├── code-reviews.jsonl          # Code quality evaluations
+├── technical-quality.jsonl     # Technical design quality (from /speckit.analyze)
+└── judge-human-correlation.jsonl  # Optional: human validation comparisons
+```
+
+These files enable:
+- Quality trend analysis over time
+- Judge-human agreement correlation tracking (target: >0.80 Pearson)
+- Iteration-by-iteration improvement deltas
+- Project-wide quality benchmarking
+
+---
+
 ## Phase 0: Specification & Requirements Definition
 
 ### `/speckit.specify` - Create Feature Specification
