@@ -68,7 +68,7 @@ The development process follows these distinct phases, each with specific comman
 
 | Workflow Point | Subagent | Purpose | Threshold | Invocation |
 |----------------|----------|---------|-----------|------------|
-| **After `/speckit.specify`** | `spec-quality-judge` | Evaluate specification quality | ≥7.0/10 for production readiness | Optional but recommended |
+<!-- | **After `/speckit.specify`** | `spec-quality-judge` | Evaluate specification quality | ≥7.0/10 for production readiness | Optional but recommended | -->
 | **After `/speckit.implement`** | `code-quality-judge` | Evaluate Terraform code quality & security | ≥8.0/10 for production readiness | Recommended before deployment |
 
 ### Spec Quality Judge Subagent
