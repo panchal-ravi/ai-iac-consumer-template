@@ -262,7 +262,6 @@ Round to one decimal place.
 | Tool | Status | Findings |
 |------|--------|----------|
 | terraform validate | ✅/❌ | [Error count] |
-| tfsec | ✅/❌ | [Finding count] |
 | trivy | ✅/❌ | [Vulnerability count] |
 | checkov | ✅/❌ | [Policy violations] |
 | vault-radar-scan | ✅/❌ | [Secret detections] |
