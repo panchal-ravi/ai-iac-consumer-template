@@ -417,7 +417,7 @@ These files enable:
    - `outputs.tf`: Output exports
    - `provider.tf`: Provider and configurations
    - `terraform.tf`: Terraform block, backend configuration for testing
-   - `override.tf`: Terraform block, backend configuration for testing in a HCP Terraform workspace and project. Import ensure sandbox_<> project is utlised 
+   - `override.tf`: Terraform block, backend configuration for testing in a HCP Terraform workspace and project. Import ensure sandbox_<> project is utlised
    - `sandbox.auto.tfvars.example`: An example variables file for the user to populate.
    - `sandbox.auto.tfvars`: An variables file for the user/ai agent to populate for terraform cli testing using cloud backend.
 3. Set up project infrastructure:
@@ -461,7 +461,7 @@ variable "var_name" {
   description = "Clear description of the variable's purpose"
   type        = appropriate_type
   default     = value  # Only if appropriate
-  
+
   validation {
     condition     = validation_rule
     error_message = "Helpful error message"
@@ -524,7 +524,7 @@ output "output_name" {
 ```hcl
 terraform {
   required_version = ">= 1.8"
-  
+
   required_providers {
     # List all required providers with version constraints
     provider_name = {
@@ -532,7 +532,7 @@ terraform {
       version = "~> X.Y"
     }
   }
-  
+
   # DO NOT include backend configuration in this file
 }
 ```
@@ -559,7 +559,7 @@ terraform {
       name = "sandbox_<GITHUB_REPO_NAME>"  # Replace with actual repo name
       project = "<PROJECT_NAME>"  # Replace with actual project name
     }
-    
+
   }
 }
 ```
@@ -616,7 +616,7 @@ If MCP tools fail or return no results:
 
 - You MUST install or update the pre-commit framework if it is not already present.
 - You MUST configure `.git/hooks/pre-commit` to use the pre-commit framework.
-- The `.pre-commit-config.yaml` file is expected to exist in the repository. 
+- The `.pre-commit-config.yaml` file is expected to exist in the repository.
 - Pre-commit hooks SHOULD include `terraform_fmt`, `terraform_docs`, `terraform_validate`, `terraform_tflint`, and `checkov`.
 
 **Pre-commit Hook Configuration**:
@@ -924,3 +924,41 @@ This infrastructure code has been validated using ephemeral HCP Terraform worksp
 The default project should be sandbox.
 
 * If you need to fix code and perform a new run as your using CLI workspaces run, you need to use Terraform cli again to ensure the changes are updated on the HCP Terraform workspace
+
+## Updating AGENTS.md Files
+
+When you discover new information that would be helpful for future development work, please:
+
+- **Update existing AGENTS.md files** when you learn implementation details, debugging insights, or architectural patterns specific to that component
+- **Create new AGENTS.md files** in relevant directories when working with areas that don't yet have documentation
+- **Add valuable insights** such as common pitfalls, debugging techniques, dependency relationships, or implementation patterns
+
+
+# Final deployment report
+
+Once completed all tasks and Terraform is fully deployed, log any issues in memory in the feature branch as deployment_log_<timestamp>.log
+
+Important to include the following (table formats are preferred):
+
+### Required Information
+
+- **Architecture Summary**: High-level overview of the deployed infrastructure
+- **HCP Terraform Organization**: The organization name used
+- **HCP Terraform Project**: The project name used
+- **HCP Terraform Workspace**: The workspace name(s) used
+- **Private Modules Utilsed** Include all modules and full source address for Terraform module
+- **Git Branch**: The feature branch that was created
+- **Claude Token Usage**: Total tokens consumed during the session
+- **Failed Tool Calls**: Any failed tool calls and remediation attempts made
+- **Skills Calls**: Documentation of all skills invoked
+- **Subagents**: Total count of subagent calls made with names and amount called
+
+### Critical Items
+
+**Important**: The following must be clearly documented:
+
+- **Workarounds vs Fixes**: What issues were worked around instead of properly fixing. These need to be clearly itemized with explanations of why a workaround was chosen over a fix.
+- **Security Reports**: Include all available security reports. Use a separate table for pre-commit reports (terraform_validate, tfsec, checkov, trivy, etc.)
+- **Sentinel Policy Advisories**: Document advisory details from Sentinel policy output in workspace runs, must include include advisory warnings and failures
+
+This helps build a comprehensive knowledge base for the codebase over time.

@@ -8,6 +8,29 @@
     },
     "chat.tools.terminal.autoApprove": {
         ".specify/scripts/bash/": true,
-        ".specify/scripts/powershell/": true
-    }
+        ".specify/scripts/powershell/": true,
+        ".specify/scripts/bash/validate-env.sh": true,
+        "git fetch": true,
+        "gh repo view": true,
+        "ls": true,
+        "terraform init": true,
+        "terraform plan": true,
+        "terraform apply": true,
+        "terraform fmt": true,
+        "terraform version": true,
+        "pre-commit install": true,
+        "pre-commit run --all-files": true,
+        "git add": true,
+        "git commit": true,
+        "git rev-parse": true,
+        "git log": true,
+        "git config": true,
+        "cat": true,
+        "env": true,
+        "echo": true,
+        "find": true,
+        "mv": true,
+        "cd": true,
+    },
+
 }
