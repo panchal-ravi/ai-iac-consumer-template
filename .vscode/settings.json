@@ -6,8 +6,23 @@
         "speckit.tasks": true,
         "speckit.implement": true
     },
+    "chat.tools.terminal.enableAutoApprove": true,
     "chat.tools.terminal.autoApprove": {
         ".specify/scripts/bash/": true,
-        ".specify/scripts/powershell/": true
+        ".specify/scripts/powershell/": true,
+        "pre-commit install": true,
+        "git config": true,
+        "git rev-parse": true,
+        "git checkout": true,
+        "git pull": true,
+        "git add": true,
+        "git commit": true,
+        "ls": true,
+        "cd": true,
+        "cat": true,
+        "echo": true,
+        "mkdir": true,
+        "mv": true,
+        "terraform": true,
     }
 }
