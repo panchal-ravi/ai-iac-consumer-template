@@ -16,8 +16,8 @@ Provision using Terraform:
 
 ## HCP Terraform Configuration
 
-- **Organization**: `hashi-demos-apj`
-- **Project**: `sandbox`
+- **Organization**: `ravi-panchal-org`
+- **Project**: `Default Project`
 - **Workspace**: `sandbox_ec2<GITHUB_REPO_NAME>`
 
 ## Workflow Instructions
