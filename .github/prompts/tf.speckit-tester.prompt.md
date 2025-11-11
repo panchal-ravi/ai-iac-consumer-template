@@ -61,6 +61,7 @@ After each phase, validate generated artifacts:
 ### Full Pipeline Test
 
 Execute all phases sequentially from Phase 0 to Phase 3:
+Run each speckit command using subagent #runSubagent for isolation and context management.
 After each phase clear the context using /clear
 
 ```
@@ -87,21 +88,21 @@ Phase 3: Implementation & Validation
 Execute individual phases for targeted testing:
 
 **Phase 0 Only**: Test specification generation
-- Run `/speckit.specify` with test feature description
+- Run `/speckit.specify` with #runSubagent with test feature description
 - Auto-resolve any clarifications
 - Validate checklist generation
 
 **Phase 1 Only**: Test planning (requires existing spec)
-- Run `/speckit.plan` against existing spec.md
-- Run `/speckit.tasks` from generated plan
+- Run `/speckit.plan` with #runSubagent against existing spec.md
+- Run `/speckit.tasks` with #runSubagent from generated plan
 - Validate task structure
 
 **Phase 2 Only**: Test analysis (requires spec, plan, tasks)
-- Run `/speckit.analyze` on existing artifacts
+- Run `/speckit.analyze` with #runSubagent on existing artifacts
 - Validate consistency checks
 
 **Phase 3 Only**: Test implementation (requires plan, tasks)
-- Run `/speckit.implement` from existing plan/tasks
+- Run `/speckit.implement` with #runSubagent from existing plan/tasks
 - Validate code generation
 
 ## Test Harness Usage
@@ -149,9 +150,9 @@ Test a complete workflow from feature description to code:
 Test Phase 0 specification generation:
 
 1. Feature: "Create analytics dashboard"
-2. Run /speckit.specify
+2. Run /speckit.specify with #runSubagent
 3. Auto-resolve clarifications with defaults
-4. Run /speckit.checklist
+4. Run /speckit.checklist with #runSubagent
 5. Validate all checklist items pass
 ```
 
@@ -161,8 +162,8 @@ Test Phase 0 specification generation:
 Test Phase 1 planning from existing spec:
 
 1. Load existing spec.md
-2. Run /speckit.plan
-3. Run /speckit.tasks
+2. Run /speckit.plan with #runSubagent
+3. Run /speckit.tasks with #runSubagent
 4. Validate tasks align with plan
 5. Check task dependencies
 ```

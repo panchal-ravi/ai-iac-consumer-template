@@ -6,10 +6,14 @@
         "speckit.tasks": true,
         "speckit.implement": true
     },
+    "chat.agent.maxRequests": 256,
     "chat.tools.terminal.enableAutoApprove": true,
+    "chat.tools.terminal.blockDetectedFileWrites": "outsideWorkspace",
     "chat.tools.terminal.autoApprove": {
         ".specify/scripts/bash/": true,
         ".specify/scripts/powershell/": true,
+        "/workspace/.specify/scripts/bash/validate-env.sh": true,
+        "bash": true,
         "pre-commit install": true,
         "git config": true,
         "git rev-parse": true,
@@ -17,6 +21,7 @@
         "git pull": true,
         "git add": true,
         "git commit": true,
+        "git remote": true,
         "ls": true,
         "cd": true,
         "cat": true,
@@ -24,5 +29,8 @@
         "mkdir": true,
         "mv": true,
         "terraform": true,
+        "sed": true,
+        "cut": true,
+        "aws": true
     }
 }

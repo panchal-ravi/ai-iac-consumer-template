@@ -4,6 +4,7 @@ set -e
 # This script installs Terraform and related tools
 
 # Versions
+TARGETARCH=arm64
 TERRAFORM_VERSION=${1:-"1.13.4"}
 TERRAFORM_DOCS_VERSION=${2:-"0.20.0"}
 TFSEC_VERSION=${3:-"1.28.14"}
@@ -19,7 +20,7 @@ INSTALL_VAULT_RADAR=${12:-"false"}
 
 
 echo "Installing Terraform v${TERRAFORM_VERSION}..."
-curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+curl -sSL -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip"
 unzip -qq /tmp/terraform.zip -d /tmp
 sudo mv /tmp/terraform /usr/local/bin/
 rm -f /tmp/terraform.zip
@@ -28,7 +29,7 @@ rm -f /tmp/terraform.zip
 if [ "${INSTALL_VAULT_RADAR}" = "true" ]; then
     echo "Installing Vault Radar v${VAULT_RADAR_VERSION}..."
     #https://releases.hashicorp.com/vault-radar/0.36.0/
-    curl -sSL -o /tmp/vault-radar.zip "https://releases.hashicorp.com/vault-radar/${VAULT_RADAR_VERSION}/vault-radar_${VAULT_RADAR_VERSION}_linux_amd64.zip"
+    curl -sSL -o /tmp/vault-radar.zip "https://releases.hashicorp.com/vault-radar/${VAULT_RADAR_VERSION}/vault-radar_${VAULT_RADAR_VERSION}_linux_${TARGETARCH}.zip"
     unzip -qq /tmp/vault-radar.zip -d /tmp
     sudo mv /tmp/vault-radar /usr/local/bin/
     rm -f /tmp/vault-radar.zip
@@ -37,48 +38,48 @@ else
 fi
 
 echo "Installing terraform-docs v${TERRAFORM_DOCS_VERSION}..."
-curl -sSLo /tmp/terraform-docs.tar.gz "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz"
+curl -sSLo /tmp/terraform-docs.tar.gz "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-${TARGETARCH}.tar.gz"
 tar -xzf /tmp/terraform-docs.tar.gz -C /tmp
 sudo mv /tmp/terraform-docs /usr/local/bin/
 rm -f /tmp/terraform-docs.tar.gz
 
 echo "Installing tfsec v${TFSEC_VERSION}..."
-curl -sSLo /tmp/tfsec "https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64"
+curl -sSLo /tmp/tfsec "https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-${TARGETARCH}"
 sudo mv /tmp/tfsec /usr/local/bin/
 sudo chmod +x /usr/local/bin/tfsec
 
 echo "Installing terrascan v${TERRASCAN_VERSION}..."
-curl -sSLo /tmp/terrascan.tar.gz "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz"
+curl -sSLo /tmp/terrascan.tar.gz "https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_${TARGETARCH}.tar.gz"
 tar -xzf /tmp/terrascan.tar.gz -C /tmp
 sudo mv /tmp/terrascan /usr/local/bin/
 rm -f /tmp/terrascan.tar.gz
 
 echo "Installing tflint v${TFLINT_VERSION}..."
-curl -sSLo /tmp/tflint.zip "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip"
+curl -sSLo /tmp/tflint.zip "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${TARGETARCH}.zip"
 unzip -qq /tmp/tflint.zip -d /tmp
 sudo mv /tmp/tflint /usr/local/bin/
 rm -f /tmp/tflint.zip
 
 echo "Installing TFLint AWS ruleset v${TFLINT_AWS_RULESET_VERSION}..."
 mkdir -p ~/.tflint.d/plugins
-curl -sSLo /tmp/tflint-aws-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/tflint-ruleset-aws_linux_amd64.zip"
+curl -sSLo /tmp/tflint-aws-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/tflint-ruleset-aws_linux_${TARGETARCH}.zip"
 unzip -qq /tmp/tflint-aws-ruleset.zip -d ~/.tflint.d/plugins
 rm -f /tmp/tflint-aws-ruleset.zip
 
 echo "Installing TFLint Azure ruleset v${TFLINT_AZURE_RULESET_VERSION}..."
-curl -sSLo /tmp/tflint-azure-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-azurerm/releases/download/v${TFLINT_AZURE_RULESET_VERSION}/tflint-ruleset-azurerm_linux_amd64.zip"
+curl -sSLo /tmp/tflint-azure-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-azurerm/releases/download/v${TFLINT_AZURE_RULESET_VERSION}/tflint-ruleset-azurerm_linux_${TARGETARCH}.zip"
 unzip -qq /tmp/tflint-azure-ruleset.zip -d ~/.tflint.d/plugins
 rm -f /tmp/tflint-azure-ruleset.zip
 
 echo "Installing TFLint GCP ruleset v${TFLINT_GCP_RULESET_VERSION}..."
-curl -sSLo /tmp/tflint-gcp-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-google/releases/download/v${TFLINT_GCP_RULESET_VERSION}/tflint-ruleset-google_linux_amd64.zip"
+curl -sSLo /tmp/tflint-gcp-ruleset.zip "https://github.com/terraform-linters/tflint-ruleset-google/releases/download/v${TFLINT_GCP_RULESET_VERSION}/tflint-ruleset-google_linux_${TARGETARCH}.zip"
 unzip -qq /tmp/tflint-gcp-ruleset.zip -d ~/.tflint.d/plugins
 rm -f /tmp/tflint-gcp-ruleset.zip
 
 echo "Installing Infracost v${INFRACOST_VERSION}..."
-curl -sSLo /tmp/infracost.tar.gz "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-amd64.tar.gz"
+curl -sSLo /tmp/infracost.tar.gz "https://github.com/infracost/infracost/releases/download/v${INFRACOST_VERSION}/infracost-linux-${TARGETARCH}.tar.gz"
 tar -xzf /tmp/infracost.tar.gz -C /tmp
-sudo mv /tmp/infracost-linux-amd64 /usr/local/bin/infracost
+sudo mv /tmp/infracost-linux-${TARGETARCH} /usr/local/bin/infracost
 rm -f /tmp/infracost.tar.gz
 
 # echo "Installing pre-commit..."
