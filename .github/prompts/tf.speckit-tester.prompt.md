@@ -103,6 +103,19 @@ Execute individual phases for targeted testing:
 
 **Phase 3 Only**: Test implementation (requires plan, tasks)
 - Run `/speckit.implement` with #runSubagent from existing plan/tasks
+- All module sources **must** reference the private Terraform registry
+- Module source paths **must** follow the pattern: `app.terraform.io/<org-name>/module-name/provider`
+- Ensure proper version constraints are specified for all modules
+- Validate that module configurations comply with organizational standards
+
+## Usage
+
+Use this prompt when testing Terraform configurations to ensure they properly reference modules from your organization's private registry rather than public sources.
+
+## Important Notes
+
+⚠️ **Critical**: Always verify that module sources start with `app.terraform.io/<org-name>/` to maintain security and compliance with internal module governance policies.
+- 
 - Validate code generation
 
 ## Test Harness Usage

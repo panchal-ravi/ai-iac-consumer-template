@@ -6,6 +6,7 @@
         "speckit.tasks": true,
         "speckit.implement": true
     },
+    "terminal.integrated.shellIntegration.enabled": true,
     "chat.agent.maxRequests": 256,
     "chat.tools.terminal.enableAutoApprove": true,
     "chat.tools.terminal.blockDetectedFileWrites": "outsideWorkspace",
@@ -31,6 +32,9 @@
         "terraform": true,
         "sed": true,
         "cut": true,
-        "aws": true
+        "aws": true,
+        "command": true,
+        "curl": true,
+        "rm": true
     }
 }
