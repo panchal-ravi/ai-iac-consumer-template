@@ -48,7 +48,7 @@
       "Skill(github-speckit-tester)",
       "Skill(terraform-style-guide)",
       "Skill(terraform-test)",
-      "Skill(terraform-stacks)",
+      "Skill(terraform-stacks)"
     ]
   },
   "enableAllProjectMcpServers": true,
