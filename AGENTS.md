@@ -424,8 +424,9 @@ These files enable:
    - Install/update pre-commit framework
    - Configure `.git/hooks/pre-commit`
    - Ensure `.pre-commit-config.yaml` includes required hooks
-4. Provide deployment instructions
-5. Run tests (see Testing & Validation Framework below)
+4. Once the code is generated and passing pre-commit, use the code-quality-judge subagent review the code to evaluate code quality.
+5. Provide deployment instructions
+6. Run tests (see Testing & Validation Framework below)
 
 **DO NOT**:
 
@@ -660,7 +661,7 @@ These are pre-existing in the git repository template only hooks need to be conf
 - The current `feature/*` branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
 - Ephemeral workspaces MUST be created within the user specified HCP Terraform Organization and Project
 - Ephemeral workspace MUST be connected to the current `feature/*` branch of the application's GitHub remote repository to ensure code under test matches the current feature development state
-- You MUST create all necessary workspace variables using sandbox.auto.tfvars based on required variables defined in `variables.tf` in the `feature/*` branch. This file is intentionally in gitignore but can be used for Terraform CLI execution using cloud backend.
+- You MUST create all necessary terraform variables using sandbox.auto.tfvars based on required variables defined in `variables.tf` in the `feature/*` branch. This file is intentionally in gitignore but can be used for Terraform CLI execution using cloud backend.
 - Testing MUST include both `terraform plan` and `terraform apply` operations
 - All testing activities MUST be performed automatically against the ephemeral workspace
 - Ephemeral workspaces will be automatically destroyed after 2 hours via auto-destroy setting

@@ -48,12 +48,22 @@
       "Skill(github-speckit-tester)",
       "Skill(terraform-style-guide)",
       "Skill(terraform-test)",
-      "Skill(terraform-stacks)"
+      "Skill(terraform-stacks)",
+      "Bash(find:*)"
     ],
     "deny": [
       "Write(.gitignore)",
       "Update(.gitignore)",
-      "Edit(.gitignore)"
+      "Edit(.gitignore)",
+      "Write(.tflint.hcl)",
+      "Update(.tflint.hcl)",
+      "Edit(.tflint.hcl)",
+      "Write(.pre-commit-config.yaml)",
+      "Update(.pre-commit-config.yaml)",
+      "Edit(.pre-commit-config.yaml)",
+      "Write(.mcp.json)",
+      "Update(.mcp.json)",
+      "Edit(.mcp.json)"
     ]
   },
   "enableAllProjectMcpServers": true,
