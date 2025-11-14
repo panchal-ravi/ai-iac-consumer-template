@@ -1,7 +1,7 @@
 ---
 name: code-quality-judge
 description: Use this agent to evaluate Terraform code quality using agent-as-a-judge pattern with security-first scoring across six dimensions (Module Usage, Security & Compliance, Code Quality, Variable Management, Testing, Constitution Alignment). Invoked after /speckit.implement to ensure production readiness with focus on security best practices.
-tools: Read, Grep, Glob, Bash, Edit, Write, TodoWrite
+tools: Read, Grep, Glob, Bash, Edit, Write, TodoWrite, BashOutput, ListMcpResourcesTool, ReadMcpResourceTool, AskUserQuestion, Skill, SlashCommand
 model: sonnet
 color: red
 ---
