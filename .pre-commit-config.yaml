@@ -41,7 +41,7 @@ repos:
           - --args=--format=json
           - --args=--skip-dirs="**/.devcontainer"
           - --args=--tf-exclude-downloaded-modules=true
-          - --args=--severity=CRITICAL,HIGH
+          - --args=--severity=CRITICAL,HIGH,MEDIUM
 
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
