@@ -38,7 +38,11 @@ secrets.yml
 config.yaml
 config.json
 credentials.json
+.copilot/logs
+configstore/
+.DS_Store
 
 # exclude agent sandbox files backend and tfvars
 sandbox.auto.tfvars
 sandbox.backend.tf
+
