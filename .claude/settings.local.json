@@ -49,6 +49,11 @@
       "Skill(terraform-style-guide)",
       "Skill(terraform-test)",
       "Skill(terraform-stacks)"
+    ],
+    "deny": [
+      "Write(.gitignore)",
+      "Update(.gitignore)",
+      "Edit(.gitignore)"
     ]
   },
   "enableAllProjectMcpServers": true,
