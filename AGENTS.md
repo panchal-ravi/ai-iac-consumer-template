@@ -44,7 +44,7 @@ The development process follows these distinct phases, each with specific comman
 | **Phase 1** | `/speckit.plan` | Design technical implementation | `spec.md`, `constitution.md` | `plan.md`, `data-model.md`, contracts/ |
 | **Phase 1** | `/speckit.tasks` | Generate actionable task list | `plan.md` | `tasks.md` |
 | **Phase 2** | `/speckit.analyze` | Validate cross-artifact consistency | `spec.md`, `plan.md`, `tasks.md` | Analysis report (read-only) |
-| **Phase 3** | `/speckit.implement` | Execute implementation | `plan.md`, `tasks.md` | Production code |
+| **Phase 3** | `/speckit.implement` | Execute implementation | `plan.md`, `tasks.md` | Production code, on completion perform code review with the code-quality-judge subagent, fix issues and rerun review.
 
 ## Core Responsibilities
 
