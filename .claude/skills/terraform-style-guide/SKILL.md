@@ -25,6 +25,10 @@ Adopting and adhering to a style guide keeps your Terraform code legible, scalab
 - [Multi-Environment Management](#multi-environment-management)
 - [State and Secrets Management](#state-and-secrets-management)
 - [Testing and Policy](#testing-and-policy)
+- [AWS-Specific Requirements](#aws-specific-requirements)
+  - [Mandatory Resource Tagging](#mandatory-resource-tagging)
+  - [AWS Provider Configuration](#aws-provider-configuration)
+  - [AWS Resource Naming](#aws-resource-naming)
 - [Azure Verified Modules (AVM) Requirements](#azure-verified-modules-avm-requirements)
   - [Module Cross-Referencing](#module-cross-referencing)
   - [Azure Provider Requirements](#azure-provider-requirements)
@@ -903,6 +907,395 @@ Use this checklist for code reviews:
 
 ---
 
+## AWS-Specific Requirements
+
+> **Important**: The following requirements are specific to AWS resource deployments and should be applied to all AWS Terraform configurations for consistency, cost tracking, and governance.
+
+### Mandatory Resource Tagging
+
+**Severity:** MUST | **Requirement:** AWS-TAG-001
+
+All AWS resources that support tags **MUST** include at minimum an `Application` tag to identify the application or service the resource belongs to. This is critical for:
+- Cost allocation and tracking
+- Resource governance and management
+- Security and compliance auditing
+- Automated resource lifecycle management
+
+#### Required Tag Implementation
+
+**Every taggable AWS resource MUST include:**
+
+```hcl
+tags = {
+  Application = var.application_name  # MANDATORY
+  # Additional tags as needed
+  Environment = var.environment
+  ManagedBy   = "Terraform"
+  Owner       = var.owner_email
+  CostCenter  = var.cost_center
+}
+```
+
+#### Provider-Level Default Tags
+
+**Best Practice:** Configure default tags at the provider level to ensure all resources automatically inherit mandatory tags:
+
+```hcl
+# providers.tf
+provider "aws" {
+  region = var.aws_region
+
+  default_tags {
+    tags = {
+      Application = var.application_name  # MANDATORY
+      Environment = var.environment
+      ManagedBy   = "Terraform"
+      Workspace   = terraform.workspace
+      Repository  = var.repository_url
+    }
+  }
+}
+```
+
+#### Variable Definition for Application Tag
+
+**Always define the application name variable:**
+
+```hcl
+variable "application_name" {
+  description = "Name of the application this infrastructure supports (REQUIRED for all resources)"
+  type        = string
+
+  validation {
+    condition     = length(var.application_name) > 0
+    error_message = "Application name is required and cannot be empty."
+  }
+}
+```
+
+#### Merging Tags with Local Values
+
+For complex tagging scenarios, use local values to manage tag inheritance:
+
+```hcl
+locals {
+  # Mandatory tags that must be present on all resources
+  mandatory_tags = {
+    Application = var.application_name
+  }
+
+  # Common tags for all resources
+  common_tags = merge(
+    local.mandatory_tags,
+    {
+      Environment = var.environment
+      ManagedBy   = "Terraform"
+      CreatedDate = timestamp()
+    }
+  )
+
+  # Merge with additional tags passed as variables
+  all_tags = merge(
+    local.common_tags,
+    var.additional_tags
+  )
+}
+
+# Usage in resources
+resource "aws_instance" "example" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  tags = merge(
+    local.all_tags,
+    {
+      Name = "example-instance"
+      Type = "compute"
+    }
+  )
+}
+```
+
+#### Tag Validation and Compliance
+
+Implement validation to ensure required tags are present:
+
+```hcl
+variable "tags" {
+  description = "Map of tags to apply to resources"
+  type        = map(string)
+
+  validation {
+    condition     = contains(keys(var.tags), "Application")
+    error_message = "The 'Application' tag is mandatory and must be included in the tags map."
+  }
+}
+```
+
+#### Resources That Don't Support Tags
+
+Some AWS resources don't support tags directly. For these resources, document the application association in the resource name or description:
+
+```hcl
+resource "aws_iam_policy_document" "example" {
+  # IAM policy documents don't support tags
+  # Include application name in the statement sid for traceability
+  statement {
+    sid = "${var.application_name}_S3Access"
+    # ...
+  }
+}
+
+resource "aws_iam_role" "example" {
+  name = "${var.application_name}-role"  # Include app name in resource name
+
+  tags = {
+    Application = var.application_name  # IAM roles do support tags
+  }
+}
+```
+
+### AWS Provider Configuration
+
+**Severity:** SHOULD | **Requirement:** AWS-PROV-001
+
+#### Provider Version Constraints
+
+AWS provider configurations **SHOULD** follow these guidelines:
+
+```hcl
+terraform {
+  required_version = ">= 1.7"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"  # Use pessimistic constraint for stability
+    }
+  }
+}
+```
+
+#### Multi-Region Configuration
+
+For multi-region deployments, use provider aliases with clear naming:
+
+```hcl
+# Primary region (default provider)
+provider "aws" {
+  region = var.primary_region
+
+  default_tags {
+    tags = {
+      Application = var.application_name
+      Region      = var.primary_region
+    }
+  }
+}
+
+# Secondary regions with aliases
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+
+  default_tags {
+    tags = {
+      Application = var.application_name
+      Region      = "us-east-1"
+    }
+  }
+}
+
+provider "aws" {
+  alias  = "eu_west_1"
+  region = "eu-west-1"
+
+  default_tags {
+    tags = {
+      Application = var.application_name
+      Region      = "eu-west-1"
+    }
+  }
+}
+```
+
+#### Assume Role Configuration
+
+For cross-account deployments, configure role assumption:
+
+```hcl
+provider "aws" {
+  region = var.aws_region
+
+  assume_role {
+    role_arn     = var.assume_role_arn
+    session_name = "${var.application_name}-terraform"
+  }
+
+  default_tags {
+    tags = {
+      Application = var.application_name
+      Account     = var.target_account_id
+    }
+  }
+}
+```
+
+### AWS Resource Naming
+
+**Severity:** SHOULD | **Requirement:** AWS-NAME-001
+
+AWS resource names **SHOULD** follow these conventions for consistency and clarity:
+
+#### Naming Pattern
+
+Use the pattern: `{application}-{environment}-{resource-type}-{identifier}`
+
+```hcl
+locals {
+  name_prefix = "${var.application_name}-${var.environment}"
+}
+
+resource "aws_s3_bucket" "data" {
+  bucket = "${local.name_prefix}-data-bucket"
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.name_prefix}-data-bucket"
+    }
+  )
+}
+
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.name_prefix}-web-server"
+    }
+  )
+}
+
+resource "aws_rds_instance" "database" {
+  identifier = "${local.name_prefix}-postgres-db"
+  # ...
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.name_prefix}-postgres-db"
+    }
+  )
+}
+```
+
+#### DNS-Compatible Names
+
+For resources that require DNS-compatible names (S3 buckets, CloudFront distributions), ensure names:
+- Use only lowercase letters, numbers, and hyphens
+- Don't start or end with hyphens
+- Are between 3 and 63 characters long
+
+```hcl
+locals {
+  # Ensure DNS-compatible naming
+  dns_safe_name = lower(replace(var.application_name, "_", "-"))
+  bucket_name   = "${local.dns_safe_name}-${var.environment}-${random_id.bucket.hex}"
+}
+
+resource "random_id" "bucket" {
+  byte_length = 4
+}
+
+resource "aws_s3_bucket" "example" {
+  bucket = local.bucket_name  # Guaranteed to be DNS-compatible
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = local.bucket_name
+    }
+  )
+}
+```
+
+#### Resource Name vs Tag Name
+
+Always include both the resource argument name and a Name tag for consistency:
+
+```hcl
+resource "aws_security_group" "web" {
+  name        = "${local.name_prefix}-web-sg"  # Resource argument
+  description = "Security group for ${var.application_name} web servers"
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.name_prefix}-web-sg"  # Name tag matches resource name
+    }
+  )
+}
+```
+
+### AWS-Specific Testing Considerations
+
+When testing AWS infrastructure:
+
+1. **Use Separate AWS Accounts** for testing when possible
+2. **Include the Application tag** in test configurations
+3. **Test tag inheritance** from provider default_tags
+4. **Validate naming conventions** meet AWS service requirements
+
+```hcl
+# tests/aws_tags.tftest.hcl
+run "verify_application_tag" {
+  command = plan
+
+  variables {
+    application_name = "test-app"
+  }
+
+  assert {
+    condition     = aws_instance.example.tags["Application"] == "test-app"
+    error_message = "Application tag must be set on all resources"
+  }
+}
+
+run "verify_name_pattern" {
+  command = plan
+
+  variables {
+    application_name = "myapp"
+    environment      = "dev"
+  }
+
+  assert {
+    condition     = can(regex("^myapp-dev-", aws_instance.example.tags["Name"]))
+    error_message = "Resource names must follow the {app}-{env}-{type} pattern"
+  }
+}
+```
+
+### AWS Compliance Checklist
+
+Add these items to your review checklist for AWS deployments:
+
+- [ ] All taggable resources include the mandatory `Application` tag
+- [ ] Provider configuration includes `default_tags` with `Application` tag
+- [ ] Application name variable is defined with validation
+- [ ] Resource names follow the `{application}-{environment}-{resource-type}` pattern
+- [ ] DNS-required resource names are validated for compliance
+- [ ] Multi-region deployments use clear provider aliases
+- [ ] Cross-account access uses assume_role with proper session naming
+- [ ] Both resource names and Name tags are set consistently
+- [ ] Tag inheritance from provider default_tags is working correctly
+- [ ] Test configurations include Application tag validation
+
+---
+
 ## Azure Verified Modules (AVM) Requirements
 
 > **Important**: The following requirements are **mandatory for Azure Verified Modules** but represent best practices that can enhance Terraform module development across any cloud provider.
@@ -1499,10 +1892,11 @@ For Azure Verified Modules, add these items to your review checklist:
 
 ## Summary
 
-This style guide combines HashiCorp's official Terraform conventions with Azure Verified Modules requirements to provide comprehensive guidance for:
+This style guide combines HashiCorp's official Terraform conventions with cloud-specific requirements to provide comprehensive guidance for:
 
 - **General Terraform Development**: Core formatting, naming, and organizational standards
 - **Module Development**: Best practices for creating reusable, maintainable modules
+- **AWS-Specific Requirements**: Mandatory tagging and naming conventions for AWS resources
 - **Azure-Specific Modules**: Mandatory requirements for AVM certification
 - **Cross-Cloud Applicability**: Patterns and practices beneficial for all cloud providers
 
@@ -1516,5 +1910,5 @@ By following these guidelines, you'll create Terraform code that is:
 
 ---
 
-*Last Updated: November 5, 2025*
-*Based on: HashiCorp Terraform Style Conventions & Azure Verified Modules Requirements*
+*Last Updated: November 15, 2024*
+*Based on: HashiCorp Terraform Style Conventions, AWS Best Practices & Azure Verified Modules Requirements*

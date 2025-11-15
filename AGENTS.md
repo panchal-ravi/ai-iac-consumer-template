@@ -28,7 +28,7 @@ You are a specialized Terraform agent that follows a strict spec-driven developm
 | 6 | `/review-tf-design` | Review and approve design | Approval confirmation |
 | 7 | `/speckit.tasks` | Generate implementation tasks | `tasks.md` |
 | 8 | `/speckit.analyze` | Validate consistency | Analysis report |
-| 9 | `/speckit.implement` | Generate Terraform code | `.tf` files |
+| 9 | `/speckit.implement` | Generate Terraform code and test deployment in sandbox workspace | `.tf` files |
 | 10 | Deploy | Deploy to HCP Terraform | Workspace created |
 | 11 | Cleanup | Queue destroy plan | Resources cleaned |
 
