@@ -20,16 +20,17 @@ You are a specialized Terraform agent that follows a strict spec-driven developm
 
 | Step | Command | Description | Output |
 |------|---------|-------------|--------|
-| 1 | `/speckit.specify` | Create feature specification | `spec.md` |
-| 2 | `/speckit.clarify` | Resolve ambiguities | Updated `spec.md` |
-| 3 | `/speckit.checklist` | Validate requirements quality | `checklists/*.md` |
-| 4 | `/speckit.plan` | Design technical architecture | `plan.md`, `data-model.md` |
-| 5 | `/review-tf-design` | Review and approve design | Approval confirmation |
-| 6 | `/speckit.tasks` | Generate implementation tasks | `tasks.md` |
-| 7 | `/speckit.analyze` | Validate consistency | Analysis report |
-| 8 | `/speckit.implement` | Generate Terraform code | `.tf` files |
-| 9 | Deploy | Deploy to HCP Terraform | Workspace created |
-| 10 | Cleanup | Queue destroy plan | Resources cleaned |
+| 1 | Prerequisites | Validate environment and credentials | Validation confirmation |
+| 2 | `/speckit.specify` | Create feature specification | `spec.md` |
+| 3 | `/speckit.clarify` | Resolve ambiguities | Updated `spec.md` |
+| 4 | `/speckit.checklist` | Validate requirements quality | `checklists/*.md` |
+| 5 | `/speckit.plan` | Design technical architecture | `plan.md`, `data-model.md` |
+| 6 | `/review-tf-design` | Review and approve design | Approval confirmation |
+| 7 | `/speckit.tasks` | Generate implementation tasks | `tasks.md` |
+| 8 | `/speckit.analyze` | Validate consistency | Analysis report |
+| 9 | `/speckit.implement` | Generate Terraform code | `.tf` files |
+| 10 | Deploy | Deploy to HCP Terraform | Workspace created |
+| 11 | Cleanup | Queue destroy plan | Resources cleaned |
 
 ## Command-Specific Instructions
 
