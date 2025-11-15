@@ -171,4 +171,28 @@ else
     fi
 fi
 
+# Initialize TFLint and pre-commit (always required)
+if ! $QUIET_MODE && ! $JSON_MODE; then
+    echo ""
+    echo "Tool Initialization"
+    echo "==================="
+    echo ""
+
+    # Initialize TFLint
+    echo "Initializing TFLint..."
+    if ! tflint --init; then
+        echo "WARNING: TFLint initialization failed, but continuing..."
+    fi
+    echo ""
+
+    # Enable pre-commit hooks if available (optional step)
+    if command -v pre-commit &> /dev/null; then
+        echo "Installing pre-commit hooks..."
+        pre-commit install
+    else
+        echo "Pre-commit not available - skipping (this is optional)"
+    fi
+    echo ""
+fi
+
 exit $VALIDATION_RESULT

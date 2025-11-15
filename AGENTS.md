@@ -426,6 +426,7 @@ These files enable:
 1. Confirm implementation of approved plan
 2. Generate Terraform code in the root directory:
    - `main.tf`: Module declarations using MCP-verified specs
+   - `locals.tf`: terraform locals
    - `variables.tf`: Variable definitions with validation rules
    - `outputs.tf`: Output exports
    - `provider.tf`: Provider and configurations

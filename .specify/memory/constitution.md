@@ -65,7 +65,27 @@
 - HCP Terraform Project Name
 - HCP Terraform Workspace Name for Dev environment
 
+# Initialize TFLint and pre-commit (always required)
+
+```
+echo "Initializing TFLint..."
+if ! tflint --init; then
+    echo "WARNING: TFLint initialization failed, but continuing..."
+fi
+
+As a pre-requisite the repository must have pre-commit initialised, use the follow script to enable pre-commit
+
+# Enable pre-commit hooks if available (optional step)
+if command -v pre-commit &> /dev/null; then
+    echo "Installing pre-commit hooks..."
+    pre-commit install
+else
+    echo "Pre-commit not available - skipping (this is optional)"
+fi
+```
+
 **Rules**:
+
 - You MUST use Terraform MCP server tools to determine organization, project and dev workspace name based on the current remote git repository
 - If multiple options exist or details cannot be determined automatically, you MUST prompt user to select/provide these configuration details
 - You MUST always validate that these configuration details are available before invoking any tools provided by Terraform MCP server
@@ -73,6 +93,7 @@
 - Organization and project context MUST be validated before module registry access
 
 **Implementation**:
+
 - Configuration details MUST be automatically detected from the current git repository using Terraform MCP server tools
 - When automatic detection is not possible or returns multiple options, you MUST present choices to the user for selection
 - Missing prerequisites MUST be surfaced to the user with clear instructions and options
@@ -82,22 +103,6 @@
 ---
 
 ## III. Code Generation Standards
-
-### 3.1 Repository Structure
-**Standard**: One application, one repository, git branch per environment.
-
-**Structure**:
-```
-/
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── providers.tf
-├── versions.tf
-├── locals.tf
-├── README.md
-└── .gitignore
-```
 
 **Git Branch Strategy**:
 - `feature/*` branches → Development work (branched from `dev`)
@@ -113,38 +118,23 @@
 - Environment-specific values MUST be managed through terraform variables, NOT hardcoded in code. For testing and validation in sandbox use sandbox.auto.tfvars
 - Shared configuration MAY be extracted to local modules if needed for composition
 
-# Initialize TFLint and pre-commit (always available in devcontainer)
-
-```
-echo "Initializing TFLint..."
-if ! tflint --init; then
-    echo "WARNING: TFLint initialization failed, but continuing..."
-fi
-
-# Enable pre-commit hooks if available (optional step)
-if command -v pre-commit &> /dev/null; then
-    echo "Installing pre-commit hooks..."
-    pre-commit install
-else
-    echo "Pre-commit not available - skipping (this is optional)"
-fi
-```
-
 # Verify directory structure
 echo "Module directory structure:"
 ls -la
-
 
 ### 3.2 File Organization
 **Standard**: Terraform files MUST follow organizational conventions.
 
 **Rules**:
 - `main.tf`: Module instantiations and core infrastructure logic
+- `locals.tf`: terraform locals
 - `variables.tf`: Input variable declarations with descriptions, types, and validation
 - `outputs.tf`: Output declarations with descriptions for downstream consumption, outputs should pass back common expected values, examples, names and addresses.
 - `providers.tf`: provider configuration blocks
-- `versions.tf` : terraform block required_version, required_providers
-- `locals.tf` : Terraform locals
+- `terraform.tf`: Terraform block, backend configuration for testing
+- `override.tf`: Terraform block, backend configuration for testing in a HCP Terraform workspace and project. Import ensure sandbox_<> project is utlised 
+- `sandbox.auto.tfvars.example`: An example variables file for the user to populate.
+- `sandbox.auto.tfvars`: An variables file for the user/ai agent to populate for terraform cli testing using cloud backend.
 
 **Prohibitions**:
 - You MUST NOT create monolithic single-file configurations exceeding 500 lines
@@ -237,6 +227,7 @@ module "vpc" {
 **Policy**: Generated code must embed security best practices and follow organizational standards.
 
 **Implementation**:
+- you must ensure pre-commit is initialised using the pre-commit 
 - Generated infrastructure MUST align with security requirements (e.g., encryption enabled, public access restricted)
 - You SHOULD include security rationale comments:
   ```hcl
@@ -410,7 +401,7 @@ module "vpc" {
 - pre-commit should not be bypassed unless the user has authorized
 
 **Validation Steps**:
-- You SHOULD recommend configuring pre-commit hooks in the development environment
+
 -  run `terraform init` or `terraform plan` using a cloud block to specify the workspace in your specified HCP terraform project
 - Reviewing the terraform plan output in the HCP Terraform UI for the dev workspace before promoting to other environments
 - Review and resolve any detailed workspace output or warnings from the workspace.
@@ -418,15 +409,6 @@ module "vpc" {
 ### 5.4 Version Control
 **Standard**: Generated code MUST be version controlled with meaningful commits.
 
-**Rules**:
-- `.gitignore` MUST exclude:
-  ```
-  .terraform/
-  *.tfstate
-  *.tfstate.backup
-  .terraform.lock.hcl
-  *.tfvars  # May contain sensitive data
-  ```
 - You SHOULD suggest atomic commits per logical change
 - You MUST NOT commit secrets, credentials, or sensitive data
 
@@ -543,6 +525,11 @@ terraform {
 - You SHOULD reference successful prior implementations as patterns
 - You MUST respect organizational customizations to this constitution
 - You SHOULD incorporate policy feedback to avoid repeated violations
+- Before executing any operations, you MUST validate that required environment variables are set using the `validate-env.sh` script.
+
+  ```bash
+  .specify/scripts/bash/validate-env.sh
+  ```
 
 ---
 
