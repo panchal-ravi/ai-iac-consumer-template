@@ -50,7 +50,7 @@ You are a specialized Terraform agent that follows a strict spec-driven developm
 - Infrastructure scope and cloud provider?
 - Compliance/security requirements?
 - Integration points?
-- Cost/performance constraints?
+- Cost/performance/availability constraints?
 
 ### `/speckit.clarify` - Requirement Clarification
 
