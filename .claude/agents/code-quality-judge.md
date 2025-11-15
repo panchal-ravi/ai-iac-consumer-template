@@ -347,173 +347,169 @@ Round to one decimal place.
 
 ### 7. Generate Evaluation Report
 
+**CRITICAL**: Use the standardized markdown template to ensure consistency across all evaluations.
+
+**Template Location**: `.specify/templates/code-quality-evaluation-report.md`
+
+**Process**:
+
+1. Read the template file
+2. Replace all `{{PLACEHOLDER}}` variables with actual evaluation data
+3. Save the completed report to: `FEATURE_DIR/evaluations/code-review-{{EVAL_ID}}.md`
+4. Display the full report to the user
+
+**Template Variable Mapping**:
+
 ```markdown
-# Terraform Code Quality Evaluation Report
+# Report Header
+{{FEATURE_NAME}} = Feature name from plan.md
+{{TIMESTAMP}} = ISO-8601 timestamp (e.g., 2025-01-15T14:30:00Z)
+{{FILE_COUNT}} = Number of .tf files evaluated
+{{LOC_COUNT}} = Approximate total lines of code
 
-**Feature**: [Feature name from plan.md]
-**Evaluated**: [ISO-8601 timestamp]
-**Evaluator**: code-quality-judge (Claude Sonnet 4.5)
-**Files Evaluated**: [List of .tf files]
+# Executive Summary
+{{OVERALL_SCORE}} = Weighted overall score (X.X format)
+{{READINESS_BADGE}} = ✅ Production Ready / ⚠️ Minor Fixes Required / ⚠️ Significant Rework Needed / ❌ Not Production Ready
+{{STRENGTH_1/2/3}} = Top 3 strengths with file:line examples
+{{PRIORITY_1/2/3}} = Priority badges (P0/P1/P2/P3)
+{{ISSUE_1/2/3}} = Top 3 critical improvements with file:line and fix
 
----
+# Score Breakdown
+{{DIM1_SCORE}} through {{DIM6_SCORE}} = Individual dimension scores (X.X format)
+{{DIM1_WEIGHTED}} through {{DIM6_WEIGHTED}} = Weighted scores (X.XX format)
+{{OVERALL_WEIGHTED}} = Final weighted score (X.XX format)
 
-## Executive Summary
+# Dimension Analysis (Repeat for each dimension 1-6)
+{{DIMN_STRENGTHS}} = Bulleted list of strengths with file:line examples
+{{DIMN_ISSUES}} = Detailed issues with severity, file:line, code quotes, and fixes
+{{DIMN_RECOMMENDATIONS}} = Actionable recommendations with before/after code snippets
 
-**Overall Code Quality Score: [X.X]/10** - [READINESS_LEVEL]
+# Security Analysis
+{{SECURITY_P0_FINDINGS}} = Critical security findings with CVE/CWE references
+{{SECURITY_P1_FINDINGS}} = High severity security findings
+{{SECURITY_P2_FINDINGS}} = Medium severity security findings
+{{VALIDATE_STATUS/COUNT/DETAILS}} = terraform validate results (✅/❌, count, details)
+{{TFSEC_STATUS/COUNT/DETAILS}} = tfsec results
+{{TRIVY_STATUS/COUNT/DETAILS}} = trivy results
+{{CHECKOV_STATUS/COUNT/DETAILS}} = checkov results
+{{VAULT_STATUS/COUNT/DETAILS}} = vault-radar results
+{{SECURITY_RECOMMENDATION}} = Overall security recommendation
 
-**Top 3 Strengths:**
-1. [Specific strength with file:line code example]
-2. [Specific strength with file:line code example]
-3. [Specific strength with file:line code example]
+# File Analysis
+{{FILE_BY_FILE_ANALYSIS}} = Complete analysis for each .tf file with:
+  ### filename.tf
+  **Quality Score**: X.X/10
+  - ✅ Strengths with line numbers
+  - ❌ Issues with line numbers and code quotes
+  - 💡 Recommendations with code examples
 
-**Top 3 Critical Improvements:**
-1. **[P0/P1/P2]** [Issue with file:line and specific fix]
-2. **[P0/P1/P2]** [Issue with file:line and specific fix]
-3. **[P0/P1/P2]** [Issue with file:line and specific fix]
+# Improvement Roadmap
+{{ROADMAP_P0}} = Checklist of P0 issues with file:line and remediation
+{{ROADMAP_P1}} = Checklist of P1 issues
+{{ROADMAP_P2}} = Checklist of P2 issues
+{{ROADMAP_P3}} = Checklist of P3 issues
 
----
+# Constitution Compliance
+{{CONST_N_STATUS}} = ✅ Compliant / ⚠️ Partial / ❌ Violation
+{{CONST_N_EVIDENCE}} = File:line evidence
+{{CONST_N_NOTES}} = Additional context
+{{CONSTITUTION_PERCENTAGE}} = Percentage (e.g., 85)
+{{CONST_PASS}} = Number of passing principles
+{{CONST_TOTAL}} = Total number of principles checked
+{{CONSTITUTION_VIOLATIONS}} = List of MUST principle violations
 
-## Detailed Dimension Scores
+# Next Steps
+{{NEXT_STEPS_CONTENT}} = Detailed next steps based on score range
 
-### 1. Module Usage & Architecture: [SCORE]/10
+# Refinement Options
+{{REFINEMENT_OPTIONS}} = Interactive refinement options (A/B/C/D) when score < 8.0
 
-**Strengths:**
-- [Good module usage examples with file:line]
+# Metadata
+{{EVAL_DURATION}} = Evaluation time in seconds
+{{TOKEN_COUNT}} = Approximate token usage
+{{ITERATION_NUMBER}} = Current iteration number
+{{TF_VERSION}} = Terraform version detected
+{{GENERATION_TIMESTAMP}} = Report generation timestamp
+{{EVAL_ID}} = Unique evaluation ID (timestamp-based, e.g., 20250115-143000)
 
-**Issues Found:**
-- **[SEVERITY]** [Issue description] (file:line)
-  ```hcl
-  # Current code
-  ```
+# Appendix
+{{CODE_EXAMPLES_APPENDIX}} = Detailed before/after code examples for top issues
+```
 
-- Problem: [explanation]
-- Fix: Use module `app.terraform.io/org/module-name/provider`
+**Report Filename Convention**:
+- Format: `code-review-{{EVAL_ID}}.md`
+- Example: `code-review-20250115-143000.md`
+- Save to: `FEATURE_DIR/evaluations/`
 
-**Recommendations:**
+**Display to User**:
+After generating the report, output the full markdown content to the user AND save it to the evaluations directory.
 
-- [Specific module to use with version]
+**Populating Next Steps Content**:
 
-[Repeat for all 6 dimensions...]
+Based on the overall score, populate `{{NEXT_STEPS_CONTENT}}` with the appropriate guidance:
 
----
+**For Score ≥ 8.0** (Production Ready):
+```markdown
+### ✅ Code is Production Ready
 
-## Score Breakdown
+Your Terraform code meets production quality standards. Next steps:
 
-| Dimension | Score | Weight | Weighted Score |
-|-----------|-------|--------|----------------|
-| Module Usage & Architecture | X.X/10 | 25% | X.XX |
-| Security & Compliance | X.X/10 | 30% | X.XX |
-| Code Quality & Maintainability | X.X/10 | 15% | X.XX |
-| Variable & Output Management | X.X/10 | 10% | X.XX |
-| Testing & Validation | X.X/10 | 10% | X.XX |
-| Constitution & Plan Alignment | X.X/10 | 10% | X.XX |
-| **Overall** | **X.X/10** | **100%** | **X.XX** |
+1. **Run pre-commit hooks**: `pre-commit run --all-files`
+2. **Commit to feature branch**: `git add . && git commit -m "feat: [description]"`
+3. **Create pull request**: Use GitHub CLI or web interface
+4. **Deploy to sandbox workspace**: Test in ephemeral environment
+5. **Request code review**: Tag relevant team members
+```
 
----
+**For Score 6.0-7.9** (Minor Fixes Required):
+```markdown
+### ⚠️ Minor Fixes Required
 
-[Insert Security Analysis Summary from step 6]
+Your code is close to production ready but needs minor improvements:
 
----
+1. **Address all P0 (Critical) issues** - {{P0_COUNT}} issues identified
+2. **Fix P1 (High Priority) issues** - {{P1_COUNT}} issues identified
+3. **Run security validation**: `terraform validate && tfsec . && trivy config .`
+4. **Re-run code-quality-judge subagent** (target: ≥8.0)
+5. **Once passing, proceed to deployment**
 
-## File-by-File Analysis
+Expected time to fix: {{ESTIMATED_FIX_TIME}} (based on issue count and complexity)
+```
 
-### main.tf
+**For Score 4.0-5.9** (Significant Rework Needed):
+```markdown
+### ⚠️ Significant Rework Needed
 
-**Quality Score**: X.X/10
+Your code requires substantial improvements before deployment:
 
-- ✅ [Strengths]
-- ❌ [Issues with line numbers]
-- 💡 [Recommendations]
+1. **Address all Critical (P0) and High Priority (P1) issues**
+   - {{P0_COUNT}} critical issues identified
+   - {{P1_COUNT}} high priority issues identified
+2. **Run security tools**: `terraform validate && tfsec . && trivy config .`
+3. **Refactor per recommendations** in the Improvement Roadmap section
+4. **Re-evaluate** (target: ≥6.0 first pass, then ≥8.0)
+5. **Consider pairing with senior engineer** for complex security issues
 
-[Repeat for all .tf files]
+Focus areas: {{TOP_FOCUS_AREAS}}
+```
 
----
+**For Score < 4.0** (Not Production Ready):
+```markdown
+### ❌ Not Production Ready
 
-## Improvement Roadmap
+**DO NOT DEPLOY** - Critical issues prevent safe deployment:
 
-### Critical (P0) - Fix Before Deployment
+1. **IMMEDIATE ACTION REQUIRED**: Address all security vulnerabilities
+   - {{SECURITY_P0_COUNT}} critical security issues found
+   - See Security Analysis Summary for details
+2. **Review constitution compliance**: {{CONSTITUTION_VIOLATIONS_COUNT}} MUST principle violations
+3. **Consider regenerating code**: Run `/speckit.implement` after fixing plan.md issues
+4. **Run full security scan**: `pre-commit run --all-files`
+5. **Re-evaluate after major fixes**: Target ≥6.0 before considering deployment
 
-- [ ] [Security Issue: file:line - Specific remediation with code]
+**Critical blockers**: {{CRITICAL_BLOCKER_LIST}}
 
-### High Priority (P1) - Should Fix
-
-- [ ] [Issue: file:line - Specific remediation]
-
-### Medium Priority (P2) - Quality Enhancements
-
-- [ ] [Enhancement: file:line - Suggested improvement]
-
-### Low Priority (P3) - Nice to Have
-
-- [ ] [Polish: file:line - Optional improvement]
-
----
-
-## Constitution Compliance Report
-
-| Principle | Section | Status | Evidence |
-|-----------|---------|--------|----------|
-| Module-first architecture | §1.1 | ✅/❌ | [file:line] |
-| Semantic versioning | §1.2 | ✅/❌ | [version constraints] |
-| Ephemeral credentials | §2.1 | ✅/❌ | [workspace vars / hardcoded] |
-| Least privilege IAM | §2.2 | ✅/❌ | [IAM analysis] |
-| Testing framework | §6 | ✅/❌ | [test files present] |
-| Pre-commit validation | §5.3 | ✅/❌ | [hooks configured] |
-
-**Constitution Alignment**: [XX]% compliant ([Y]/[Z] principles)
-
-**Critical Violations**: [List MUST principle violations]
-
----
-
-## Next Steps
-
-[Based on overall score:]
-
-**For Score ≥ 8.0:**
-✅ Code is production ready
-
-- Run pre-commit hooks: `pre-commit run --all-files`
-- Commit to feature branch
-- Create pull request
-- Deploy to sandbox workspace
-
-**For Score 6.0-7.9:**
-⚠️ Minor fixes required
-
-1. Address all P0 (Critical) issues
-2. Fix P1 (High Priority) issues
-3. Re-run code-quality-judge subagent (target: ≥8.0)
-4. Once passing, proceed to deployment
-
-**For Score 4.0-5.9:**
-⚠️ Significant rework needed
-
-1. Address Critical and High Priority issues
-2. Run security tools: `terraform validate && tfsec . && trivy config .`
-3. Refactor per recommendations
-4. Re-evaluate (target: ≥6.0 first pass)
-
-**For Score < 4.0:**
-❌ Not production ready
-
-1. **DO NOT DEPLOY** - critical issues present
-2. Address all security vulnerabilities immediately
-3. Review constitution compliance
-4. Consider regenerating with `/speckit.implement` after plan fixes
-5. Re-evaluate after major fixes
-
----
-
-## Evaluation Metadata
-
-**Methodology**: Agent-as-a-Judge (Security-First Pattern)
-**Evaluation Time**: [Duration in seconds]
-**Token Usage**: [Approximate tokens]
-**Iteration**: [N]
-**Files Evaluated**: [Count]
-**Total Lines of Code**: [Approximate LOC]
-
+**Estimated rework time**: {{ESTIMATED_REWORK_TIME}} (significant architectural changes may be needed)
 ```
 
 ### 8. Save Evaluation History
@@ -527,12 +523,16 @@ Schema:
 
 ### 9. Offer Iterative Refinement (If Score < 8.0)
 
-Ask user:
+**CRITICAL**: Populate the `{{REFINEMENT_OPTIONS}}` template variable based on the score.
 
+**For Scores ≥ 8.0**: Set `{{REFINEMENT_OPTIONS}}` to:
 ```markdown
-## Code Refinement Options
+✅ **No refinement needed** - Code meets production quality standards.
+```
 
-Your Terraform code scored **[X.X]/10** - below the recommended 8.0 production threshold.
+**For Scores < 8.0**: Set `{{REFINEMENT_OPTIONS}}` to:
+```markdown
+Your Terraform code scored **{{OVERALL_SCORE}}/10** - below the recommended 8.0 production threshold.
 
 Would you like me to:
 
@@ -541,18 +541,36 @@ Would you like me to:
 **C) Manual Refinement**: You'll update code yourself, then re-run this agent
 **D) View Detailed Remediation**: Show specific code examples for each fix
 
-Please choose an option (A/B/C/D):
+**Please choose an option (A/B/C/D):**
 ```
 
-**If Option A (Auto-fix)**:
+**After displaying the report, wait for user response:**
 
+**If Option A (Auto-fix)**:
 1. Use Edit tool to fix all P0 issues
 2. Re-run evaluation automatically
-3. Show improvement delta
-4. Max 3 iterations
+3. Show improvement delta (score before → score after)
+4. Max 3 iterations to prevent infinite loops
+5. Save each iteration report with incremented iteration number
+
+**If Option B (Interactive Refinement)**:
+1. Present each issue one at a time
+2. Show proposed fix
+3. Wait for user approval (yes/no/modify)
+4. Apply approved fixes
+5. Re-evaluate after all approved changes
+
+**If Option C (Manual Refinement)**:
+1. Confirm user will make changes manually
+2. Provide guidance on re-running the evaluation
+3. Exit agent
 
 **If Option D (Detailed Remediation)**:
-Generate code examples for top 10 issues with before/after snippets
+1. Generate comprehensive code examples for top 10 issues
+2. Format as before/after comparison blocks
+3. Include explanation of why change improves quality
+4. Populate `{{CODE_EXAMPLES_APPENDIX}}` with these examples
+5. Ask if user wants to proceed with option A, B, or C
 
 ### 10. Optional: Run Security Validation Tools
 
