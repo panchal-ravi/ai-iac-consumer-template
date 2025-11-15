@@ -3,7 +3,6 @@
 # Install: pre-commit install
 # Run manually: pre-commit run --all-files
 # Update hooks: pre-commit autoupdate
-verbose: true 
 repos:
   # Terraform formatting and validation
   - repo: https://github.com/antonbabenko/pre-commit-terraform
