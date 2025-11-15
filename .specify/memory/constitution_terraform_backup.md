@@ -216,6 +216,7 @@ module "vpc" {
 - Module inputs MUST map to declared variables, NOT hardcoded values
 - You MUST include comments explaining non-obvious module configurations
 - Module source MUST explicitly reference the private registry e.g. `<app.terraform.io/<org-name>`, never generic registry shortcuts
+- Once the code is generated and passing pre-commit, use the code-quality-judge subagent review the code to evaluate code quality.
 
 ---
 
@@ -248,6 +249,8 @@ module "vpc" {
   ```
 - Security patterns MUST be implemented proactively, not reactively
 - Non-compliant patterns MUST be avoided even if technically functional
+- Once the code is generated and passing pre-commit, use must use the code-quality-judge subagent review the code to evaluate code quality. Fix the issue identified in code review
+
 
 ### 3.3 Secrets Management
 **Policy**: Secrets MUST never appear in Terraform code or state.
@@ -285,6 +288,7 @@ module "vpc" {
 - RDS instances MUST NOT be publicly accessible unless explicitly justified
 - EC2 instances MUST use IAM instance profiles instead of embedded credentials
 - Lambda functions MUST use least privilege execution roles with specific service permissions
+- You must use the aws-security-advisor agent to research and review the required AWS resources
 
 **GCP-Specific Rules**:
 - Firewall rules MUST use specific source ranges instead of `0.0.0.0/0` unless justified
