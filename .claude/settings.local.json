@@ -49,7 +49,11 @@
       "Skill(terraform-style-guide)",
       "Skill(terraform-test)",
       "Skill(terraform-stacks)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(sed:*)",
+      "Bash(curl:*)",
+      "mcp__terraform__update_workspace_variable",
+      "mcp__terraform__list_workspace_variables"
     ],
     "deny": [
       "Write(.gitignore)",

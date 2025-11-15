@@ -101,9 +101,6 @@
 
 **Git Branch Strategy**:
 - `feature/*` branches → Development work (branched from `dev`)
-- `dev` branch → Development environment
-- `staging` branch → Staging environment  
-- `main` branch → Production environment
 
 **Branch Protection Rules**:
 - Direct commits to `dev`, `staging`, and `main` branches are PROHIBITED
@@ -113,7 +110,7 @@
 
 **Rules**:
 - Each git branch maps to ONE HCP Terraform workspace (pre-configured during application onboarding)
-- Environment-specific values MUST be managed through workspace variables, NOT hardcoded in code
+- Environment-specific values MUST be managed through terraform variables, NOT hardcoded in code. For testing and validation in sandbox use sandbox.auto.tfvars
 - Shared configuration MAY be extracted to local modules if needed for composition
 
 # Initialize TFLint and pre-commit (always available in devcontainer)
@@ -148,10 +145,9 @@ ls -la
 - `providers.tf`: provider configuration blocks
 - `versions.tf` : terraform block required_version, required_providers
 - `locals.tf` : Terraform locals
--
 
 **Prohibitions**:
-- You MUST NOT create monolithic single-file configurations exceeding 300 lines
+- You MUST NOT create monolithic single-file configurations exceeding 500 lines
 - You MUST NOT intermingle resource types without logical grouping
 - You MUST NOT use default values for security-sensitive variables
 
@@ -216,6 +212,7 @@ module "vpc" {
 - Module inputs MUST map to declared variables, NOT hardcoded values
 - You MUST include comments explaining non-obvious module configurations
 - Module source MUST explicitly reference the private registry e.g. `<app.terraform.io/<org-name>`, never generic registry shortcuts
+- Once the code is generated and passing pre-commit, use the code-quality-judge subagent review the code to evaluate code quality.
 
 ---
 
@@ -248,6 +245,8 @@ module "vpc" {
   ```
 - Security patterns MUST be implemented proactively, not reactively
 - Non-compliant patterns MUST be avoided even if technically functional
+- Once the code is generated and passing pre-commit, use must use the code-quality-judge subagent review the code to evaluate code quality. Fix the issue identified in code review
+
 
 ### 3.3 Secrets Management
 **Policy**: Secrets MUST never appear in Terraform code or state.
@@ -285,6 +284,7 @@ module "vpc" {
 - RDS instances MUST NOT be publicly accessible unless explicitly justified
 - EC2 instances MUST use IAM instance profiles instead of embedded credentials
 - Lambda functions MUST use least privilege execution roles with specific service permissions
+- You must use the aws-security-advisor agent to research and review the required AWS resources
 
 **GCP-Specific Rules**:
 - Firewall rules MUST use specific source ranges instead of `0.0.0.0/0` unless justified
@@ -335,35 +335,18 @@ module "vpc" {
 - Run terraform validate to confirm code is syntactically correct
 - The current feature branch MUST be committed and pushed to the remote Git repository BEFORE creating the ephemeral workspace
 - ensure the terraform variables are validated by the user before proceeding, including regions values and other required inputs.
-- You MUST create all necessary workspace variables at the ephemeral workspace level based on required variables defined in `variables.tf` in the `feature/*` branch
+- You MUST create all necessary terraform variables using the sandbox.auto.tfvars file based on required variables defined in `variables.tf` in the `feature/*` branch
 - Ephemeral workspaces MUST be used to validate terraform plan and apply operations before promoting changes
 - Upon successful testing in the ephemeral workspace, you MUST create corresponding workspace variables for the dev workspace
 - You MUST use the following tools to test AI-generated Terraform code:
   - `create_workspace` to create ephemeral workspace
-  - `create_workspace_variable` to create workspace level variables
   - `create_run` to create a new Terraform run in the specified ephemeral workspace
 - Ephemeral workspaces MUST be deleted after successful testing to avoid unnecessary costs
-
-**Variable Promotion Workflow**:
-1. Test variables in ephemeral workspace connected to `feature/*` branch
-2. Confirm variable value with user in prompt before proceeding
-3. Validate successful terraform run operations (plan and apply)
-4. Create identical workspace variables in the dev workspace
-5. Document variable requirements and values for staging and production promotion
-
-### 4.2 Variable Sets
-**Standard**: Leverage organization-wide variable sets for common configuration.
-
-**Common Variable Sets**:
-- `vault-authentication`: Vault URL, namespace, role for dynamic credentials
-- `tags-standard`: Organization, cost-center, compliance tags
-- `network-config`: Shared network CIDRs, DNS zones
-- `monitoring-config`: Logging endpoints, metrics exporters
 
 **Rules**:
 - You MUST NOT duplicate variable set values in code
 - You SHOULD document expected variable sets in `README.md`
-- Application-specific variables MUST be defined at workspace level, not in code
+- Application-specific variables MUST be defined at in the sandbox.auto.tfvars file
 
 ### 4.3 Environment Promotion
 **Standard**: Changes MUST flow feature → dev → staging → main branches with mandatory human review at each stage.
