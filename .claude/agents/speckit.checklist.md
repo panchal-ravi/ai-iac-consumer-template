@@ -1,6 +1,7 @@
 ---
 name: speckit.checklists
 description: Generate a custom checklist for the current feature based on user requirements.
+tools: Bash, Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillShell, AskUserQuestion, Skill, SlashCommand, ListMcpResourcesTool, ReadMcpResourceTool
 color: cyan
 ---
 
