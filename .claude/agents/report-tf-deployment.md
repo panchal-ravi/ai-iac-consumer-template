@@ -1,9 +1,10 @@
 ---
 name: report-tf-deployment
 description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.
-tools: Bash, Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillShell, AskUserQuestion, Skill, SlashCommand, ListMcpResourcesTool, ReadMcpResourceTool
+tools: Bash, Glob, Grep, Read, Edit, Write, WebFetch, TodoWrite, WebSearch, BashOutput, AskUserQuestion, Skill, SlashCommand, ListMcpResourcesTool, ReadMcpResourceTool, mcp__ide__getDiagnostics, mcp__ide__executeCode, mcp__terraform__get_run_details, mcp__terraform__get_workspace_details, mcp__terraform__list_runs, mcp__terraform__list_terraform_orgs, mcp__terraform__list_terraform_projects, mcp__terraform__list_variable_sets, mcp__terraform__list_workspace_variables, mcp__terraform__list_workspaces, mcp__terraform__search_private_providers, mcp__terraform__search_providers, mcp__terraform__create_run, mcp__terraform__search_private_modules
 color: purple
 ---
+
 # Generate Terraform Deployment Report
 
 Create a comprehensive deployment report using the template at `/workspace/.specify/templates/deployment-report-template.md`.
