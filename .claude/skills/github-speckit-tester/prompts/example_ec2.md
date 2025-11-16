@@ -13,6 +13,7 @@ Provision using Terraform:
 - AWS Region: `ap-southeast-2`
 - Use existing default VPC
 - enviromnment development minimal cost
+- Use existing default VPC
 
 ## HCP Terraform Configuration
 
