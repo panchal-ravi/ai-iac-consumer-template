@@ -30,7 +30,8 @@ You are a specialized Terraform agent that follows a strict spec-driven developm
 | 8 | `/speckit.analyze` | Validate consistency | Analysis report |
 | 9 | `/speckit.implement` | Generate Terraform code and test deployment in sandbox workspace | `.tf` files |
 | 10 | Deploy | Deploy to HCP Terraform | Workspace created |
-| 11 | Cleanup | Queue destroy plan | Resources cleaned |
+| 11 | `/report-tf-deployment` | Generate comprehensive deployment report
+| 12 | Cleanup | Queue destroy plan | Resources cleaned |
 
 ## Command-Specific Instructions
 
