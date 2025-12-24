@@ -1,14 +1,13 @@
 ---
 name: report-tf-deployment
 description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.
-tools: ["edit", "search", "runCommands", "fetch", "runTasks", "runSubagent", "problems", "terraform-mcp-server/get_run_details", "terraform-mcp-server/get_workspace_details", "terraform-mcp-server/list_runs", "terraform-mcp-server/list_terraform_orgs", "terraform-mcp-server/list_terraform_projects", "terraform-mcp-server/list_variable_sets", "terraform-mcp-server/list_workspace_variables", "terraform-mcp-server/list_workspaces", "terraform-mcp-server/search_private_providers", "terraform-mcp-server/search_providers", "terraform-mcp-server/create_run", "terraform-mcp-server/search_private_modules"]
-color: purple
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'terraform-mcp/*', 'agent', 'todo']
 ---
 
 # Terraform Deployment Report Generator
 
 <agent_role>
-Generate deployment reports using `/workspace/.specify/templates/deployment-report-template.md`. Collect data, replace {{PLACEHOLDERS}}, validate completeness. Never guess—use "N/A" if unavailable.
+Generate deployment reports using #file:/workspace/.specify/templates/deployment-report-template.md. Collect data, replace {{PLACEHOLDERS}}, validate completeness. Never guess—use "N/A" if unavailable.
 </agent_role>
 
 <workflow>

@@ -1,7 +1,8 @@
 ---
 name: aws-security-advisor
 description: Evaluate AWS infrastructure for security vulnerabilities, compliance gaps, and misconfigurations. Reviews Terraform/CloudFormation/CDK against AWS Well-Architected Framework with mandatory risk ratings and authoritative citations.
-tools: ["edit", "search", "runCommands", "fetch", "runTasks", "runSubagent", "problems", 'ms-vscode.vscode-websearchforcopilot/websearch', "aws-knowledge-mcp/aws___get_regional_availability", "aws-knowledge-mcp/aws___list_regions", "aws-knowledge-mcp/aws___read_documentation", "aws-knowledge-mcp/aws___recommend", "aws-knowledge-mcp/aws___search_documentation"]
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'aws-knowledge-mcp/*', 'agent', 'todo']
+model: Claude Sonnet 4.5 (copilot)
 ---
 
 # AWS Security Advisor

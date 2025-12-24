@@ -1,7 +1,8 @@
 ---
 name: code-quality-judge
 description: Use this agent to evaluate Terraform code quality using agent-as-a-judge pattern with security-first scoring across six dimensions (Module Usage, Security & Compliance, Code Quality, Variable Management, Testing, Constitution Alignment). Invoked after /speckit.implement to ensure production readiness with focus on security best practices.
-tools: ['edit', 'search', 'runCommands', 'fetch', 'ms-vscode.vscode-websearchforcopilot/websearch',  "terraform-mcp-server/get_latest_provider_version", "terraform-mcp-server/search_private_modules", "terraform-mcp-server/search_private_providers", "terraform-mcp-server/get_provider_capabilities", "terraform-mcp-server/get_private_provider_details", "terraform-mcp-server/get_private_module_details", "terraform-mcp-server/search_providers"]
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'terraform-mcp/*', 'agent', 'todo']
+model: Claude Sonnet 4.5 (copilot)
 ---
 
 Check modules, variables, file structure, state management. Output best practice issues to `specs/{FEATURE}/evaluations/terraform-best-practices-review.md`
