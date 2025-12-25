@@ -19,8 +19,8 @@ ARG TZ \
 # Install uv directly from the official uv image (ensure version pinning for stability)
 COPY --from=docker.io/astral/uv:latest /uv /uvx /usr/local/bin/
 
-# Install Go from official image (multi-stage copy is more efficient than downloading)
-COPY --from=docker.io/library/golang:1.24-bookworm /usr/local/go /usr/local/go
+# Install Go from official image (using stable version for reliability)
+COPY --from=docker.io/library/golang:1.23-bookworm /usr/local/go /usr/local/go
 
 # Install packages, configure locale, set up directories, and install delta in one layer
 # Note: node:20-slim requires ca-certificates for HTTPS operations
@@ -93,5 +93,11 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
         -x && \
     uv tool install pre-commit --with pre-commit-uv && \
     uv tool install specify-cli --from git+https://github.com/github/spec-kit.git && \
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
+    ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then GOLANGCI_ARCH="amd64"; else GOLANGCI_ARCH="arm64"; fi && \
+    GOLANGCI_VERSION="1.63.4" && \
+    mkdir -p /home/node/go/bin && \
+    wget -qO- "https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCI_VERSION}/golangci-lint-${GOLANGCI_VERSION}-linux-${GOLANGCI_ARCH}.tar.gz" | tar -xz -C /tmp && \
+    mv "/tmp/golangci-lint-${GOLANGCI_VERSION}-linux-${GOLANGCI_ARCH}/golangci-lint" /home/node/go/bin/ && \
+    rm -rf /tmp/golangci-lint-* && \
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc 
