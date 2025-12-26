@@ -32,22 +32,23 @@ Workflow - autonomously complete the tasks,
 7. commit and update Git issue and continue to next stage
 8. `/speckit.plan` - Design technical architecture with data model
 9. commit and update Git issue and continue to next stage
-10. `/review-tf-design` - Review and approve design
+10. `/review-aws-security` - Review and approve security design
 11. commit and update Git issue and continue to next stage
-12. `/speckit.tasks` - Generate actionable implementation task list
+12. `/review-code-quality` - Review and approve code quality design
 13. commit and update Git issue and continue to next stage
-14. `/speckit.analyze` - Analyze spec for consistency
+14. `/speckit.tasks` - Generate actionable implementation task list
 15. commit and update Git issue and continue to next stage
-16. `/speckit.implement` - Generate Terraform code and test in sandbox workspace (init, plan only)
+16. `/speckit.analyze` - Analyze spec for consistency
 17. commit and update Git issue and continue to next stage
-18. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
-19. Verify successful apply
-20. commit and update Git issue and continue to next stage
-21. `/report-tf-deployment` - Generate comprehensive deployment report
-22. Ask User before proceeding - Cleanup - Queue destroy plan only if confirmed
-23. Close GitHub Issue - Add final summary comment and close issue with completed label
-24. Create a PR with all committed changes for review
-
+18. `/speckit.implement` - Generate Terraform code and test in sandbox workspace (init, plan only)
+19. commit and update Git issue and continue to next stage
+20. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
+21. Verify successful apply
+22. commit and update Git issue and continue to next stage
+23. `/report-tf-deployment` - Generate comprehensive deployment report
+24. Ask User before proceeding - Cleanup - Queue destroy plan only if confirmed
+25. Close GitHub Issue - Add final summary comment and close issue with completed label
+26. Create a PR with all committed changes for review
 ### GitHub Issue Template Mapping
 
 When creating the issue, map user inputs to these key template fields:
