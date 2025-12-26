@@ -1,3 +1,0 @@
----
-agent: code-quality-judge
----
