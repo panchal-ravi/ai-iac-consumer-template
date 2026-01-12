@@ -28,11 +28,17 @@ Before starting the workflow, create and configure a GitHub issue:
    - Example: `🤖 **speckit.specify** - Started: Creating feature specification from requirements`
    - Example: `🤖 **speckit.specify** - Completed: Generated spec.md with 5 core requirements`
 
+### Environment
+All files and folders exist in /workspace/ directory. 
+All speckit scripts are located in `/workspace/.specify/scripts/bash` directory.
+
+You should not require to change to any other directory.
+
 ### Execution Workflow
 
 work on the GitHub issue autonomously
 
-Workflow - autonomously complete the tasks. All speckit stages should be run as subagents. At each stage, commit changes and update the GitHub issue with progress comments. All speckit scripts are located in `/workspace/.specify/` directory.
+Workflow - autonomously complete the tasks. All speckit stages should be run as subagents. At each stage, commit changes and update the GitHub issue with progress comments. 
 
 0. Create and configure tracking GitHub issue from template. Github issue should be created and labeled appropriately. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
