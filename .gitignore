@@ -39,6 +39,7 @@ config.yaml
 config.json
 credentials.json
 .copilot/logs
+.copilot/config.json
 configstore/
 .DS_Store
 

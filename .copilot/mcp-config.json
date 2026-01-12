@@ -14,9 +14,15 @@
         "TFE_TOKEN",
         "hashicorp/terraform-mcp-server:0.3.2"
       ],
-      "env": {
-        "TFE_TOKEN": "${TFE_TOKEN}"
-      }
+      "env": {}
+    },
+    "aws-knowledge-mcp": {
+      "type": "http",
+      "url": "https://knowledge-mcp.global.api.aws",
+      "headers": {},
+      "tools": [
+        "*"
+      ]
     }
   }
 }
