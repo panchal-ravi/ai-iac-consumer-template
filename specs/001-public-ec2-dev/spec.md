@@ -14,6 +14,13 @@
 - Environment: Development
 - Monthly Budget: $50
 
+## Clarifications
+
+### Session 2026-01-12
+
+- Q: When the EC2 instance is terminated, should the root volume be deleted immediately or retained for a period? → A: Delete volume immediately
+- Q: What level of monitoring is required for the EC2 instance - basic CloudWatch monitoring (5-minute intervals) or detailed monitoring (1-minute intervals) with custom dashboards and alarms? → A: basic monitoring only
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Initial Instance Provisioning (Priority: P1)
@@ -77,10 +84,11 @@ As a development team lead, I need the infrastructure to be cost-optimized with 
 
 **Acceptance Scenarios**:
 
-1. **Given** the instance is provisioned, **When** checking CloudWatch, **Then** basic monitoring metrics (CPU, network, disk) are collected
-2. **Given** the instance is running, **When** checking resource tags, **Then** tags include Environment=development, ManagedBy=Terraform, CostCenter and Project identifiers
-3. **Given** the infrastructure is deployed, **When** reviewing AWS cost explorer, **Then** resources are identifiable by tags for cost tracking
-4. **Given** instance type is t3.micro with 8GB storage, **When** calculating monthly cost, **Then** estimated cost is well under $50/month budget
+1. **Given** the instance is provisioned, **When** checking CloudWatch, **Then** basic monitoring (5-minute interval) metrics for CPU, network, and disk are collected
+2. **Given** the instance is provisioned, **When** checking CloudWatch configuration, **Then** detailed monitoring (1-minute intervals) is NOT enabled to avoid extra costs
+3. **Given** the instance is running, **When** checking resource tags, **Then** tags include Environment=development, ManagedBy=Terraform, CostCenter and Project identifiers
+4. **Given** the infrastructure is deployed, **When** reviewing AWS cost explorer, **Then** resources are identifiable by tags for cost tracking
+5. **Given** instance type is t3.micro with 8GB storage and basic monitoring, **When** calculating monthly cost, **Then** estimated cost is well under $50/month budget
 
 ---
 
@@ -111,7 +119,7 @@ As a development team lead, I need the infrastructure to be cost-optimized with 
 - **FR-003**: System MUST assign a public IP address to the EC2 instance
 - **FR-004**: System MUST deploy the instance in the default VPC of ap-southeast-1 region
 - **FR-005**: System MUST use the latest Amazon Linux 2023 AMI available in ap-southeast-1
-- **FR-006**: System MUST attach an 8 GB GP3 root volume to the instance
+- **FR-006**: System MUST attach an 8 GB GP3 root volume to the instance with delete_on_termination=true (volume deleted immediately when instance terminates)
 - **FR-007**: System MUST provision all resources through HCP Terraform workspace "sandbox_workspace"
 
 **Authentication & Access**:
@@ -130,7 +138,9 @@ As a development team lead, I need the infrastructure to be cost-optimized with 
 
 **Monitoring & Cost Management**:
 
-- **FR-016**: System MUST enable basic CloudWatch monitoring for the EC2 instance
+- **FR-016**: System MUST enable basic CloudWatch monitoring (5-minute interval metrics) for the EC2 instance, collecting CPU utilization, network I/O, and disk I/O metrics
+- **FR-016a**: System MUST NOT enable detailed monitoring (1-minute intervals) to avoid additional costs
+- **FR-016b**: System MUST NOT create custom CloudWatch dashboards or alarms (basic metric collection only)
 - **FR-017**: System MUST apply resource tags to all created resources including: Environment=development, ManagedBy=Terraform, Project, CostCenter
 - **FR-018**: Infrastructure cost MUST remain under $50 per month based on t3.micro pricing and 8GB GP3 storage
 
@@ -179,7 +189,7 @@ As a development team lead, I need the infrastructure to be cost-optimized with 
 - **SC-004**: Instance public IP address is visible and documented in Terraform outputs immediately after provisioning
 - **SC-005**: SSH password is retrievable from AWS Secrets Manager by authorized users within 30 seconds
 - **SC-006**: Monthly infrastructure cost remains under $50 based on t3.micro compute ($7.30/month) and 8GB GP3 storage ($0.80/month) = ~$8.10/month
-- **SC-007**: Basic CloudWatch metrics (CPU utilization, network in/out, disk read/write) are visible within 5 minutes of instance creation
+- **SC-007**: Basic CloudWatch metrics (5-minute intervals for CPU utilization, network in/out, disk read/write) are visible within 5 minutes of instance creation; detailed monitoring (1-minute intervals) is explicitly not enabled to minimize costs
 - **SC-008**: All provisioned resources are tagged correctly for cost tracking and resource management
 - **SC-009**: Infrastructure changes are reflected in GitHub Issue #12 within 1 hour of deployment
 - **SC-010**: 100% of provisioning attempts using available private registry modules succeed without requiring public module fallback (target metric)
@@ -329,6 +339,8 @@ The following items are explicitly **not included** in this feature:
 ### Monitoring & Operations
 
 - Advanced CloudWatch dashboards or custom metrics
+- CloudWatch alarms or SNS notifications
+- Detailed monitoring (1-minute CloudWatch intervals)
 - Log aggregation or centralized logging (CloudWatch Logs, ELK stack)
 - APM or distributed tracing
 - Alerting and on-call rotation setup
@@ -392,8 +404,10 @@ This feature is considered **complete** when all of the following are verified:
 
 ### Monitoring & Tagging
 
-- [ ] Basic CloudWatch monitoring is enabled
+- [ ] Basic CloudWatch monitoring is enabled (5-minute interval metrics only)
+- [ ] Detailed CloudWatch monitoring (1-minute intervals) is NOT enabled
 - [ ] CloudWatch metrics visible for: CPU utilization, network in/out, disk I/O
+- [ ] No custom CloudWatch alarms or dashboards created (basic metrics only)
 - [ ] Resource tags applied: Environment=development, ManagedBy=Terraform
 - [ ] Resource tags include Project and CostCenter identifiers
 - [ ] Tags are visible in AWS Cost Explorer
