@@ -4,6 +4,12 @@ description: This agent creates and manages a GitHub issue to autonomously provi
 model: Claude Sonnet 4.5 (copilot)
 ---
 
+## User Input
+
+```text
+$ARGUMENTS
+```
+
 ### GitHub Issue Setup
 
 Before starting the workflow, create and configure a GitHub issue:
