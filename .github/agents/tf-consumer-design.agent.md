@@ -1,6 +1,6 @@
 ---
-name: tf-consumer-workflow
-description: This agent creates and manages a GitHub issue to autonomously provision infrastructure using HCP Terraform based on user requests.
+name: tf-consumer-design
+description: Generates design, plan and detailed tasks based on infrastructure requirements. Reviews design against security and Terraform best practices.
 model: Claude Sonnet 4.5 (copilot)
 ---
 
@@ -20,7 +20,7 @@ Before starting the workflow, create and configure a GitHub issue:
    - Use `gh issue create` with the user provided input and template values
    - Title format: `[AGENT PROVISION] <descriptive-name>`
    - Labels: `agent-driven`, `terraform`, `infrastructure`, `provisioning`
-   - Populate all fields from the template with user-provided or inferred values
+   - Populate all fields from the template 
 4. **Validate Issue**: Confirm the GitHub issue is valid and contains all required information
 5. **Mark as In Progress**: Add `in-progress` label when starting work using `gh issue edit <issue-number> --add-label "in-progress"`
 6. **Update Issue with Progress**: Comment on the issue at the start and completion of each Github spec-kit stage with a short summary and link to the generated artifacts:
@@ -56,15 +56,9 @@ Workflow - autonomously complete the tasks. All speckit stages should be run as 
 13. commit and update Git issue and continue to next stage
 14. Run `speckit.analyze` agent as subagent - Analyze spec for consistency
 15. commit and update Git issue and continue to next stage
-16. Run `speckit.implement` agent as subagent - Generate Terraform code and test in sandbox workspace (init, plan only)
-17. commit and update Git issue and continue to next stage
-18. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
-19. Verify successful apply
-20. commit and update Git issue and continue to next stage
-21. Run `report-tf-deployment` agent as subagent - Generate comprehensive deployment report
-22. Ask User before proceeding - Cleanup - Queue destroy plan only if confirmed
-23. Close GitHub Issue - Add final summary comment and close issue with completed label
-24. Create a PR with all committed changes for review
+16. Record Github branch and issue details to ./specs/<FEATURE_NAME>/gh-issue.json for use by implementation agent
+17. Request user to review and approve design (human-in-the-loop) before implementation phase
+
 ### GitHub Issue Template Mapping
 
 When creating the issue, map user inputs to these key template fields:
@@ -99,4 +93,4 @@ When creating the issue, map user inputs to these key template fields:
 5. Validate the created issue has all critical information
 6. Add `in-progress` label before starting work
 7. Post progress comments at start/completion of each Speckit phase
-8. Close issue with final summary when workflow complete
+8. Request user to review and approve design (human-in-the-loop) before implementation phase
