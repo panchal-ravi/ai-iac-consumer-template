@@ -23,7 +23,7 @@ Before starting the workflow, create and configure a GitHub issue:
    - Populate all fields from the template with user-provided or inferred values
 4. **Validate Issue**: Confirm the GitHub issue is valid and contains all required information
 5. **Mark as In Progress**: Add `in-progress` label when starting work using `gh issue edit <issue-number> --add-label "in-progress"`
-6. **Update Issue with Progress**: Comment on the issue at the start and completion of each Speckit stage with a short summary:
+6. **Update Issue with Progress**: Comment on the issue at the start and completion of each Github spec-kit stage with a short summary and link to the generated artifacts:
    - Format: `🤖 **[Stage Name]** - [Started/Completed]: Brief summary`
    - Example: `🤖 **speckit.specify** - Started: Creating feature specification from requirements`
    - Example: `🤖 **speckit.specify** - Completed: Generated spec.md with 5 core requirements`
@@ -32,7 +32,7 @@ Before starting the workflow, create and configure a GitHub issue:
 
 work on the GitHub issue autonomously
 
-Workflow - autonomously complete the tasks,
+Workflow - autonomously complete the tasks. All speckit stages should be run as subagents. At each stage, commit changes and update the GitHub issue with progress comments. All speckit scripts are located in `.specify/` directory of the current folder.
 
 0. Create and configure tracking GitHub issue from template. Github issue should be created and labeled appropriately. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
