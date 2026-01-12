@@ -36,26 +36,26 @@ Workflow - autonomously complete the tasks,
 
 0. Create and configure tracking GitHub issue from template. Github issue should be created and labeled appropriately. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
-2. `/speckit.specify` - Create feature specification from the issue details and continue to next stage
+2. Run `speckit.specify` agent as subagent - Create feature specification from the issue details and continue to next stage
 3. commit and update Git issue
-4. `/speckit.clarify` - Resolve ambiguities in the specification
+4. Run `speckit.clarify` agent as subagent - Resolve ambiguities in the specification
 5. commit and update Git issue and continue to next stage
-6. `/speckit.checklist` - Validate requirements quality
+6. Run `speckit.checklist` agent as subagent - Validate requirements quality
 7. commit and update Git issue and continue to next stage
-8. `/speckit.plan` - Design technical architecture with data model
+8. Run `speckit.plan` agent as subagent - Design technical architecture with data model
 9. commit and update Git issue and continue to next stage
-10. `/review-tf-design` - Review and approve Terraform design
+10. Run `review-tf-design` agent as subagent - Review and approve Terraform design
 11. commit and update Git issue and continue to next stage
-12. `/speckit.tasks` - Generate actionable implementation task list
+12. Run `speckit.tasks` agent as subagent - Generate actionable implementation task list
 13. commit and update Git issue and continue to next stage
-14. `/speckit.analyze` - Analyze spec for consistency
+14. Run `speckit.analyze` agent as subagent - Analyze spec for consistency
 15. commit and update Git issue and continue to next stage
-16. `/speckit.implement` - Generate Terraform code and test in sandbox workspace (init, plan only)
+16. Run `speckit.implement` agent as subagent - Generate Terraform code and test in sandbox workspace (init, plan only)
 17. commit and update Git issue and continue to next stage
 18. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
 19. Verify successful apply
 20. commit and update Git issue and continue to next stage
-21. `/report-tf-deployment` - Generate comprehensive deployment report
+21. Run `report-tf-deployment` agent as subagent - Generate comprehensive deployment report
 22. Ask User before proceeding - Cleanup - Queue destroy plan only if confirmed
 23. Close GitHub Issue - Add final summary comment and close issue with completed label
 24. Create a PR with all committed changes for review
