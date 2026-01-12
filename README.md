@@ -1,3 +1,128 @@
+# EC2 Development Instance with Password-Based SSH
+
+Public EC2 development instance with password-based SSH authentication, security hardening, and CloudWatch monitoring. Deployed via HCP Terraform for infrastructure as code best practices.
+
+## 🚀 Quick Start
+
+See [quickstart.md](./specs/001-ec2-dev-instance/quickstart.md) for complete deployment and testing instructions.
+
+### Prerequisites
+
+- HCP Terraform workspace: `sandbox_ec2_dev_instance`
+- AWS credentials configured via HCP Terraform Variable Sets
+- Terraform >= 1.5.0
+- AWS Provider >= 5.0.0
+
+### Deploy
+
+```bash
+# Initialize Terraform
+terraform init
+
+# Review plan
+terraform plan
+
+# Deploy infrastructure
+terraform apply
+
+# IMPORTANT: Set devuser password via Session Manager (REQUIRED before SSH)
+# Connect to instance via Session Manager
+aws ssm start-session --target $(terraform output -raw instance_id)
+
+# Set password for devuser account (must meet complexity requirements)
+# Requirements: 14+ characters, uppercase, lowercase, digit, special character
+sudo passwd devuser
+
+# Disconnect from Session Manager (Ctrl+C or type 'exit')
+
+# Connect via SSH with password authentication
+ssh devuser@$(terraform output -raw instance_public_ip)
+```
+
+### Password Requirements
+
+The `devuser` password must meet the following complexity requirements (FR-012, FR-013):
+
+- **Minimum length**: 14 characters
+- **Character classes**: Must include all 4 types:
+  - Uppercase letters (A-Z)
+  - Lowercase letters (a-z)
+  - Digits (0-9)
+  - Special characters (!@#$%^&*)
+- **Maximum repeat**: No more than 2 consecutive identical characters
+- **Password expiry**: 90 days with 7-day warning (FR-017)
+
+## Feature Overview
+
+This implementation provides a complete EC2 development environment with:
+
+- **Infrastructure Deployment (US1)**: t3.micro instance in us-east-1 with Elastic IP
+- **SSH Access (US2)**: Password-based authentication with `devuser` account
+- **Security Hardening (US3)**: fail2ban protection, strong password policies
+- **Monitoring (US4)**: CloudWatch logging of SSH authentication events
+
+### Key Features
+
+- ✅ Password-based SSH (no key pair management required)
+- ✅ Automatic brute-force protection with fail2ban
+- ✅ Emergency access via AWS Systems Manager Session Manager
+- ✅ Real-time SSH authentication logging to CloudWatch
+- ✅ Cost-optimized: ~$10/month for development use
+- ✅ 3-5 minute deployment time
+
+### Architecture
+
+```
+Internet
+   │
+   ├──> Elastic IP (203.0.113.x)
+   │
+   └──> EC2 t3.micro (Amazon Linux 2023)
+        ├── Security Group (SSH port 22)
+        ├── IAM Role (SSM access)
+        ├── fail2ban (brute-force protection)
+        └── CloudWatch Agent (log streaming)
+```
+
+## Documentation
+
+- **[Specification](./specs/001-ec2-dev-instance/spec.md)** - Complete feature requirements
+- **[Implementation Plan](./specs/001-ec2-dev-instance/plan.md)** - Architecture and technical decisions
+- **[Quick Start Guide](./specs/001-ec2-dev-instance/quickstart.md)** - Deployment and testing
+- **[Research](./specs/001-ec2-dev-instance/research.md)** - Technical decision rationale
+- **[Data Model](./specs/001-ec2-dev-instance/data-model.md)** - Resource relationships
+- **[Terraform Interface](./specs/001-ec2-dev-instance/contracts/terraform-interface.md)** - Input/output contract
+
+## Cost Estimate
+
+| Component | Monthly Cost |
+|-----------|--------------|
+| EC2 t3.micro | $7.50 |
+| EBS gp3 30GB | $2.40 |
+| CloudWatch Logs | $0.50 |
+| **Total** | **~$10.40** |
+
+Well within the $50/month budget ceiling (SC-005).
+
+## Security Considerations
+
+⚠️ **Development Environment Only**
+
+This configuration is designed for development environments and is **NOT suitable for production use**:
+
+- Public SSH access (0.0.0.0/0) with password authentication
+- Not compliant with PCI-DSS, HIPAA, or SOC 2
+- No data encryption beyond AWS defaults
+- Single point of access (no high availability)
+
+**Mitigations in place:**
+- fail2ban automatic IP blocking after 5 failed attempts
+- Strong password policy enforcement (14+ characters, 4 character classes)
+- CloudWatch authentication logging for security monitoring
+- Session Manager emergency fallback access
+
+---
+
 # AI IaC Consumer Template
 
 A prescriptive agent workflow template for AI-assisted Infrastructure as Code development, powered by **Claude Code** and **HCP Terraform**.
@@ -297,14 +422,19 @@ Workspace: sandbox_sqs_<GITHUB_REPO_NAME>
 
 ---
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 
 ## Modules
 
@@ -312,13 +442,45 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_cloudwatch_log_group.ssh_auth_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_eip.dev_instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
+| [aws_iam_instance_profile.ec2_profile](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_role.ec2_ssm_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.ssm_managed_instance_core](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_instance.dev](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
+| [aws_security_group.ec2_dev_ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_ami.amazon_linux_2023](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_subnets.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_vpc.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Additional tags to merge with standard tags (Environment, Project, ManagedBy, PublicAccess) | `map(string)` | `{}` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region for resource deployment (e.g., us-east-1, us-west-2) | `string` | `"us-east-1"` | no |
+| <a name="input_enable_monitoring"></a> [enable\_monitoring](#input\_enable\_monitoring) | Enable CloudWatch detailed monitoring (1-minute metrics, adds $2/month cost) | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Deployment environment - development use only (production NOT supported) | `string` | `"development"` | no |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type from t3 family (t3.micro ~$7.50/month, t3.small ~$15/month) | `string` | `"t3.micro"` | no |
+| <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project identifier for resource naming (1-32 chars, lowercase alphanumeric and hyphens) | `string` | `"ec2-dev-instance"` | no |
+| <a name="input_root_volume_size"></a> [root\_volume\_size](#input\_root\_volume\_size) | Root EBS volume size in GB (minimum 30 for AL2023, ~$0.10/GB-month for gp3) | `number` | `30` | no |
+| <a name="input_ssh_allowed_cidr_blocks"></a> [ssh\_allowed\_cidr\_blocks](#input\_ssh\_allowed\_cidr\_blocks) | CIDR blocks allowed for SSH access (0.0.0.0/0 allows public access - development only) | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
 
 ## Outputs
 
-No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| Name | Description |
+|------|-------------|
+| <a name="output_elastic_ip_id"></a> [elastic\_ip\_id](#output\_elastic\_ip\_id) | Elastic IP allocation ID for cost tracking and IP allowlist management |
+| <a name="output_iam_instance_profile_name"></a> [iam\_instance\_profile\_name](#output\_iam\_instance\_profile\_name) | IAM instance profile name for role association verification |
+| <a name="output_iam_role_arn"></a> [iam\_role\_arn](#output\_iam\_role\_arn) | IAM role ARN for Session Manager access and permission verification |
+| <a name="output_instance_id"></a> [instance\_id](#output\_instance\_id) | EC2 instance identifier for AWS Console navigation and Session Manager |
+| <a name="output_instance_private_ip"></a> [instance\_private\_ip](#output\_instance\_private\_ip) | VPC private IP address for internal routing and VPC peering |
+| <a name="output_instance_public_ip"></a> [instance\_public\_ip](#output\_instance\_public\_ip) | Public IP address (Elastic IP) for SSH access and DNS configuration |
+| <a name="output_log_group_arn"></a> [log\_group\_arn](#output\_log\_group\_arn) | CloudWatch Logs group ARN for IAM policies and cross-account access |
+| <a name="output_log_group_name"></a> [log\_group\_name](#output\_log\_group\_name) | CloudWatch Logs group name for SSH authentication events and log streaming |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group ID for SSH access rules and compliance auditing |
+| <a name="output_session_manager_command"></a> [session\_manager\_command](#output\_session\_manager\_command) | AWS CLI command for Session Manager emergency fallback access |
+| <a name="output_ssh_connection_command"></a> [ssh\_connection\_command](#output\_ssh\_connection\_command) | Ready-to-use SSH connection command (password must be set first via Session Manager) |
+<!-- END_TF_DOCS -->

@@ -1,16 +1,14 @@
-# terraform block
-# example with pessimistic version constraints for providers:
-# terraform {
-#   required_version = ">= 1.13.0"
+# Terraform version constraints for EC2 Development Instance
+# FR-001: Terraform >= 1.5.0 for HCP Terraform compatibility
+# Constitution 3.1: Version constraints mandatory
 
-#   required_providers {
-#     aws = {
-#       source  = "hashicorp/aws"
-#       version = "~> 6.0.0"
-#     }
-#     random = {
-#       source  = "hashicorp/random"
-#       version = "~> 3.0.0"
-#     }
-#   }
-# }
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}

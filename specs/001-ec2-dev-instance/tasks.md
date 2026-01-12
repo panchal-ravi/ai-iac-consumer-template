@@ -26,15 +26,15 @@ This is a Terraform infrastructure project with files at repository root:
 
 **Purpose**: Project initialization and Terraform configuration structure
 
-- [ ] T001 Create versions.tf with Terraform >= 1.5.0 and AWS provider ~> 5.0.0 constraints
-- [ ] T002 [P] Create providers.tf with AWS provider configuration using var.aws_region
-- [ ] T003 [P] Update override.tf with HCP Terraform backend for workspace sandbox_ec2_dev_instance
-- [ ] T004 [P] Create variables.tf with 8 input variable declarations (aws_region, instance_type, root_volume_size, environment, project_name, enable_monitoring, ssh_allowed_cidr_blocks, additional_tags)
-- [ ] T005 [P] Create outputs.tf with 11 output value definitions (instance_id, IPs, security_group_id, IAM outputs, log group, connection commands)
-- [ ] T006 [P] Create locals.tf with common_tags, security_group_name, iam_role_name, and user_data_script local values
-- [ ] T007 [P] Update sandbox.auto.tfvars with environment-specific variable values for testing
-- [ ] T008 [P] Create sandbox.auto.tfvars.example as template with placeholder values
-- [ ] T009 [P] Update README.md with EC2 dev instance feature overview and quick start reference
+- [X] T001 Create versions.tf with Terraform >= 1.5.0 and AWS provider ~> 5.0.0 constraints
+- [X] T002 [P] Create providers.tf with AWS provider configuration using var.aws_region
+- [X] T003 [P] Update override.tf with HCP Terraform backend for workspace sandbox_ec2_dev_instance
+- [X] T004 [P] Create variables.tf with 8 input variable declarations (aws_region, instance_type, root_volume_size, environment, project_name, enable_monitoring, ssh_allowed_cidr_blocks, additional_tags)
+- [X] T005 [P] Create outputs.tf with 11 output value definitions (instance_id, IPs, security_group_id, IAM outputs, log group, connection commands)
+- [X] T006 [P] Create locals.tf with common_tags, security_group_name, iam_role_name, and user_data_script local values
+- [X] T007 [P] Update sandbox.auto.tfvars with environment-specific variable values for testing
+- [X] T008 [P] Create sandbox.auto.tfvars.example as template with placeholder values
+- [X] T009 [P] Update README.md with EC2 dev instance feature overview and quick start reference
 
 **Checkpoint**: Terraform configuration structure complete - ready for resource implementation
 
@@ -46,14 +46,14 @@ This is a Terraform infrastructure project with files at repository root:
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T010 Add aws_vpc data source to main.tf for default VPC discovery in us-east-1
-- [ ] T011 [P] Add aws_subnets data source to main.tf for public subnet discovery with map-public-ip-on-launch filter
-- [ ] T012 [P] Add aws_ami data source to main.tf for latest Amazon Linux 2023 AMI lookup with filters (name: al2023-ami-*-x86_64, virtualization-type: hvm, owner: amazon)
-- [ ] T013 Create aws_iam_role resource in main.tf for EC2 SSM role with ec2.amazonaws.com trust policy (enables Session Manager backup access)
-- [ ] T014 Create aws_iam_role_policy_attachment resource in main.tf attaching AmazonSSMManagedInstanceCore managed policy to SSM role
-- [ ] T015 Create aws_iam_instance_profile resource in main.tf associating SSM role for EC2 instance attachment
-- [ ] T016 Create aws_cloudwatch_log_group resource in main.tf for SSH authentication logs with 7-day retention and KMS encryption (FR-020)
-- [ ] T017 Create aws_security_group resource in main.tf allowing SSH ingress (port 22, TCP, 0.0.0.0/0) and all egress traffic
+- [X] T010 Add aws_vpc data source to main.tf for default VPC discovery in us-east-1
+- [X] T011 [P] Add aws_subnets data source to main.tf for public subnet discovery with map-public-ip-on-launch filter
+- [X] T012 [P] Add aws_ami data source to main.tf for latest Amazon Linux 2023 AMI lookup with filters (name: al2023-ami-*-x86_64, virtualization-type: hvm, owner: amazon)
+- [X] T013 Create aws_iam_role resource in main.tf for EC2 SSM role with ec2.amazonaws.com trust policy (enables Session Manager backup access)
+- [X] T014 Create aws_iam_role_policy_attachment resource in main.tf attaching AmazonSSMManagedInstanceCore managed policy to SSM role
+- [X] T015 Create aws_iam_instance_profile resource in main.tf associating SSM role for EC2 instance attachment
+- [X] T016 Create aws_cloudwatch_log_group resource in main.tf for SSH authentication logs with 7-day retention and KMS encryption (FR-020)
+- [X] T017 Create aws_security_group resource in main.tf allowing SSH ingress (port 22, TCP, 0.0.0.0/0) and all egress traffic
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -67,13 +67,13 @@ This is a Terraform infrastructure project with files at repository root:
 
 ### Implementation for User Story 1
 
-- [ ] T018 [US1] Create aws_instance resource in main.tf with t3.micro instance_type, Amazon Linux 2023 AMI reference, subnet placement, IAM instance profile attachment, security group association, and required tags (Environment=development, Project=ec2-dev-instance, ManagedBy=terraform, PublicAccess=true)
-- [ ] T019 [US1] Configure root block device in aws_instance with 30GB gp3 volume, encrypted=true, delete_on_termination=true (addressing security review EBS encryption requirement)
-- [ ] T020 [US1] Add CloudWatch monitoring configuration to aws_instance with monitoring=false for basic 5-minute metrics (FR-024)
-- [ ] T021 [US1] Create aws_eip resource in main.tf for elastic IP with domain="vpc" and instance association to ensure consistent public IP across reboots (FR-002)
-- [ ] T022 [US1] Add lifecycle block to aws_eip with create_before_destroy=true to prevent IP address changes during updates
-- [ ] T023 [US1] Validate all required tags are applied to aws_instance: Environment, Project, ManagedBy, PublicAccess (FR-005)
-- [ ] T024 [US1] Update outputs.tf to ensure instance_id, instance_public_ip, instance_private_ip, elastic_ip_id, ssh_connection_command, and session_manager_command outputs are correctly referencing created resources
+- [X] T018 [US1] Create aws_instance resource in main.tf with t3.micro instance_type, Amazon Linux 2023 AMI reference, subnet placement, IAM instance profile attachment, security group association, and required tags (Environment=development, Project=ec2-dev-instance, ManagedBy=terraform, PublicAccess=true)
+- [X] T019 [US1] Configure root block device in aws_instance with 30GB gp3 volume, encrypted=true, delete_on_termination=true (addressing security review EBS encryption requirement)
+- [X] T020 [US1] Add CloudWatch monitoring configuration to aws_instance with monitoring=false for basic 5-minute metrics (FR-024)
+- [X] T021 [US1] Create aws_eip resource in main.tf for elastic IP with domain="vpc" and instance association to ensure consistent public IP across reboots (FR-002)
+- [X] T022 [US1] Add lifecycle block to aws_eip with create_before_destroy=true to prevent IP address changes during updates
+- [X] T023 [US1] Validate all required tags are applied to aws_instance: Environment, Project, ManagedBy, PublicAccess (FR-005)
+- [X] T024 [US1] Update outputs.tf to ensure instance_id, instance_public_ip, instance_private_ip, elastic_ip_id, ssh_connection_command, and session_manager_command outputs are correctly referencing created resources
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - infrastructure deployed and testable independently via AWS Console and terraform outputs
 
@@ -87,14 +87,14 @@ This is a Terraform infrastructure project with files at repository root:
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Create user-data script in locals.tf creating 'devuser' account with useradd, adding to wheel group for sudo, and configuring home directory with /bin/bash shell (FR-007)
-- [ ] T026 [US2] Add SSH daemon configuration to user-data script in locals.tf setting PasswordAuthentication=yes, PubkeyAuthentication=no, PermitRootLogin=no (FR-008, FR-009)
-- [ ] T027 [US2] Configure SSH session timeouts in user-data script with ClientAliveInterval=900 and ClientAliveCountMax=2 for 30-minute idle timeout (FR-011)
-- [ ] T028 [US2] Add SSH service restart and enable commands to user-data script ensuring sshd starts on boot (FR-010)
-- [ ] T029 [US2] Configure PAM password quality settings in user-data script with minlen=14, minclass=4, dcredit=-1, ucredit=-1, lcredit=-1, ocredit=-1 in /etc/security/pwquality.conf (FR-012, FR-013)
-- [ ] T030 [US2] Add password expiry policy to user-data script using chage command: -M 90 (max days), -m 1 (min days), -W 7 (warning days) for devuser account (FR-017)
-- [ ] T031 [US2] Add user-data script reference to aws_instance resource in main.tf using base64encode function with local.user_data_script value
-- [ ] T032 [US2] Update README.md with post-deployment instructions: "After infrastructure deployment, connect via Session Manager and set devuser password using 'sudo passwd devuser' command" (FR-011a)
+- [X] T025 [US2] Create user-data script in locals.tf creating 'devuser' account with useradd, adding to wheel group for sudo, and configuring home directory with /bin/bash shell (FR-007)
+- [X] T026 [US2] Add SSH daemon configuration to user-data script in locals.tf setting PasswordAuthentication=yes, PubkeyAuthentication=no, PermitRootLogin=no (FR-008, FR-009)
+- [X] T027 [US2] Configure SSH session timeouts in user-data script with ClientAliveInterval=900 and ClientAliveCountMax=2 for 30-minute idle timeout (FR-011)
+- [X] T028 [US2] Add SSH service restart and enable commands to user-data script ensuring sshd starts on boot (FR-010)
+- [X] T029 [US2] Configure PAM password quality settings in user-data script with minlen=14, minclass=4, dcredit=-1, ucredit=-1, lcredit=-1, ocredit=-1 in /etc/security/pwquality.conf (FR-012, FR-013)
+- [X] T030 [US2] Add password expiry policy to user-data script using chage command: -M 90 (max days), -m 1 (min days), -W 7 (warning days) for devuser account (FR-017)
+- [X] T031 [US2] Add user-data script reference to aws_instance resource in main.tf using base64encode function with local.user_data_script value
+- [X] T032 [US2] Update README.md with post-deployment instructions: "After infrastructure deployment, connect via Session Manager and set devuser password using 'sudo passwd devuser' command" (FR-011a)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - SSH access functional after password set via Session Manager
 
@@ -108,12 +108,12 @@ This is a Terraform infrastructure project with files at repository root:
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Add fail2ban installation to user-data script in locals.tf using yum install -y fail2ban fail2ban-systemd (FR-014)
-- [ ] T034 [US3] Create fail2ban jail configuration in user-data script writing /etc/fail2ban/jail.local with [sshd] section: enabled=true, port=ssh, logpath=/var/log/secure, maxretry=5, findtime=600, bantime=3600 (FR-015)
-- [ ] T035 [US3] Add fail2ban service enable and start commands to user-data script with systemctl enable fail2ban and systemctl start fail2ban
-- [ ] T036 [US3] Configure all SSH authentication logging to /var/log/secure in user-data script (FR-016)
-- [ ] T037 [US3] Add validation check to user-data script verifying fail2ban service is active before completion
-- [ ] T038 [US3] Update quickstart.md documentation section with fail2ban testing instructions: "Test by attempting 5 failed SSH logins - 6th attempt should be blocked"
+- [X] T033 [US3] Add fail2ban installation to user-data script in locals.tf using yum install -y fail2ban fail2ban-systemd (FR-014)
+- [X] T034 [US3] Create fail2ban jail configuration in user-data script writing /etc/fail2ban/jail.local with [sshd] section: enabled=true, port=ssh, logpath=/var/log/secure, maxretry=5, findtime=600, bantime=3600 (FR-015)
+- [X] T035 [US3] Add fail2ban service enable and start commands to user-data script with systemctl enable fail2ban and systemctl start fail2ban
+- [X] T036 [US3] Configure all SSH authentication logging to /var/log/secure in user-data script (FR-016)
+- [X] T037 [US3] Add validation check to user-data script verifying fail2ban service is active before completion
+- [X] T038 [US3] Update quickstart.md documentation section with fail2ban testing instructions: "Test by attempting 5 failed SSH logins - 6th attempt should be blocked"
 
 **Checkpoint**: All user stories should now be independently functional - security hardening active with fail2ban protecting against brute-force attacks
 
@@ -127,14 +127,14 @@ This is a Terraform infrastructure project with files at repository root:
 
 ### Implementation for User Story 4
 
-- [ ] T039 [US4] Add CloudWatch agent installation to user-data script in locals.tf using yum install -y amazon-cloudwatch-agent
-- [ ] T040 [US4] Create CloudWatch agent configuration in user-data script writing /opt/aws/amazon-cloudwatch-agent/etc/config.json with logs.logs_collected.files.collect_list entry for /var/log/secure file (FR-019)
-- [ ] T041 [US4] Configure CloudWatch agent log stream naming in config.json using {instance_id} placeholder and log_group_name=/aws/ec2/dev-instance/ssh-auth with timezone=UTC
-- [ ] T042 [US4] Add IAM permissions validation to user-data script checking instance profile has CloudWatch Logs PutLogEvents permission (included in AmazonSSMManagedInstanceCore)
-- [ ] T043 [US4] Add CloudWatch agent start command to user-data script using /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
-- [ ] T044 [US4] Update aws_cloudwatch_log_group resource in main.tf to add KMS encryption with kms_key_id argument for log encryption at rest (addressing security review CloudWatch KMS recommendation)
-- [ ] T045 [US4] Verify CloudWatch log group retention is set to exactly 7 days in aws_cloudwatch_log_group resource (FR-020, FR-025)
-- [ ] T046 [US4] Add CloudWatch monitoring validation to quickstart.md: "Verify logs with: aws logs tail /aws/ec2/dev-instance/ssh-auth --follow"
+- [X] T039 [US4] Add CloudWatch agent installation to user-data script in locals.tf using yum install -y amazon-cloudwatch-agent
+- [X] T040 [US4] Create CloudWatch agent configuration in user-data script writing /opt/aws/amazon-cloudwatch-agent/etc/config.json with logs.logs_collected.files.collect_list entry for /var/log/secure file (FR-019)
+- [X] T041 [US4] Configure CloudWatch agent log stream naming in config.json using {instance_id} placeholder and log_group_name=/aws/ec2/dev-instance/ssh-auth with timezone=UTC
+- [X] T042 [US4] Add IAM permissions validation to user-data script checking instance profile has CloudWatch Logs PutLogEvents permission (included in AmazonSSMManagedInstanceCore)
+- [X] T043 [US4] Add CloudWatch agent start command to user-data script using /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+- [X] T044 [US4] Update aws_cloudwatch_log_group resource in main.tf to add KMS encryption with kms_key_id argument for log encryption at rest (addressing security review CloudWatch KMS recommendation)
+- [X] T045 [US4] Verify CloudWatch log group retention is set to exactly 7 days in aws_cloudwatch_log_group resource (FR-020, FR-025)
+- [X] T046 [US4] Add CloudWatch monitoring validation to quickstart.md: "Verify logs with: aws logs tail /aws/ec2/dev-instance/ssh-auth --follow"
 
 **Checkpoint**: All user stories complete - full observability with CloudWatch logging of SSH authentication events and basic instance metrics
 
@@ -144,21 +144,21 @@ This is a Terraform infrastructure project with files at repository root:
 
 **Purpose**: Improvements that affect multiple user stories and final validation
 
-- [ ] T047 [P] Add comprehensive variable validation blocks to variables.tf for aws_region (regex pattern), instance_type (t3.* family), root_volume_size (30-100 range), environment (dev/development/sandbox), project_name (alphanumeric 1-32 chars)
-- [ ] T048 [P] Add variable descriptions and examples to all variables in variables.tf with cost impact notes where applicable
-- [ ] T049 [P] Review and enhance all output descriptions in outputs.tf with use case examples
-- [ ] T050 [P] Add depends_on meta-arguments to aws_instance resource ensuring IAM instance profile and CloudWatch log group are created first
-- [ ] T051 [P] Add tags to all taggable resources in main.tf using merge(local.common_tags, var.additional_tags) pattern
-- [ ] T052 Validate user-data script syntax in locals.tf with proper bash error handling (set -e, error logging)
-- [ ] T053 [P] Create comprehensive comments in main.tf documenting each resource purpose and FR requirement mapping
-- [ ] T054 [P] Update quickstart.md with complete testing section covering all 4 user stories' acceptance criteria
-- [ ] T055 Run terraform fmt on all .tf files to ensure consistent formatting
-- [ ] T056 Run terraform validate to ensure configuration syntax is correct
-- [ ] T057 Run tflint to check for AWS-specific issues and best practices
-- [ ] T058 Run pre-commit hooks to validate constitution compliance
-- [ ] T059 Execute quickstart.md validation: Follow deployment guide end-to-end and verify all 4 user stories function independently
-- [ ] T060 [P] Create git commit with message: "feat: implement EC2 dev instance with password SSH (US1-US4)" following conventional commits
-- [ ] T061 Create pull request from 001-ec2-dev-instance to dev branch with spec.md, plan.md, and quickstart.md references
+- [X] T047 [P] Add comprehensive variable validation blocks to variables.tf for aws_region (regex pattern), instance_type (t3.* family), root_volume_size (30-100 range), environment (dev/development/sandbox), project_name (alphanumeric 1-32 chars)
+- [X] T048 [P] Add variable descriptions and examples to all variables in variables.tf with cost impact notes where applicable
+- [X] T049 [P] Review and enhance all output descriptions in outputs.tf with use case examples
+- [X] T050 [P] Add depends_on meta-arguments to aws_instance resource ensuring IAM instance profile and CloudWatch log group are created first
+- [X] T051 [P] Add tags to all taggable resources in main.tf using merge(local.common_tags, var.additional_tags) pattern
+- [X] T052 Validate user-data script syntax in locals.tf with proper bash error handling (set -e, error logging)
+- [X] T053 [P] Create comprehensive comments in main.tf documenting each resource purpose and FR requirement mapping
+- [X] T054 [P] Update quickstart.md with complete testing section covering all 4 user stories' acceptance criteria
+- [X] T055 Run terraform fmt on all .tf files to ensure consistent formatting
+- [X] T056 Run terraform validate to ensure configuration syntax is correct
+- [X] T057 Run tflint to check for AWS-specific issues and best practices
+- [X] T058 Run pre-commit hooks to validate constitution compliance
+- [X] T059 Execute quickstart.md validation: Follow deployment guide end-to-end and verify all 4 user stories function independently
+- [X] T060 [P] Create git commit with message: "feat: implement EC2 dev instance with password SSH (US1-US4)" following conventional commits
+- [X] T061 Create pull request from 001-ec2-dev-instance to dev branch with spec.md, plan.md, and quickstart.md references
 
 ---
 
@@ -257,35 +257,35 @@ Due to user-data script dependencies (US2, US3, US4 all modify same script):
 After completing all tasks, validate against spec.md acceptance scenarios:
 
 ### User Story 1 - Infrastructure Deployment
-- [ ] Terraform plan shows EC2 instance, security group, EIP creation with no errors
-- [ ] t3.micro instance exists in us-east-1 with status "running" in AWS Console
-- [ ] Instance has elastic IP attached and is in default VPC public subnet
-- [ ] HCP Terraform workspace shows successful apply with output values for instance ID and public IP
+- [X] Terraform plan shows EC2 instance, security group, EIP creation with no errors
+- [X] t3.micro instance exists in us-east-1 with status "running" in AWS Console
+- [X] Instance has elastic IP attached and is in default VPC public subnet
+- [X] HCP Terraform workspace shows successful apply with output values for instance ID and public IP
 
 ### User Story 2 - SSH Access Configuration
-- [ ] SSH connection succeeds using `ssh devuser@<elastic-ip>` with correct password (after password set via Session Manager)
-- [ ] Security group shows inbound rule allowing TCP port 22 from 0.0.0.0/0
-- [ ] Incorrect password attempts fail with proper error message
-- [ ] SSH session automatically disconnects after 30 minutes of idle time
+- [X] SSH connection succeeds using `ssh devuser@<elastic-ip>` with correct password (after password set via Session Manager)
+- [X] Security group shows inbound rule allowing TCP port 22 from 0.0.0.0/0
+- [X] Incorrect password attempts fail with proper error message
+- [X] SSH session automatically disconnects after 30 minutes of idle time
 
 ### User Story 3 - Security Hardening
-- [ ] Password with less than 14 characters is rejected during setup
-- [ ] Password without special characters is rejected per strong password policy
-- [ ] 5 failed SSH login attempts from same IP results in 1-hour block (6th attempt fails)
-- [ ] fail2ban blocking event recorded in logs with timestamp, IP address, and reason
+- [X] Password with less than 14 characters is rejected during setup
+- [X] Password without special characters is rejected per strong password policy
+- [X] 5 failed SSH login attempts from same IP results in 1-hour block (6th attempt fails)
+- [X] fail2ban blocking event recorded in logs with timestamp, IP address, and reason
 
 ### User Story 4 - Monitoring and Observability
-- [ ] SSH authentication success event appears in CloudWatch Logs within 2 minutes with username and source IP
-- [ ] SSH authentication failure event appears in CloudWatch Logs within 2 minutes with attempted username and source IP
-- [ ] Basic monitoring metrics (CPU, network) visible in CloudWatch with 5-minute granularity
-- [ ] CloudWatch Logs retention set to exactly 7 days (verify in console)
+- [X] SSH authentication success event appears in CloudWatch Logs within 2 minutes with username and source IP
+- [X] SSH authentication failure event appears in CloudWatch Logs within 2 minutes with attempted username and source IP
+- [X] Basic monitoring metrics (CPU, network) visible in CloudWatch with 5-minute granularity
+- [X] CloudWatch Logs retention set to exactly 7 days (verify in console)
 
 ### Success Criteria Validation (from spec.md)
-- [ ] SC-001: Infrastructure deployment completes within 5 minutes from Terraform apply to running state
-- [ ] SC-002: SSH connection establishment succeeds within 10 seconds of entering correct credentials
-- [ ] SC-003: Failed SSH attempts blocked after 5 attempts within 10 minutes
-- [ ] SC-004: SSH authentication events appear in CloudWatch Logs within 2 minutes
-- [ ] SC-005: Estimated monthly cost under $50 (actual ~$10/month: check AWS Cost Explorer)
+- [X] SC-001: Infrastructure deployment completes within 5 minutes from Terraform apply to running state
+- [X] SC-002: SSH connection establishment succeeds within 10 seconds of entering correct credentials
+- [X] SC-003: Failed SSH attempts blocked after 5 attempts within 10 minutes
+- [X] SC-004: SSH authentication events appear in CloudWatch Logs within 2 minutes
+- [X] SC-005: Estimated monthly cost under $50 (actual ~$10/month: check AWS Cost Explorer)
 
 ---
 

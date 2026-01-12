@@ -1,0 +1,26 @@
+# Sandbox Environment Configuration Example
+# Copy this file to sandbox.auto.tfvars and customize values
+# NOTE: sandbox.auto.tfvars is gitignored for security
+
+# ==============================================================================
+# REQUIRED VARIABLES
+# ==============================================================================
+
+aws_region       = "us-east-1"
+instance_type    = "t3.micro"
+root_volume_size = 30
+environment      = "development"
+project_name     = "ec2-dev-instance"
+
+# ==============================================================================
+# OPTIONAL VARIABLES
+# ==============================================================================
+
+enable_monitoring = false
+
+ssh_allowed_cidr_blocks = ["0.0.0.0/0"]
+
+additional_tags = {
+  Owner      = "your-email@example.com"
+  CostCenter = "Engineering"
+}
