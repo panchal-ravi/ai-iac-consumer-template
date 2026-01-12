@@ -77,12 +77,22 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 
 ### Edge Cases
 
-- What happens when the devuser password expires or needs rotation? (Assumption: SSH access remains available through serial console or AWS Systems Manager Session Manager for emergency password reset)
+- What happens when the devuser password expires or needs rotation? (Clarified: SSH access remains available through AWS Systems Manager Session Manager for emergency password reset; operator can connect via Session Manager and reset password directly)
 - How does the system handle simultaneous SSH sessions from multiple IPs? (Assumption: Multiple concurrent sessions are allowed, limited only by instance resources)
-- What happens if fail2ban blocks the legitimate user's IP address? (Assumption: User can use AWS Systems Manager Session Manager as fallback access method)
+- What happens if fail2ban blocks the legitimate user's IP address? (Clarified: User can use AWS Systems Manager Session Manager as configured fallback access method with IAM-based authentication)
 - How does the instance behave during AWS maintenance windows? (Assumption: Instance may reboot during maintenance; elastic IP persists and SSH access resumes automatically)
 - What happens when the t3.micro instance exhausts CPU credits? (Assumption: Performance degrades to baseline, but SSH access remains available)
-- How is the initial devuser password set securely during provisioning? (Assumption: Password is generated using Terraform random_password resource and stored as sensitive output, communicated via secure channel)
+- How is the initial devuser password set securely during provisioning? (Clarified: Operator sets password via AWS Systems Manager Session Manager during implementation; password not stored in Terraform state or configuration files)
+
+## Clarifications
+
+### Session 2026-01-12
+
+- Q: Which specific AMI should be used for the EC2 instance? → A: Use Amazon Linux 2023 AMI with data source lookup for latest version (automatic security patches while maintaining compatibility)
+- Q: How should the initial devuser password be securely set during instance provisioning? → A: Prompt operator to set password via AWS Systems Manager Session Manager during implementation (avoids storing in Terraform state)
+- Q: Should AWS Systems Manager Session Manager be configured as backup access if SSH is blocked? → A: Yes, configure Session Manager with IAM role and SSM agent for emergency access
+- Q: What CloudWatch Logs retention period should be configured for SSH authentication logs? → A: 7 days retention (balances operational visibility with cost optimization for development)
+- Q: Should a custom hardened AMI be created or use standard AWS-provided AMI? → A: Use standard AWS-provided AMI with user-data hardening script (simpler management and automatic updates)
 
 ## Requirements *(mandatory)*
 
@@ -90,7 +100,7 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 
 #### Infrastructure Provisioning
 
-- **FR-001**: System MUST deploy EC2 instance as t3.micro instance type in us-east-1 region using default VPC
+- **FR-001**: System MUST deploy EC2 instance as t3.micro instance type in us-east-1 region using default VPC with latest Amazon Linux 2023 AMI resolved via AWS data source
 - **FR-002**: System MUST attach elastic IP address to EC2 instance to ensure consistent public IP across reboots
 - **FR-003**: System MUST place instance in public subnet within default VPC to enable direct internet connectivity
 - **FR-004**: System MUST create security group allowing inbound TCP traffic on port 22 from 0.0.0.0/0
@@ -100,25 +110,28 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 #### SSH Access Configuration
 
 - **FR-007**: System MUST create user account named 'devuser' with sudo privileges on the EC2 instance
+- **FR-007a**: System MUST configure AWS Systems Manager Session Manager with required IAM instance profile for emergency backup access when SSH is unavailable
 - **FR-008**: System MUST enable SSH password authentication on port 22
 - **FR-009**: System MUST disable SSH key-based authentication to enforce password-only access
 - **FR-010**: System MUST configure SSH service to automatically start on instance boot
 - **FR-011**: System MUST set SSH session idle timeout to 30 minutes with automatic disconnection
+- **FR-011a**: System MUST prompt operator to set initial devuser password securely via AWS Systems Manager Session Manager during implementation (password not stored in Terraform state)
 
 #### Security Requirements
 
 - **FR-012**: System MUST enforce strong password policy requiring minimum 14 characters for devuser account
 - **FR-013**: System MUST enforce password complexity requiring combination of uppercase, lowercase, numbers, and special characters
-- **FR-014**: System MUST install and configure fail2ban to monitor SSH authentication attempts
+- **FR-014**: System MUST install and configure fail2ban to monitor SSH authentication attempts using user-data script at instance launch
 - **FR-015**: System MUST configure fail2ban to block IP addresses after 5 failed login attempts within 10 minutes for 1 hour duration
 - **FR-016**: System MUST log all SSH authentication attempts (successful and failed) to system authentication logs
 - **FR-017**: System MUST configure password expiry policy requiring password rotation every 90 days
+- **FR-017a**: System MUST use standard AWS-provided Amazon Linux 2023 AMI with security hardening applied via user-data script (no custom AMI required)
 
 #### Monitoring and Logging
 
 - **FR-018**: System MUST enable CloudWatch basic monitoring with 5-minute metric intervals
-- **FR-019**: System MUST stream SSH authentication logs to CloudWatch Logs
-- **FR-020**: System MUST configure CloudWatch Logs retention period to 7 days for cost optimization
+- **FR-019**: System MUST stream SSH authentication logs to CloudWatch Logs using CloudWatch agent
+- **FR-020**: System MUST configure CloudWatch Logs retention period to exactly 7 days for cost optimization in development environment
 - **FR-021**: System MUST collect basic instance metrics including CPU utilization, network traffic, and disk I/O
 
 #### Cost Management
@@ -130,15 +143,17 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 
 ### Key Entities
 
-- **EC2 Instance**: Represents the virtual machine resource running in AWS with specifications (t3.micro, us-east-1), network configuration (public subnet, elastic IP), and lifecycle state (running/stopped). Contains operating system, SSH service, user accounts, and monitoring agents.
+- **EC2 Instance**: Represents the virtual machine resource running in AWS with specifications (t3.micro, us-east-1), network configuration (public subnet, elastic IP), and lifecycle state (running/stopped). Contains operating system (Amazon Linux 2023), SSH service, user accounts, monitoring agents, and attached IAM instance profile for Session Manager access.
+
+- **IAM Instance Profile**: Represents the IAM role attached to EC2 instance enabling AWS Systems Manager Session Manager access. Contains managed policy AmazonSSMManagedInstanceCore providing permissions for Systems Manager agent to communicate with AWS APIs for emergency backup access.
 
 - **Security Group**: Represents network firewall rules controlling inbound and outbound traffic to the EC2 instance. Contains rules defining allowed protocols (TCP), ports (22), and source IP ranges (0.0.0.0/0 for SSH).
 
-- **User Account (devuser)**: Represents the operating system user account with attributes including username ('devuser'), password (encrypted, meeting complexity requirements), sudo privileges, and password expiry date (90 days from creation).
+- **User Account (devuser)**: Represents the operating system user account with attributes including username ('devuser'), password (set via Session Manager during implementation, meeting complexity requirements), sudo privileges, and password expiry date (90 days from creation).
 
 - **Elastic IP**: Represents the static public IPv4 address resource allocated to AWS account and associated with the EC2 instance network interface. Ensures consistent public IP across instance reboots.
 
-- **CloudWatch Log Stream**: Represents the continuous stream of SSH authentication events including timestamp, source IP, username, and authentication result (success/failure). Organized under log group with 7-day retention policy.
+- **CloudWatch Log Stream**: Represents the continuous stream of SSH authentication events including timestamp, source IP, username, and authentication result (success/failure). Organized under log group with exactly 7-day retention policy for development cost optimization.
 
 - **HCP Terraform Workspace**: Represents the remote execution environment containing Terraform state, variables (AWS credentials, region configuration), and execution history. Links to AWS provider and manages infrastructure lifecycle.
 
@@ -165,14 +180,15 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 - **A-002**: HCP Terraform workspace has valid AWS credentials configured with permissions to create EC2 instances, security groups, elastic IPs, and CloudWatch resources
 - **A-003**: AWS account has available elastic IP quota (default limit is 5 per region)
 - **A-004**: AWS account is not restricted by Organizations SCPs that would block public instance deployment or password-based SSH
-- **A-005**: Instance will use latest Amazon Linux 2023 AMI available in us-east-1 region
+- **A-005**: Instance will use latest Amazon Linux 2023 AMI available in us-east-1 region resolved dynamically via aws_ami data source for automatic security updates
+- **A-005a**: Standard AWS-provided AMI will be used without custom hardening; security configuration applied via user-data script at launch
 - **A-006**: Public subnet has automatic public IP assignment disabled (relying on elastic IP for public connectivity)
 
 ### Security Assumptions
 
 - **A-007**: Public SSH access with password authentication is acceptable risk posture for development environment, not production
-- **A-008**: Initial devuser password will be generated securely during provisioning and communicated out-of-band (not stored in plain text in Terraform state)
-- **A-009**: AWS Systems Manager Session Manager serves as emergency fallback access if SSH is locked out
+- **A-008**: Initial devuser password will be set by operator via AWS Systems Manager Session Manager during implementation phase (not stored in Terraform state or logs)
+- **A-009**: AWS Systems Manager Session Manager configured with IAM instance profile serves as emergency fallback access if SSH is locked out by fail2ban or password issues
 - **A-010**: Fail2ban persistent blocking is not required - 1 hour block duration sufficient for development use case
 - **A-011**: Single sudo user account (devuser) is sufficient for development workload - no additional users required
 - **A-012**: Password rotation can be performed manually every 90 days (automated rotation not required for development environment)
@@ -181,7 +197,7 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 
 - **A-013**: Instance will run 24/7 for development availability - no auto-stop/start scheduling implemented
 - **A-014**: Basic CloudWatch monitoring (5-minute intervals) provides sufficient observability for development use case
-- **A-015**: 7-day log retention balances operational visibility with cost optimization needs
+- **A-015**: 7-day CloudWatch Logs retention provides sufficient operational visibility for development environment while minimizing storage costs (approximately $0.50/month for expected log volume)
 - **A-016**: Instance backup/disaster recovery not required for development environment (can be rebuilt from Terraform)
 - **A-017**: Manual security patching is acceptable - automated patching not implemented initially
 
@@ -210,6 +226,8 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 - **D-003**: AWS provider version >= 5.0 required for Terraform configuration compatibility
 - **D-004**: Internet connectivity required for SSH access from development workstations
 - **D-005**: CloudWatch Logs agent compatible with Amazon Linux 2023 operating system
+- **D-005a**: AWS Systems Manager agent (SSM agent) pre-installed on Amazon Linux 2023 AMI for Session Manager functionality
+- **D-005b**: IAM permissions to create instance profiles and attach AmazonSSMManagedInstanceCore managed policy
 
 ### Configuration Dependencies
 
@@ -222,7 +240,7 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 
 - **D-010**: HCP Terraform workspace must be configured for remote execution (not local execution mode)
 - **D-011**: Version control system (Git) required for managing Terraform configuration files
-- **D-012**: Initial password generation requires secure communication channel (not email) for password delivery to authorized users
+- **D-012**: Initial password setup requires operator access to AWS Systems Manager Session Manager console or CLI during implementation phase for secure password configuration
 
 ## Out of Scope *(include if applicable)*
 
@@ -245,17 +263,16 @@ As a DevOps engineer, I need to monitor SSH authentication attempts and basic in
 - **OOS-015**: Additional user accounts beyond devuser - single-user configuration only
 - **OOS-016**: Custom port configuration - SSH remains on standard port 22
 - **OOS-017**: Geographic IP restrictions beyond 0.0.0.0/0 - open public access required
-- **OOS-018**: Web-based SSH access through AWS Systems Manager Session Manager GUI
-- **OOS-019**: Integration with HashiCorp Vault for secrets management
-- **OOS-020**: Terraform modules for reusability - inline configuration acceptable for single instance
+- **OOS-018**: Integration with HashiCorp Vault for secrets management
+- **OOS-019**: Terraform modules for reusability - inline configuration acceptable for single instance
 
 ### Future Considerations
 
 - **FC-001**: Migration to SSH key-based authentication for improved security posture
 - **FC-002**: Implementation of IP allowlist restricting SSH access to known office/VPN IPs
 - **FC-003**: Upgrade to larger instance type if development workload requires more resources
-- **FC-004**: Addition of AWS Systems Manager Session Manager for browser-based access
-- **FC-005**: Integration with centralized logging system (ELK stack, Splunk) if multi-instance deployment grows
+- **FC-004**: Integration with centralized logging system (ELK stack, Splunk) if multi-instance deployment grows
+- **FC-005**: Implementation of AWS Systems Manager Session Manager browser-based GUI access in addition to CLI
 
 ## Risk Assessment *(include if applicable)*
 
