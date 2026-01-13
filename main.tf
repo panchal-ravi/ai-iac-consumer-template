@@ -202,7 +202,7 @@ resource "aws_instance" "dev_ec2" {
   # FR-006: Configure root volume (8 GB GP3, delete on termination)
   root_block_device {
     volume_type           = var.root_volume_type
-    volume_size           = var.root_volume_size
+    volume_size           = 30 # Minimum required for Amazon Linux 2023 AMI
     delete_on_termination = true
     encrypted             = false # Can be enabled for additional security
 
@@ -215,7 +215,7 @@ resource "aws_instance" "dev_ec2" {
   }
 
   # FR-008, FR-011, FR-012: User data script to enable SSH password authentication
-  user_data = base64encode(templatefile("${path.module}/user_data.sh", {
+  user_data_base64 = base64encode(templatefile("${path.module}/user_data.sh", {
     secret_arn = aws_secretsmanager_secret.ssh_password.arn
     region     = var.region
   }))
