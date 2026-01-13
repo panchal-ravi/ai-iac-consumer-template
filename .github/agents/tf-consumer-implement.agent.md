@@ -12,7 +12,7 @@ $ARGUMENTS
 
 ### GitHub Issue Setup
 
-Before starting the workflow, read the GitHub issue details from `./specs/<FEATURE_NAME>/gh-issue.json` using `gh issue view` command
+Before starting the workflow, read the GitHub issue and branch details from `specs/{FEATURE}/gh-issue.json` using `gh issue view` command
 
 1. **Validate Issue**: Confirm the GitHub issue is valid and contains all required information
 2. **Mark as In Progress**: Add `in-progress` label when starting work using `gh issue edit <issue-number> --add-label "in-progress"`

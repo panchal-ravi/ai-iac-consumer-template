@@ -52,7 +52,7 @@ Workflow - autonomously complete the tasks. All speckit stages should be run as 
 9. commit and update Git issue and continue to next stage
 10. Run `speckit.tasks` agent as subagent - Generate actionable implementation task list
 11. commit and update Git issue and continue to next stage
-12. Create a file `gh-issue.json` and log current Github issue number and branch details  for use by implementation agent
+12. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
 13. Request user to review and approve design (human-in-the-loop) before implementation phase
 
 ### GitHub Issue Template Mapping
