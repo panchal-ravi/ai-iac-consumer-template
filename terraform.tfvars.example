@@ -1,0 +1,30 @@
+# ============================================================================
+# Example Environment Configuration
+# Feature: 001-public-ec2-dev
+# Copy this file to terraform.tfvars or <environment>.auto.tfvars
+# ============================================================================
+
+# AWS Configuration (FR-001)
+region = "ap-southeast-1"  # Must be ap-southeast-1 per specification
+
+# Environment
+environment = "development"  # Options: development, staging, production
+
+# Instance Configuration (FR-002, FR-006)
+instance_type      = "t3.micro"  # Must be t3.micro per cost requirements
+root_volume_size   = 8           # Must be 8 GB per specification
+root_volume_type   = "gp3"       # Must be gp3 per specification
+
+# Security Configuration (FR-009)
+ssh_password_length = 32  # Minimum 32 characters required
+
+# Tagging Configuration (FR-017) - REQUIRED
+project_name = "your-project-name"      # Replace with your project name
+cost_center  = "your-cost-center-code"  # Replace with your cost center
+
+# Monitoring Configuration (FR-016, FR-016a)
+enable_detailed_monitoring = false  # Must be false to avoid additional costs
+
+# Feature and Workspace Identifiers
+feature_branch = "001-public-ec2-dev"
+workspace_name = "sandbox_workspace"  # Update for different workspaces

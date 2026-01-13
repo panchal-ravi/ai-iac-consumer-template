@@ -1,0 +1,58 @@
+# .terraformignore - Exclude files from Terraform operations
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+docs/
+specs/
+
+# Development tools
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# Testing
+test/
+tests/
+*_test.go
+
+# Dependencies
+node_modules/
+.terraform/
+
+# Environment files
+.env*
+*.env
+
+# Examples and samples
+examples/
+*.example
+sandbox.auto.tfvars.example
+
+# Logs
+*.log
+logs/
+
+# Pre-commit hooks
+.pre-commit-config.yaml
+.tflint.hcl
+
+# Copilot and agent files
+.copilot/
+.claude/
+AGENTS.md
+GettingStarted.md

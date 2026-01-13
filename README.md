@@ -297,14 +297,21 @@ Workspace: sandbox_sqs_<GITHUB_REPO_NAME>
 
 ---
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.13.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.6 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.28.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules
 
@@ -312,13 +319,58 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_iam_instance_profile.instance_profile](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_role.instance_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.secrets_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_instance.dev_ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
+| [aws_secretsmanager_secret.ssh_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret_version.ssh_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_security_group.ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_vpc_security_group_egress_rule.all_outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [random_password.ssh_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [aws_ami.amazon_linux_2023](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_subnets.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_vpc.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_cost_center"></a> [cost\_center](#input\_cost\_center) | Cost center identifier for billing and cost allocation (required per FR-017) | `string` | n/a | yes |
+| <a name="input_enable_detailed_monitoring"></a> [enable\_detailed\_monitoring](#input\_enable\_detailed\_monitoring) | Enable detailed CloudWatch monitoring (must be false per FR-016a) | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Deployment environment (development, staging, production) | `string` | `"development"` | no |
+| <a name="input_feature_branch"></a> [feature\_branch](#input\_feature\_branch) | Feature branch identifier for tracking | `string` | `"001-public-ec2-dev"` | no |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type (must be t3.micro for cost optimization per FR-002) | `string` | `"t3.micro"` | no |
+| <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project name for resource tagging and identification (required per FR-017) | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | AWS region for resource deployment (must be ap-southeast-1 per FR-001) | `string` | `"ap-southeast-1"` | no |
+| <a name="input_root_volume_size"></a> [root\_volume\_size](#input\_root\_volume\_size) | Root EBS volume size in GB (must be 8 GB per FR-006) | `number` | `8` | no |
+| <a name="input_root_volume_type"></a> [root\_volume\_type](#input\_root\_volume\_type) | EBS volume type (must be gp3 per FR-006) | `string` | `"gp3"` | no |
+| <a name="input_ssh_password_length"></a> [ssh\_password\_length](#input\_ssh\_password\_length) | Length of generated SSH password (minimum 32 characters per FR-009) | `number` | `32` | no |
+| <a name="input_workspace_name"></a> [workspace\_name](#input\_workspace\_name) | HCP Terraform workspace name | `string` | `"sandbox_workspace"` | no |
 
 ## Outputs
 
-No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| Name | Description |
+|------|-------------|
+| <a name="output_ami_id"></a> [ami\_id](#output\_ami\_id) | AMI ID used for the EC2 instance |
+| <a name="output_ami_name"></a> [ami\_name](#output\_ami\_name) | Name of the Amazon Linux 2023 AMI used |
+| <a name="output_availability_zone"></a> [availability\_zone](#output\_availability\_zone) | Availability zone where the instance is deployed |
+| <a name="output_estimated_monthly_cost"></a> [estimated\_monthly\_cost](#output\_estimated\_monthly\_cost) | Estimated monthly cost in USD (SC-006) |
+| <a name="output_iam_instance_profile_name"></a> [iam\_instance\_profile\_name](#output\_iam\_instance\_profile\_name) | IAM instance profile name |
+| <a name="output_iam_role_arn"></a> [iam\_role\_arn](#output\_iam\_role\_arn) | IAM role ARN attached to the EC2 instance |
+| <a name="output_instance_id"></a> [instance\_id](#output\_instance\_id) | EC2 instance ID for reference and management |
+| <a name="output_instance_private_ip"></a> [instance\_private\_ip](#output\_instance\_private\_ip) | Private IP address within VPC |
+| <a name="output_instance_public_ip"></a> [instance\_public\_ip](#output\_instance\_public\_ip) | Public IP address for SSH connection (FR-022) |
+| <a name="output_instance_state"></a> [instance\_state](#output\_instance\_state) | Current state of the EC2 instance |
+| <a name="output_password_retrieval_command"></a> [password\_retrieval\_command](#output\_password\_retrieval\_command) | AWS CLI command to retrieve SSH password |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group ID attached to the EC2 instance |
+| <a name="output_security_group_name"></a> [security\_group\_name](#output\_security\_group\_name) | Security group name |
+| <a name="output_ssh_connection_command"></a> [ssh\_connection\_command](#output\_ssh\_connection\_command) | SSH connection command (password will be prompted) |
+| <a name="output_ssh_secret_arn"></a> [ssh\_secret\_arn](#output\_ssh\_secret\_arn) | AWS Secrets Manager secret ARN containing SSH password (FR-023) |
+| <a name="output_ssh_secret_name"></a> [ssh\_secret\_name](#output\_ssh\_secret\_name) | AWS Secrets Manager secret name |
+| <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | Subnet ID where the instance is deployed |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | VPC ID where the instance is deployed |
+<!-- END_TF_DOCS -->
