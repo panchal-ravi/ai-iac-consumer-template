@@ -1,4 +1,6 @@
 FROM panchalravi/terraform-ai-tools:latest
 
-RUN npm install -g @github/copilot@prerelease && \
+ARG COPILOT_VERSION=0.0.380
+
+RUN npm install -g @github/copilot@${COPILOT_VERSION} && \
     npm cache clean --force

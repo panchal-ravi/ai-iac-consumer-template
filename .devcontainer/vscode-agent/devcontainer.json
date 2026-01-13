@@ -17,9 +17,9 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "bash -c 'mkdir -p ~/.terraform.d && cat > ~/.terraform.d/credentials.tfrc.json << EOF\n{\n  \"credentials\": {\n    \"app.terraform.io\": {\n      \"token\": \"${TFE_TOKEN}\"\n    }\n  }\n}\nEOF'",
-
+  "postStartCommand": "docker image pull hashicorp/terraform-mcp-server:0.3.3",
 	// Configure tool-specific properties.
-"customizations": {
+  "customizations": {
     "vscode": {
       "extensions": [
 				"GitHub.copilot",

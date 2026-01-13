@@ -12,9 +12,11 @@
         "--rm",
         "-e",
         "TFE_TOKEN",
-        "hashicorp/terraform-mcp-server:0.3.2"
+        "hashicorp/terraform-mcp-server:0.3.3"
       ],
-      "env": {}
+      "env": {
+        "TFE_TOKEN": "${TFE_TOKEN}"
+      }
     },
     "aws-knowledge-mcp": {
       "type": "http",
