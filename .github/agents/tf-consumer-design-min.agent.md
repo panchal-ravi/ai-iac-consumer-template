@@ -46,18 +46,14 @@ Workflow - autonomously complete the tasks. All speckit stages should be run as 
 3. commit and update Git issue
 4. Run `speckit.clarify` agent as subagent - Resolve ambiguities in the specification
 5. commit and update Git issue and continue to next stage
-6. Run `speckit.checklist` agent as subagent - Validate requirements quality
+6. Run `speckit.plan` agent as subagent - Design technical architecture with data model
 7. commit and update Git issue and continue to next stage
-8. Run `speckit.plan` agent as subagent - Design technical architecture with data model
+8. Run `review-tf-design` agent as subagent - Review and approve Terraform design
 9. commit and update Git issue and continue to next stage
-10. Run `review-tf-design` agent as subagent - Review and approve Terraform design
+10. Run `speckit.tasks` agent as subagent - Generate actionable implementation task list
 11. commit and update Git issue and continue to next stage
-12. Run `speckit.tasks` agent as subagent - Generate actionable implementation task list
-13. commit and update Git issue and continue to next stage
-14. Run `speckit.analyze` agent as subagent - Analyze spec for consistency
-15. commit and update Git issue and continue to next stage
-16. Create gh-issue.json file and log current Github issue number and branch details  for use by implementation agent
-17. Request user to review and approve design (human-in-the-loop) before implementation phase
+12. Create a file `gh-issue.json` and log current Github issue number and branch details  for use by implementation agent
+13. Request user to review and approve design (human-in-the-loop) before implementation phase
 
 ### GitHub Issue Template Mapping
 

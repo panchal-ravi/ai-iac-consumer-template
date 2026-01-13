@@ -33,7 +33,7 @@ work on the GitHub issue autonomously
 
 Workflow - autonomously complete the tasks. All speckit stages should be run as subagents. At each stage, commit changes and update the GitHub issue with progress comments. 
 
-0. Read GitHub issue from `./specs/<FEATURE_NAME>/gh-issue.json` using `gh issue view` command. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
+0. Read GitHub issue from `gh-issue.json` file and use `gh issue view` command to retrieve the issue details. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
 2. Run `speckit.implement` agent as subagent - Generate Terraform code and test in sandbox workspace (init, plan only)
 3. commit and update Git issue and continue to next stage
