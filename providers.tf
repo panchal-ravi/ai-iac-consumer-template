@@ -1,5 +1,8 @@
-# provider configuration blocks
-# example:
-# provider "aws" {
-#   region = var.aws_region
-# }   
+# AWS Provider Configuration
+provider "aws" {
+  region = var.region
+
+  default_tags {
+    tags = var.tags
+  }
+}
