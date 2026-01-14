@@ -81,6 +81,13 @@ module "ec2_instance" {
   # FR-021: Termination protection (disabled for easy cleanup)
   disable_api_termination = false
 
+  # Security enhancement: Enforce IMDSv2 to protect against SSRF attacks
+  metadata_options = {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
   # ============================================================================
   # Phase 4: User Story 2 - SSH Access with Password Authentication
   # ============================================================================

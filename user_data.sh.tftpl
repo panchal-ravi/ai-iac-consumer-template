@@ -26,6 +26,9 @@ echo "Restarting SSH service..."
 systemctl restart sshd
 
 # FR-012: Configure CloudWatch Logs agent
+echo "Installing CloudWatch agent..."
+dnf install -y amazon-cloudwatch-agent || yum install -y amazon-cloudwatch-agent
+
 echo "Configuring CloudWatch Logs agent..."
 mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
 
