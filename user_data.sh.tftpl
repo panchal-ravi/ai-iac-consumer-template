@@ -1,0 +1,59 @@
+#!/bin/bash
+# User Data Script for Public EC2 Development Instance
+# FR-008, FR-009, FR-010: Configure devuser with password authentication
+# FR-012: Configure CloudWatch Logs agent
+
+set -e
+exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
+
+echo "Starting user data script execution at $(date)"
+
+# FR-008: Create devuser account
+echo "Creating devuser account..."
+useradd -m -s /bin/bash devuser || true
+
+# FR-009, FR-010: Set generated password for devuser
+echo "Setting password for devuser..."
+echo "devuser:${password}" | chpasswd
+
+# FR-007: Enable password authentication for SSH
+echo "Configuring SSH for password authentication..."
+sed -i 's/^#*PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sed -i 's/^#*PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Restart SSH service to apply changes
+echo "Restarting SSH service..."
+systemctl restart sshd
+
+# FR-012: Configure CloudWatch Logs agent
+echo "Configuring CloudWatch Logs agent..."
+mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
+
+cat > /opt/aws/amazon-cloudwatch-agent/etc/config.json << 'EOF'
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name": "/aws/ec2/sandbox_public_ec2_dev",
+            "log_stream_name": "{instance_id}",
+            "timezone": "UTC"
+          }
+        ]
+      }
+    }
+  }
+}
+EOF
+
+# Start CloudWatch agent
+echo "Starting CloudWatch Logs agent..."
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -s \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+
+echo "User data script completed successfully at $(date)"

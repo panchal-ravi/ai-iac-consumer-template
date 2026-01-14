@@ -300,25 +300,52 @@ Workspace: sandbox_sqs_<GITHUB_REPO_NAME>
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.28.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.8.0 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cloudwatch_log_group"></a> [cloudwatch\_log\_group](#module\_cloudwatch\_log\_group) | app.terraform.io/ravi-panchal-org/cloudwatch/aws//modules/log-group | 5.7.2 |
+| <a name="module_ec2_instance"></a> [ec2\_instance](#module\_ec2\_instance) | app.terraform.io/ravi-panchal-org/ec2-instance/aws | 6.1.4 |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [random_password.devuser](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [aws_subnets.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_vpc.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type (must be t2 or t3 nano/micro/small/medium) | `string` | `"t3.micro"` | no |
+| <a name="input_password_length"></a> [password\_length](#input\_password\_length) | Length of generated password for devuser (minimum 16 characters) | `number` | `16` | no |
+| <a name="input_region"></a> [region](#input\_region) | AWS region for resource deployment (must be ap-southeast-1) | `string` | `"ap-southeast-1"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Common tags to apply to all resources | `map(string)` | <pre>{<br/>  "Agent": "copilot-terraform-agent",<br/>  "Application": "public-ec2-dev",<br/>  "Environment": "development",<br/>  "ManagedBy": "terraform",<br/>  "Project": "public-ec2-dev",<br/>  "Purpose": "development-testing",<br/>  "Terraform": "true"<br/>}</pre> | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_cloudwatch_log_group_name"></a> [cloudwatch\_log\_group\_name](#output\_cloudwatch\_log\_group\_name) | CloudWatch log group name for instance logs |
+| <a name="output_iam_instance_profile_arn"></a> [iam\_instance\_profile\_arn](#output\_iam\_instance\_profile\_arn) | IAM instance profile ARN attached to the EC2 instance |
+| <a name="output_instance_id"></a> [instance\_id](#output\_instance\_id) | EC2 instance ID |
+| <a name="output_instance_public_ip"></a> [instance\_public\_ip](#output\_instance\_public\_ip) | Public IPv4 address of the EC2 instance |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security group ID attached to the EC2 instance |
+| <a name="output_ssh_password"></a> [ssh\_password](#output\_ssh\_password) | SSH password for devuser account (sensitive) |
+| <a name="output_ssh_username"></a> [ssh\_username](#output\_ssh\_username) | SSH username for connecting to the instance |
 <!-- END_TF_DOCS -->
