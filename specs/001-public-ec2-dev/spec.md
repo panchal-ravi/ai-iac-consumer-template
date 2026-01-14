@@ -17,10 +17,11 @@ A developer needs to quickly spin up a publicly accessible EC2 instance in AWS f
 
 **Acceptance Scenarios**:
 
-1. **Given** valid HCP Terraform credentials and AWS provider configuration, **When** the developer triggers the Terraform deployment, **Then** an EC2 t3.micro instance is provisioned in ap-southeast-1 region
+1. **Given** valid HCP Terraform credentials and AWS provider configuration, **When** the developer triggers the Terraform deployment, **Then** an EC2 t3.micro instance is provisioned in ap-southeast-1 region with termination protection disabled
 2. **Given** the instance is provisioned, **When** the deployment completes, **Then** a public IP address is automatically assigned to the instance
 3. **Given** the instance is running, **When** the developer retrieves the outputs, **Then** the public IP address is displayed for SSH access
 4. **Given** the default VPC exists in the region, **When** the Terraform applies, **Then** the instance uses the existing default VPC and subnet without creating new network resources
+5. **Given** the instance is provisioned, **When** the root volume is examined, **Then** it is 8GB GP3 encrypted with AWS managed keys and configured to delete on termination
 
 ---
 
@@ -36,8 +37,9 @@ A developer needs to connect to the development instance using SSH with username
 
 1. **Given** the instance is running and user data script has completed, **When** the developer attempts SSH with username "devuser" and the generated password, **Then** SSH connection succeeds and grants shell access
 2. **Given** password authentication is configured, **When** the developer tries to connect using SSH keys only, **Then** key-based authentication is disabled and password is required
-3. **Given** the deployment completes, **When** the developer retrieves Terraform outputs, **Then** a secure password is generated and displayed as a sensitive output value
+3. **Given** the deployment completes, **When** the developer retrieves Terraform outputs, **Then** a secure 16-character password with alphanumeric and special characters is generated and displayed as a sensitive output value
 4. **Given** SSH service is running, **When** connection attempts are made, **Then** SSH operates on standard port 22
+5. **Given** the user data script executes, **When** password configuration occurs, **Then** the script is idempotent and logs execution details to CloudWatch Logs
 
 ---
 
@@ -70,8 +72,9 @@ A developer needs basic visibility into instance operations while keeping costs 
 
 1. **Given** the instance is running, **When** CloudWatch is queried, **Then** basic instance metrics are available (CPU, network, disk)
 2. **Given** detailed monitoring costs extra, **When** the instance monitoring configuration is checked, **Then** detailed monitoring is disabled
-3. **Given** CloudWatch Logs are enabled, **When** the instance generates system logs, **Then** logs are streamed to CloudWatch Logs service
+3. **Given** CloudWatch Logs are enabled, **When** the instance generates system logs, **Then** logs are streamed to CloudWatch Logs log group `/aws/ec2/sandbox_public_ec2_dev` from /var/log/messages
 4. **Given** the monthly budget is $50, **When** the instance runs for a full month, **Then** total costs remain under the budget threshold
+5. **Given** the instance has an IAM instance profile, **When** CloudWatch permissions are checked, **Then** the profile includes CloudWatchAgentServerPolicy managed policy only
 
 ---
 
@@ -95,12 +98,14 @@ Operations teams need to identify and categorize the development instance using 
 
 - What happens when the default VPC doesn't exist in ap-southeast-1 region? System should fail with clear error indicating manual VPC creation is required.
 - What happens when the t3.micro instance type is not available in the selected availability zone? System should fail Terraform validation with availability zone error.
-- What happens when the user data script fails to configure password authentication? SSH access will fail; the instance remains accessible via AWS Systems Manager Session Manager as a recovery path.
+- What happens when the user data script fails to configure password authentication? SSH access will fail; the instance remains accessible via AWS Systems Manager Session Manager as a recovery path. User data script logs are available in CloudWatch Logs `/aws/ec2/sandbox_public_ec2_dev` for troubleshooting.
 - What happens when AWS API rate limits are hit during provisioning? Terraform will retry with exponential backoff up to its configured timeout.
-- What happens when the generated password doesn't meet SSH password complexity requirements? The user data script enforces password acceptance regardless of complexity (root can set any password).
+- What happens when the generated password doesn't meet SSH password complexity requirements? The generated 16-character password with alphanumeric and special characters meets or exceeds SSH default requirements; root can set any password via user data script.
 - What happens when multiple concurrent Terraform runs target the same workspace? HCP Terraform's run queue serializes executions automatically.
 - What happens when the monthly cost exceeds $50? AWS continues service but costs exceed budget; monitoring alerts should be configured separately.
 - What happens when the latest Amazon Linux 2023 AMI ID changes? Terraform data source automatically fetches the current latest AMI on each run.
+- What happens when EBS encryption fails due to missing KMS permissions? Terraform apply will fail with clear KMS permission error; AWS managed keys should be accessible by default.
+- What happens when CloudWatch Logs agent fails to start? Instance provisioning succeeds but logs are not captured; user data execution logs remain in /var/log/cloud-init-output.log on the instance.
 
 ## Requirements *(mandatory)*
 
@@ -108,53 +113,73 @@ Operations teams need to identify and categorize the development instance using 
 
 - **FR-001**: System MUST provision a single EC2 instance of type t3.micro in the ap-southeast-1 AWS region
 - **FR-002**: System MUST use the latest Amazon Linux 2023 AMI automatically discovered via data source
-- **FR-003**: System MUST attach an 8 GB GP3 root volume to the instance
+- **FR-003**: System MUST attach an 8 GB GP3 root volume to the instance with encryption enabled using AWS managed keys and delete-on-termination enabled
 - **FR-004**: System MUST automatically assign a public IP address to the instance at launch
 - **FR-005**: System MUST use the existing default VPC and default subnet in ap-southeast-1 via data sources
 - **FR-006**: System MUST create a security group allowing inbound SSH traffic on port 22 from 0.0.0.0/0
 - **FR-007**: System MUST disable SSH key-based authentication and enable username/password authentication
 - **FR-008**: System MUST create a user account named "devuser" on the instance
-- **FR-009**: System MUST generate a secure random password for the devuser account
-- **FR-010**: System MUST configure the instance via user data script to enable password authentication
+- **FR-009**: System MUST generate a secure random password for the devuser account with minimum 16 characters including alphanumeric and special characters
+- **FR-010**: System MUST configure the instance via idempotent user data script to enable password authentication with error logging
 - **FR-011**: System MUST integrate with CloudWatch for basic monitoring (detailed monitoring disabled)
-- **FR-012**: System MUST enable CloudWatch Logs for system logging
+- **FR-012**: System MUST enable CloudWatch Logs for system logging using log group `/aws/ec2/sandbox_public_ec2_dev` capturing /var/log/messages
 - **FR-013**: System MUST output the instance's public IP address as a non-sensitive output
 - **FR-014**: System MUST output the generated password as a sensitive output value
 - **FR-015**: System MUST output the username ("devuser") as a non-sensitive output
 - **FR-016**: System MUST apply the following tags to the instance: Environment=development, Project=public-ec2-dev, ManagedBy=terraform, Purpose=development-testing, Terraform=true, Agent=copilot-terraform-agent
 - **FR-017**: System MUST use the HCP Terraform workspace "sandbox_public_ec2_dev" in organization "ravi-panchal-org"
 - **FR-018**: System MUST assign the workspace to the "Default Project" in HCP Terraform
-- **FR-019**: System MUST configure IAM permissions following least privilege principle for the instance profile
+- **FR-019**: System MUST create an IAM instance profile with CloudWatchAgentServerPolicy managed policy for least privilege CloudWatch access
 - **FR-020**: System MUST ensure total monthly operating cost remains under $50
+- **FR-021**: System MUST disable instance termination protection to allow easy cleanup of development resources
 
 ### Key Entities
 
-- **EC2 Instance**: The virtual machine resource representing the development server; includes compute, storage, networking configuration, and public IP assignment
+- **EC2 Instance**: The virtual machine resource representing the development server; includes compute, storage, networking configuration, public IP assignment, and termination protection disabled for easy cleanup
 - **Security Group**: Firewall rules controlling network access; defines allowed SSH traffic from any source IP on port 22
-- **User Credentials**: The authentication information for SSH access; includes username ("devuser") and randomly generated password
+- **User Credentials**: The authentication information for SSH access; includes username ("devuser") and randomly generated 16-character password with alphanumeric and special characters
 - **Default VPC**: The existing default virtual private cloud in ap-southeast-1; provides network isolation and internet gateway access
 - **Default Subnet**: The existing default subnet within the default VPC; provides IP address allocation and availability zone placement
 - **AMI Data Source**: The query mechanism to discover the latest Amazon Linux 2023 AMI ID; automatically updates when new AMIs are released
-- **User Data Script**: The initialization script executed at instance launch; configures password authentication and creates user account
-- **CloudWatch Logs**: The centralized logging destination; receives system logs from the instance for monitoring and troubleshooting
+- **User Data Script**: The idempotent initialization script executed at instance launch; configures password authentication, creates user account, and enables CloudWatch Logs with error handling
+- **CloudWatch Logs**: The centralized logging destination at `/aws/ec2/sandbox_public_ec2_dev`; receives system logs (/var/log/messages) from the instance for monitoring and troubleshooting
 - **HCP Terraform Workspace**: The execution environment for Terraform runs; stores state, variables, and manages infrastructure lifecycle
+- **IAM Instance Profile**: The IAM role attached to the instance; grants CloudWatchAgentServerPolicy permissions for logs and metrics
+- **EBS Root Volume**: The 8GB GP3 encrypted storage volume; uses AWS managed KMS keys and deletes automatically on instance termination
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
 - **SC-001**: Infrastructure provisioning completes within 5 minutes from Terraform apply to SSH-accessible instance
-- **SC-002**: SSH connection succeeds within 30 seconds of providing username and password credentials
+- **SC-002**: SSH connection succeeds within 30 seconds of providing username and password credentials using 16-character generated password
 - **SC-003**: Instance is accessible from any public IP address on port 22 with 100% connectivity success rate
 - **SC-004**: Total monthly AWS infrastructure cost remains under $50 (measured via AWS Cost Explorer)
 - **SC-005**: Instance uptime meets 99% availability (measured via CloudWatch metrics over 30-day period)
 - **SC-006**: Password authentication works on first attempt without requiring SSH key files (100% success rate for valid credentials)
-- **SC-007**: Terraform deployment passes with zero errors and all resources reach "created" status
+- **SC-007**: Terraform deployment passes with zero errors and all resources reach "created" status including IAM instance profile and encrypted EBS volume
 - **SC-008**: All required resource tags are present and accurate on deployed instance (100% tag compliance)
 - **SC-009**: Generated password is marked as sensitive in Terraform outputs and not displayed in logs
-- **SC-010**: CloudWatch receives system logs within 5 minutes of instance launch
+- **SC-010**: CloudWatch receives system logs within 5 minutes of instance launch at log group `/aws/ec2/sandbox_public_ec2_dev`
 - **SC-011**: Code quality score exceeds 80% when evaluated by automated quality checks
 - **SC-012**: Security group contains exactly one inbound rule (SSH on port 22) and no unnecessary permissions
+- **SC-013**: EBS root volume encryption is verified as enabled using AWS managed KMS keys
+- **SC-014**: Instance termination protection is verified as disabled for easy cleanup
+
+## Clarifications
+
+### Session 2025-01-17
+
+These clarifications were made autonomously based on the fully autonomous agent mode, minimal cost optimization preference, and private registry module usage requirement from GitHub issue #15.
+
+- Q: What password complexity requirements should be enforced for the devuser account? → A: Minimum 16 characters, alphanumeric with special characters (AWS security best practice for development environments)
+- Q: Should automated password rotation be implemented? → A: No automated rotation; manual rotation on-demand only (consistent with development scope and cost optimization)
+- Q: Should instance termination protection be enabled? → A: Disabled (development environment is ephemeral, enables easier cleanup)
+- Q: Should EBS root volume encryption be enabled? → A: Enabled using AWS managed keys (security best practice, negligible cost impact)
+- Q: Which CloudWatch log groups and system logs should be captured? → A: Single log group `/aws/ec2/sandbox_public_ec2_dev` capturing /var/log/messages (cost-optimized, covers basic troubleshooting)
+- Q: What specific IAM permissions are required for the instance profile? → A: CloudWatchAgentServerPolicy managed policy only (minimal permissions for logs/metrics)
+- Q: Should the root volume be deleted when the instance is terminated? → A: Yes, delete on termination (ephemeral environment, cost optimization)
+- Q: Should the user data script be idempotent with error handling? → A: Yes, idempotent execution with error logging to CloudWatch (reliability best practice)
 
 ## Assumptions *(mandatory)*
 
@@ -164,22 +189,26 @@ Operations teams need to identify and categorize the development instance using 
 - AWS account has quota available for at least one t3.micro instance in ap-southeast-1
 - Network connectivity from developer's location to AWS ap-southeast-1 is available
 - SSH client is available on the developer's machine for testing connectivity
-- AWS credentials have permissions to create EC2 instances, security groups, and query VPC resources
+- AWS credentials have permissions to create EC2 instances, security groups, query VPC resources, create IAM roles/instance profiles, and configure CloudWatch Logs
 - CloudWatch service is enabled in the AWS account
 - Amazon Linux 2023 AMI is available in the ap-southeast-1 region
 - Password authentication via SSH is acceptable for development environment (not production)
 - Monthly budget tracking and alerting is configured separately from this infrastructure
 - Instance state is ephemeral for development purposes (no backup/disaster recovery required)
+- AWS managed KMS keys are acceptable for EBS encryption (no custom CMK required)
+- User data script execution completes successfully within the 5-minute provisioning window
 
 ## Dependencies *(mandatory)*
 
 - **Existing Default VPC**: Instance deployment requires the default VPC to exist in ap-southeast-1; if not present, deployment will fail
 - **HCP Terraform Workspace**: The "sandbox_public_ec2_dev" workspace must be created in "ravi-panchal-org" organization before deployment
-- **AWS Provider Credentials**: Valid AWS credentials with EC2, VPC, and CloudWatch permissions must be configured in the HCP Terraform workspace
+- **AWS Provider Credentials**: Valid AWS credentials with EC2, VPC, IAM, KMS, and CloudWatch permissions must be configured in the HCP Terraform workspace
 - **Amazon Linux 2023 AMI**: The latest AMI must be available in ap-southeast-1 region (queried via data source)
 - **Internet Gateway**: Default VPC must have an attached internet gateway for public IP routing (standard for default VPCs)
 - **AWS Service Quotas**: EC2 instance quota for t3.micro must have available capacity
 - **Route Table**: Default VPC's route table must have a route to the internet gateway for outbound connectivity
+- **KMS Service**: AWS KMS service must be available for EBS encryption using managed keys
+- **CloudWatch Logs Service**: CloudWatch Logs must be enabled and accessible for log group creation
 
 ## Out of Scope *(mandatory)*
 
@@ -198,7 +227,9 @@ Operations teams need to identify and categorize the development instance using 
 - **Monitoring alerts**: CloudWatch alarms, SNS notifications, or alerting integrations
 - **Cost allocation reports**: Detailed cost breakdown reporting or billing integrations beyond tagging
 - **Compliance scanning**: Automated compliance checks, vulnerability scanning, or security audits
-- **Password rotation**: Automated password rotation or secrets management integration
+- **Password rotation**: Automated password rotation or secrets management integration (manual rotation on-demand is acceptable)
 - **Session recording**: SSH session logging or audit trail recording
-- **Instance termination protection**: Safeguards against accidental instance termination
 - **Production hardening**: CIS benchmarks, security hardening, or production-grade security configurations
+- **Custom KMS keys**: Using customer-managed KMS keys for EBS encryption (AWS managed keys are sufficient)
+- **Instance stop/start scheduling**: Automated shutdown schedules for cost optimization
+- **Detailed CloudWatch metrics**: Sub-minute monitoring or custom metrics beyond basic instance metrics
