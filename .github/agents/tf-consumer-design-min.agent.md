@@ -42,7 +42,7 @@ Workflow - autonomously complete the tasks. All speckit stages should be run as 
 
 0. Create and configure tracking GitHub issue from template. Github issue should be created and labeled appropriately. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
-2. Run `speckit.specify` agent as subagent - Create feature specification from the issue details and continue to next stage
+2. Run `speckit.specify` agent as subagent - Create feature specification from the issue details and continue to next stage. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
 3. commit and update Git issue
 4. Run `speckit.clarify` agent as subagent - Resolve ambiguities in the specification
 5. commit and update Git issue and continue to next stage
@@ -52,8 +52,7 @@ Workflow - autonomously complete the tasks. All speckit stages should be run as 
 9. commit and update Git issue and continue to next stage
 10. Run `speckit.tasks` agent as subagent - Generate actionable implementation task list
 11. commit and update Git issue and continue to next stage
-12. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
-13. Request user to review and approve design (human-in-the-loop) before implementation phase
+12. Request user to review and approve design (human-in-the-loop) before implementation phase
 
 ### GitHub Issue Template Mapping
 
