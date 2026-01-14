@@ -1,0 +1,6 @@
+{
+  "issue_number": 15,
+  "branch": "feature/public-ec2-dev-15",
+  "feature_name": "public-ec2-dev",
+  "created_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+}
