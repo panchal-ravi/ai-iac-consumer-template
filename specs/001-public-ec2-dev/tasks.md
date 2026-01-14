@@ -23,13 +23,13 @@ All Terraform files are at repository root level (not in subdirectories).
 
 **Purpose**: Project initialization and Terraform structure
 
-- [ ] T001 Create .gitignore file at repository root with Terraform patterns (*.tfstate, *.tfvars, .terraform/, etc.)
-- [ ] T002 [P] Create versions.tf at repository root with Terraform ~> 1.5.0 and AWS provider ~> 5.0 constraints
-- [ ] T003 [P] Create variables.tf at repository root with input variables (region, instance_type, password_length, tags) including validation rules for region (must be ap-southeast-1), instance_type (must match t[2-3]\.(nano|micro|small|medium)), and password_length (minimum 16)
-- [ ] T004 [P] Create user_data.sh.tftpl template file at repository root with placeholder for ${password} variable
-- [ ] T005 [P] Create .pre-commit-config.yaml at repository root with terraform fmt, terraform validate, and tflint hooks
-- [ ] T006 [P] Create .tflint.hcl at repository root with AWS ruleset configuration
-- [ ] T007 Create README.md at repository root with feature overview, prerequisites (HCP Terraform workspace, default VPC), and quickstart reference
+- [X] T001 Create .gitignore file at repository root with Terraform patterns (*.tfstate, *.tfvars, .terraform/, etc.)
+- [X] T002 [P] Create versions.tf at repository root with Terraform ~> 1.5.0 and AWS provider ~> 5.0 constraints
+- [X] T003 [P] Create variables.tf at repository root with input variables (region, instance_type, password_length, tags) including validation rules for region (must be ap-southeast-1), instance_type (must match t[2-3]\.(nano|micro|small|medium)), and password_length (minimum 16)
+- [X] T004 [P] Create user_data.sh.tftpl template file at repository root with placeholder for ${password} variable
+- [X] T005 [P] Create .pre-commit-config.yaml at repository root with terraform fmt, terraform validate, and tflint hooks
+- [X] T006 [P] Create .tflint.hcl at repository root with AWS ruleset configuration
+- [X] T007 Create README.md at repository root with feature overview, prerequisites (HCP Terraform workspace, default VPC), and quickstart reference
 
 **Checkpoint**: Project structure is ready - Terraform files can now be implemented
 
@@ -41,10 +41,10 @@ All Terraform files are at repository root level (not in subdirectories).
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Create CloudWatch log group resource in main.tf using cloudwatch module (app.terraform.io/ravi-panchal-org/cloudwatch/aws v5.7.2) with name /aws/ec2/sandbox_public_ec2_dev
-- [ ] T009 [P] Create random_password resource in main.tf with length 16, special=true, upper=true, lower=true, numeric=true for devuser password generation
-- [ ] T010 [P] Create data source aws_vpc in main.tf to discover default VPC with filter default=true
-- [ ] T011 [P] Create data source aws_subnets in main.tf to discover default subnets filtering by VPC ID from data.aws_vpc.default
+- [X] T008 Create CloudWatch log group resource in main.tf using cloudwatch module (app.terraform.io/ravi-panchal-org/cloudwatch/aws v5.7.2) with name /aws/ec2/sandbox_public_ec2_dev
+- [X] T009 [P] Create random_password resource in main.tf with length 16, special=true, upper=true, lower=true, numeric=true for devuser password generation
+- [X] T010 [P] Create data source aws_vpc in main.tf to discover default VPC with filter default=true
+- [X] T011 [P] Create data source aws_subnets in main.tf to discover default subnets filtering by VPC ID from data.aws_vpc.default
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -58,14 +58,14 @@ All Terraform files are at repository root level (not in subdirectories).
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Create main ec2-instance module block in main.tf using app.terraform.io/ravi-panchal-org/ec2-instance/aws v6.1.4 with name "sandbox-public-ec2-dev", instance_type t3.micro, ami_ssm_parameter="/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
-- [ ] T013 [US1] Configure subnet_id in ec2-instance module using element(data.aws_subnets.default.ids, 0) to select first available default subnet
-- [ ] T014 [US1] Configure root_block_device in ec2-instance module with volume_type=gp3, volume_size=8, encrypted=true, delete_on_termination=true
-- [ ] T015 [US1] Configure monitoring=false in ec2-instance module to disable detailed monitoring for cost optimization
-- [ ] T016 [US1] Configure disable_api_termination=false in ec2-instance module to allow easy instance cleanup
-- [ ] T017 [US1] Configure tags in ec2-instance module with Environment=development, Project=public-ec2-dev, ManagedBy=terraform, Purpose=development-testing, Terraform=true, Agent=copilot-terraform-agent
-- [ ] T018 [US1] Create outputs.tf at repository root with output "instance_id" referencing module.ec2_instance.id
-- [ ] T019 [US1] Add output "instance_public_ip" to outputs.tf referencing module.ec2_instance.public_ip
+- [X] T012 [US1] Create main ec2-instance module block in main.tf using app.terraform.io/ravi-panchal-org/ec2-instance/aws v6.1.4 with name "sandbox-public-ec2-dev", instance_type t3.micro, ami_ssm_parameter="/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
+- [X] T013 [US1] Configure subnet_id in ec2-instance module using element(data.aws_subnets.default.ids, 0) to select first available default subnet
+- [X] T014 [US1] Configure root_block_device in ec2-instance module with volume_type=gp3, volume_size=8, encrypted=true, delete_on_termination=true
+- [X] T015 [US1] Configure monitoring=false in ec2-instance module to disable detailed monitoring for cost optimization
+- [X] T016 [US1] Configure disable_api_termination=false in ec2-instance module to allow easy instance cleanup
+- [X] T017 [US1] Configure tags in ec2-instance module with Environment=development, Project=public-ec2-dev, ManagedBy=terraform, Purpose=development-testing, Terraform=true, Agent=copilot-terraform-agent
+- [X] T018 [US1] Create outputs.tf at repository root with output "instance_id" referencing module.ec2_instance.id
+- [X] T019 [US1] Add output "instance_public_ip" to outputs.tf referencing module.ec2_instance.public_ip
 
 **Checkpoint**: At this point, User Story 1 should be deployable - instance provisions with public IP (no SSH access yet)
 
@@ -79,16 +79,16 @@ All Terraform files are at repository root level (not in subdirectories).
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Implement user data script in user_data.sh.tftpl with shebang, set -e, and logging redirect to /var/log/user-data.log
-- [ ] T021 [US2] Add user creation command to user_data.sh.tftpl: useradd -m -s /bin/bash devuser || true for idempotency
-- [ ] T022 [US2] Add password configuration to user_data.sh.tftpl: echo "devuser:${password}" | chpasswd
-- [ ] T023 [US2] Add SSH configuration commands to user_data.sh.tftpl: sed to enable PasswordAuthentication yes in /etc/ssh/sshd_config (handle both commented and explicit 'no' cases)
-- [ ] T024 [US2] Add SSH restart command to user_data.sh.tftpl: systemctl restart sshd
-- [ ] T025 [US2] Create locals block in main.tf with user_data = templatefile("${path.module}/user_data.sh.tftpl", {password = random_password.devuser.result})
-- [ ] T026 [US2] Configure user_data parameter in ec2-instance module referencing local.user_data
-- [ ] T027 [US2] Configure user_data_replace_on_change=false in ec2-instance module to avoid instance recreation on script changes
-- [ ] T028 [US2] Add output "ssh_username" to outputs.tf with value "devuser" (non-sensitive)
-- [ ] T029 [US2] Add output "ssh_password" to outputs.tf referencing random_password.devuser.result with sensitive=true
+- [X] T020 [US2] Implement user data script in user_data.sh.tftpl with shebang, set -e, and logging redirect to /var/log/user-data.log
+- [X] T021 [US2] Add user creation command to user_data.sh.tftpl: useradd -m -s /bin/bash devuser || true for idempotency
+- [X] T022 [US2] Add password configuration to user_data.sh.tftpl: echo "devuser:${password}" | chpasswd
+- [X] T023 [US2] Add SSH configuration commands to user_data.sh.tftpl: sed to enable PasswordAuthentication yes in /etc/ssh/sshd_config (handle both commented and explicit 'no' cases)
+- [X] T024 [US2] Add SSH restart command to user_data.sh.tftpl: systemctl restart sshd
+- [X] T025 [US2] Create locals block in main.tf with user_data = templatefile("${path.module}/user_data.sh.tftpl", {password = random_password.devuser.result})
+- [X] T026 [US2] Configure user_data parameter in ec2-instance module referencing local.user_data
+- [X] T027 [US2] Configure user_data_replace_on_change=false in ec2-instance module to avoid instance recreation on script changes
+- [X] T028 [US2] Add output "ssh_username" to outputs.tf with value "devuser" (non-sensitive)
+- [X] T029 [US2] Add output "ssh_password" to outputs.tf referencing random_password.devuser.result with sensitive=true
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should work - instance is SSH-accessible with password authentication
 
@@ -102,12 +102,12 @@ All Terraform files are at repository root level (not in subdirectories).
 
 ### Implementation for User Story 3
 
-- [ ] T030 [US3] Configure create_security_group=true in ec2-instance module to enable integrated security group creation
-- [ ] T031 [US3] Configure security_group_name="sandbox-public-ec2-dev-sg" in ec2-instance module
-- [ ] T032 [US3] Configure security_group_description="Security group for public EC2 development instance - allows SSH from anywhere" in ec2-instance module
-- [ ] T033 [US3] Configure security_group_vpc_id=data.aws_vpc.default.id in ec2-instance module
-- [ ] T034 [US3] Configure security_group_ingress_rules map in ec2-instance module with ssh rule: from_port=22, to_port=22, ip_protocol="tcp", cidr_ipv4="0.0.0.0/0", description="Allow SSH from anywhere"
-- [ ] T035 [US3] Add output "security_group_id" to outputs.tf referencing module.ec2_instance.security_group_id
+- [X] T030 [US3] Configure create_security_group=true in ec2-instance module to enable integrated security group creation
+- [X] T031 [US3] Configure security_group_name="sandbox-public-ec2-dev-sg" in ec2-instance module
+- [X] T032 [US3] Configure security_group_description="Security group for public EC2 development instance - allows SSH from anywhere" in ec2-instance module
+- [X] T033 [US3] Configure security_group_vpc_id=data.aws_vpc.default.id in ec2-instance module
+- [X] T034 [US3] Configure security_group_ingress_rules map in ec2-instance module with ssh rule: from_port=22, to_port=22, ip_protocol="tcp", cidr_ipv4="0.0.0.0/0", description="Allow SSH from anywhere"
+- [X] T035 [US3] Add output "security_group_id" to outputs.tf referencing module.ec2_instance.security_group_id
 
 **Checkpoint**: All security rules configured - SSH access is properly restricted to port 22 from any IP
 
@@ -121,16 +121,16 @@ All Terraform files are at repository root level (not in subdirectories).
 
 ### Implementation for User Story 4
 
-- [ ] T036 [US4] Configure create_iam_instance_profile=true in ec2-instance module to enable IAM role creation
-- [ ] T037 [US4] Configure iam_role_name="sandbox-public-ec2-dev-role" in ec2-instance module
-- [ ] T038 [US4] Configure iam_role_description="IAM role for EC2 development instance with CloudWatch Logs access" in ec2-instance module
-- [ ] T039 [US4] Configure iam_role_policies map in ec2-instance module with CloudWatchAgentServerPolicy="arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-- [ ] T040 [US4] Add CloudWatch agent configuration to user_data.sh.tftpl: create JSON config at /opt/aws/amazon-cloudwatch-agent/etc/config.json with logs.logs_collected.files.collect_list for /var/log/messages
-- [ ] T041 [US4] Configure CloudWatch log_group_name in user_data.sh.tftpl config as "/aws/ec2/sandbox_public_ec2_dev" and log_stream_name as "{instance_id}"
-- [ ] T042 [US4] Add CloudWatch agent start command to user_data.sh.tftpl: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
-- [ ] T043 [US4] Add depends_on = [module.cloudwatch_log_group] to ec2-instance module to ensure log group exists before instance launch
-- [ ] T044 [US4] Add output "cloudwatch_log_group_name" to outputs.tf referencing module.cloudwatch_log_group.cloudwatch_log_group_name
-- [ ] T045 [US4] Add output "iam_instance_profile_arn" to outputs.tf referencing module.ec2_instance.iam_instance_profile_arn
+- [X] T036 [US4] Configure create_iam_instance_profile=true in ec2-instance module to enable IAM role creation
+- [X] T037 [US4] Configure iam_role_name="sandbox-public-ec2-dev-role" in ec2-instance module
+- [X] T038 [US4] Configure iam_role_description="IAM role for EC2 development instance with CloudWatch Logs access" in ec2-instance module
+- [X] T039 [US4] Configure iam_role_policies map in ec2-instance module with CloudWatchAgentServerPolicy="arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+- [X] T040 [US4] Add CloudWatch agent configuration to user_data.sh.tftpl: create JSON config at /opt/aws/amazon-cloudwatch-agent/etc/config.json with logs.logs_collected.files.collect_list for /var/log/messages
+- [X] T041 [US4] Configure CloudWatch log_group_name in user_data.sh.tftpl config as "/aws/ec2/sandbox_public_ec2_dev" and log_stream_name as "{instance_id}"
+- [X] T042 [US4] Add CloudWatch agent start command to user_data.sh.tftpl: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+- [X] T043 [US4] Add depends_on = [module.cloudwatch_log_group] to ec2-instance module to ensure log group exists before instance launch
+- [X] T044 [US4] Add output "cloudwatch_log_group_name" to outputs.tf referencing module.cloudwatch_log_group.cloudwatch_log_group_name
+- [X] T045 [US4] Add output "iam_instance_profile_arn" to outputs.tf referencing module.ec2_instance.iam_instance_profile_arn
 
 **Checkpoint**: CloudWatch monitoring configured - logs are streaming within budget constraints
 
@@ -144,9 +144,9 @@ All Terraform files are at repository root level (not in subdirectories).
 
 ### Implementation for User Story 5
 
-- [ ] T046 [US5] Verify tags are properly propagated in ec2-instance module configuration (already configured in T017, validation task only)
-- [ ] T047 [US5] Update terraform.tfvars.example file at repository root with example tag values for Environment, Project, ManagedBy, Purpose, Terraform, Agent
-- [ ] T048 [US5] Document tag strategy in README.md explaining purpose of each tag and how they support cost allocation
+- [X] T046 [US5] Verify tags are properly propagated in ec2-instance module configuration (already configured in T017, validation task only)
+- [X] T047 [US5] Update terraform.tfvars.example file at repository root with example tag values for Environment, Project, ManagedBy, Purpose, Terraform, Agent
+- [X] T048 [US5] Document tag strategy in README.md explaining purpose of each tag and how they support cost allocation
 
 **Checkpoint**: All resources properly tagged for operational maturity
 
@@ -156,8 +156,8 @@ All Terraform files are at repository root level (not in subdirectories).
 
 **Purpose**: Comprehensive validation of all user stories
 
-- [ ] T049 [P] Run terraform fmt -recursive to format all Terraform files
-- [ ] T050 [P] Run terraform validate to verify configuration syntax
+- [X] T049 [P] Run terraform fmt -recursive to format all Terraform files
+- [X] T050 [P] Run terraform validate to verify configuration syntax
 - [ ] T051 [P] Run tflint to check for common errors and best practices
 - [ ] T052 Run terraform plan and verify 7+ resources will be created (EC2, security group, IAM role/profile, CloudWatch log group, random password, data sources)
 - [ ] T053 Run terraform apply in HCP Terraform workspace sandbox_public_ec2_dev and verify successful deployment
