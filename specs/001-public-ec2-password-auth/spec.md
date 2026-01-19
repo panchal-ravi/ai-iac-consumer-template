@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "Provision a public EC2 instance with username/password authentication in AWS ap-southeast-1"
 
+## Clarifications
+
+### Session 2025-01-21
+
+- Q: Password Generation Strategy - How should the password be generated and initially set? → A: Generate using Terraform random_password resource (20 chars, alphanumeric + special) stored as sensitive variable
+- Q: AMI Selection Strategy - Which AMI should be used (Amazon Linux 2023 or Ubuntu 22.04 LTS)? → A: Ubuntu 22.04 LTS using latest AMI lookup (filter: ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*)
+- Q: CloudWatch Logging Scope - What is the implementation approach for SSH authentication logging? → A: CloudWatch Agent shipping /var/log/auth.log to CloudWatch Logs group /aws/ec2/ssh-auth
+- Q: VPC Strategy - Should we require default VPC or create custom VPC if missing? → A: Use default VPC if exists, create minimal custom VPC with public subnet and IGW if default missing
+- Q: User-data Script Error Handling - How should user-data script failures be detected and handled? → A: Log to /var/log/user-data.log and CloudWatch, fail with clear error codes, manual recovery required
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Basic Instance Provisioning (Priority: P1)
@@ -105,14 +115,14 @@ Security team needs visibility into SSH authentication attempts to detect potent
 
 ### Edge Cases
 
-- What happens when the instance type t3.micro is not available in ap-southeast-1?
-- How does the system handle password rotation or expiration?
-- What happens if the Elastic IP quota is exceeded?
-- How does the system behave if the default VPC doesn't exist in ap-southeast-1?
-- What happens when multiple concurrent SSH sessions are attempted?
-- How does the system handle instance failure or unexpected termination?
-- What happens if the user-data script fails to enable password authentication?
-- How are conflicting security group rules handled?
+- What happens when the instance type t3.micro is not available in ap-southeast-1? → Terraform will fail with clear error; manual intervention required to select alternative instance type
+- How does the system handle password rotation or expiration? → Manual password rotation only; update random_password resource and re-apply Terraform
+- What happens if the Elastic IP quota is exceeded? → Terraform will fail with quota error; request quota increase or release unused Elastic IPs
+- How does the system behave if the default VPC doesn't exist in ap-southeast-1? → System automatically creates custom VPC (10.0.0.0/16) with public subnet, IGW, and route table
+- What happens when multiple concurrent SSH sessions are attempted? → SSH server allows multiple sessions by default; limited only by instance CPU/memory capacity
+- How does the system handle instance failure or unexpected termination? → No automatic recovery; Elastic IP remains allocated for reassignment; manual re-provisioning required
+- What happens if the user-data script fails to enable password authentication? → Script logs errors to /var/log/user-data.log and CloudWatch Logs with exit codes; manual troubleshooting required; SSH access will fail until resolved
+- How are conflicting security group rules handled? → Terraform manages security group declaratively; any conflicts are resolved by Terraform state management
 
 ## Requirements *(mandatory)*
 
@@ -121,23 +131,26 @@ Security team needs visibility into SSH authentication attempts to detect potent
 - **FR-001**: System MUST provision a t3.micro EC2 instance in the ap-southeast-1 AWS region
 - **FR-002**: System MUST assign a public IP address to the instance for internet accessibility
 - **FR-003**: System MUST configure the instance with 1 vCPU and 1 GB RAM (t3.micro specifications)
-- **FR-004**: System MUST use either Amazon Linux 2023 or Ubuntu 22.04 LTS as the operating system
+- **FR-004**: System MUST use Ubuntu 22.04 LTS as the operating system (AMI filter: ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*, most recent)
 - **FR-005**: System MUST attach a root EBS volume between 8-20 GB of GP3 storage type
 - **FR-006**: System MUST enable SSH password authentication for username "devuser"
 - **FR-007**: System MUST configure SSH daemon to allow PasswordAuthentication (modify sshd_config)
-- **FR-008**: System MUST store the instance password securely in HCP Terraform workspace as a sensitive variable
-- **FR-009**: System MUST create or use a VPC with public subnet and internet gateway for public connectivity
+- **FR-008**: System MUST generate a secure password using Terraform random_password resource with 20 characters (uppercase, lowercase, numbers, special characters) and store it in HCP Terraform workspace as a sensitive variable
+- **FR-009**: System MUST use default VPC in ap-southeast-1 if available; if default VPC does not exist, system MUST create a custom VPC with CIDR 10.0.0.0/16, single public subnet (10.0.1.0/24) in first available AZ, internet gateway, and appropriate route table
 - **FR-010**: System MUST configure security group allowing SSH (port 22) inbound from 0.0.0.0/0
 - **FR-011**: System MUST optionally allow HTTP (port 80) and HTTPS (port 443) inbound traffic if web server functionality is needed
 - **FR-012**: System MUST allocate and associate an Elastic IP address for stable public access
-- **FR-013**: System MUST execute user-data script on instance launch to configure password authentication
-- **FR-014**: System MUST enforce strong password requirements for the devuser account
-- **FR-015**: System MUST enable CloudWatch logging for SSH authentication attempts
+- **FR-013**: System MUST execute user-data script on instance launch to: (1) create devuser account, (2) set generated password, (3) modify /etc/ssh/sshd_config to enable PasswordAuthentication, (4) restart sshd service, (5) install and configure CloudWatch Agent, (6) log execution to /var/log/user-data.log with error codes for debugging
+- **FR-014**: System MUST enforce password complexity requirements: minimum 20 characters including uppercase letters, lowercase letters, numbers, and special characters (enforced via Terraform random_password resource configuration)
+- **FR-015**: System MUST install and configure CloudWatch Agent via user-data script to ship SSH authentication logs from /var/log/auth.log to CloudWatch Logs group "/aws/ec2/ssh-auth" with log stream named by instance ID
 - **FR-016**: System MUST be managed via HCP Terraform organization "ravi-panchal-org"
 - **FR-017**: System MUST deploy to HCP Terraform project "Default Project"
 - **FR-018**: System MUST use HCP Terraform workspace "sandbox_public_ec2_dev"
 - **FR-019**: System MUST pass all infrastructure validation checks before applying
 - **FR-020**: System MUST provide clear connection instructions including public IP, username, and password retrieval method
+- **FR-021**: System MUST grant EC2 instance IAM permissions to write to CloudWatch Logs (via instance profile with CloudWatchAgentServerPolicy)
+- **FR-022**: System MUST create CloudWatch Logs group "/aws/ec2/ssh-auth" with appropriate retention policy (7 days minimum for development)
+- **FR-023**: System MUST template user-data script to receive generated password as a variable for secure password configuration
 
 ### Key Entities
 
@@ -151,7 +164,11 @@ Security team needs visibility into SSH authentication attempts to detect potent
 
 - **EBS Volume**: A persistent block storage volume attached to the instance as root device. Key attributes include volume ID, size (8-20 GB), volume type (GP3), and attachment state.
 
-- **User Credentials**: Authentication credentials for SSH access. Key attributes include username (devuser), password (stored securely), and authentication method (password-based).
+- **User Credentials**: Authentication credentials for SSH access. Key attributes include username (devuser), password (generated by Terraform random_password resource with 20 characters), password stored as sensitive output, and authentication method (password-based).
+
+- **CloudWatch Logs Configuration**: Logging infrastructure for SSH authentication monitoring. Key attributes include log group name (/aws/ec2/ssh-auth), log stream (instance ID), CloudWatch Agent configuration file, and IAM permissions (CloudWatchAgentServerPolicy).
+
+- **IAM Instance Profile**: IAM role attached to the EC2 instance granting permissions for CloudWatch Logs. Key attributes include role name, attached policy (CloudWatchAgentServerPolicy), and instance profile association.
 
 - **HCP Terraform Workspace**: The infrastructure management workspace in HCP Terraform. Key attributes include organization name (ravi-panchal-org), project name (Default Project), workspace name (sandbox_public_ec2_dev), and workspace variables.
 
@@ -187,14 +204,14 @@ Security team needs visibility into SSH authentication attempts to detect potent
 
 ### Assumptions
 
-- **A-001**: Default VPC exists in ap-southeast-1 region and is available for use
+- **A-001**: Default VPC exists in ap-southeast-1 region OR system will automatically create custom VPC if default is missing
 - **A-002**: AWS account has sufficient service quotas for EC2 instances, Elastic IPs, and VPC resources
 - **A-003**: User has valid AWS credentials configured with appropriate permissions (EC2, VPC, CloudWatch)
 - **A-004**: HCP Terraform workspace "sandbox_public_ec2_dev" already exists or will be created as part of setup
 - **A-005**: This is a development/sandbox environment - security controls are relaxed compared to production standards
 - **A-006**: Instance will run continuously (not start/stop frequently) to minimize Elastic IP association delays
 - **A-007**: Password will be rotated manually - no automated rotation mechanism required for development environment
-- **A-008**: CloudWatch Logs retention period will use AWS default (never expire) or be configured separately
+- **A-008**: CloudWatch Logs log group "/aws/ec2/ssh-auth" will retain logs for minimum 7 days (configurable via Terraform)
 - **A-009**: Instance requires internet egress for package updates and management (implicit in public subnet design)
 - **A-010**: User accepts the security risks of password authentication and open SSH access for development purposes
 
@@ -243,10 +260,12 @@ This infrastructure is designed for a **development/sandbox environment** and do
 
 ### Infrastructure Dependencies
 
-- **DEP-006**: Default VPC in ap-southeast-1 or ability to create custom VPC
+- **DEP-006**: Default VPC in ap-southeast-1 OR ability to create custom VPC (10.0.0.0/16 CIDR available)
 - **DEP-007**: Available Elastic IP quota in AWS account (minimum 1 available)
 - **DEP-008**: Available t3.micro instance capacity in ap-southeast-1 availability zones
 - **DEP-009**: CloudWatch Logs service enabled and operational in ap-southeast-1
+- **DEP-010**: IAM permissions to create instance profiles and roles for CloudWatch Agent
+- **DEP-011**: Ubuntu 22.04 LTS AMI available in ap-southeast-1 region
 
 ### No Internal System Dependencies
 
@@ -349,3 +368,8 @@ The following items are explicitly **NOT** included in this feature:
 - **Ubuntu 22.04 LTS**: Long-term support version of Ubuntu Linux
 - **Password Authentication**: SSH authentication method using username and password (vs. key-based)
 - **Brute-force Attack**: Repeated authentication attempts to guess credentials
+- **random_password**: Terraform resource that generates cryptographically secure random passwords
+- **CloudWatch Agent**: AWS agent software installed on EC2 instances to collect logs and metrics
+- **IAM Instance Profile**: Container for IAM role that provides credentials to applications running on EC2 instance
+- **/var/log/auth.log**: Ubuntu system log file containing authentication events including SSH login attempts
+- **user-data script**: Bash script executed during EC2 instance first boot for initial configuration
