@@ -1,0 +1,64 @@
+# Terraform ignore patterns
+# Feature: 001-public-ec2-password-auth
+
+# Version control
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation
+*.md
+AGENTS.md
+GettingStarted.md
+docs/
+
+# CI/CD
+.github/
+.copilot/
+.devcontainer/
+
+# Testing
+*.tftest.hcl
+tests/
+test/
+
+# Logs
+*.log
+*.logs
+
+# Sensitive files
+.env*
+*.secret
+secrets.yml
+credentials.json
+
+# Local dev files
+sandbox.auto.tfvars
+sandbox.backend.tf
+override.tf
+
+# Terraform working directories
+.terraform/
+.terraform.lock.hcl
+
+# Backup files
+*.backup
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Specs directory
+specs/
+.specify/
+
+# Scripts
+*.sh
+!user-data.sh.tpl
