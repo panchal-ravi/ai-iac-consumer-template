@@ -1,0 +1,67 @@
+{
+  "availability_zone": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ap-southeast-1a"
+  },
+  "cloudwatch_log_group": {
+    "sensitive": false,
+    "type": "string",
+    "value": "/aws/ec2/ssh-auth"
+  },
+  "cloudwatch_log_stream": {
+    "sensitive": false,
+    "type": "string",
+    "value": "{instance_id}"
+  },
+  "connection_instructions": {
+    "sensitive": false,
+    "type": "string",
+    "value": "SSH Access:\n  Command: ssh devuser@52.220.183.89\n  Credentials: Retrieve from HCP Terraform workspace sensitive outputs (instance_password)\n    \nCloudWatch Logs:\n  Log Group: /aws/ec2/ssh-auth\n  Console: https://console.aws.amazon.com/cloudwatch/home?region=ap-southeast-1#logsV2:log-groups/log-group/%2Faws%2Fec2%2Fssh-auth\n    \nSecurity Warning: This instance uses password authentication for development only.\n"
+  },
+  "instance_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "i-0a758f6433b55b6f2"
+  },
+  "instance_password": {
+    "sensitive": true,
+    "type": "string",
+    "value": "6sLdMD$Cf1#W_Blvhvo3"
+  },
+  "instance_private_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "172.31.27.158"
+  },
+  "instance_public_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "52.220.183.89"
+  },
+  "security_group_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0edd450783fe82e25"
+  },
+  "ssh_command": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ssh devuser@52.220.183.89"
+  },
+  "ssh_username": {
+    "sensitive": false,
+    "type": "string",
+    "value": "devuser"
+  },
+  "subnet_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "subnet-0dce35448b161a8ca"
+  },
+  "vpc_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vpc-0fb658b91e2113ece"
+  }
+}
