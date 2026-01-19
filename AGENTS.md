@@ -99,3 +99,4 @@ you can always run `.specify/scripts/bash/check-prerequisites.sh` to understand 
 ---
 
 **Remember**: Specifications drive implementation. Never skip phases. Always verify with MCP tools. Security is non-negotiable.
+
