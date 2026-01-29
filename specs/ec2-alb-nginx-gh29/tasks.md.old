@@ -1,0 +1,232 @@
+# Tasks: EC2 Instance with ALB and Nginx Infrastructure
+
+**Feature Branch**: `feature/ec2-alb-nginx-gh29`  
+**Input**: Design documents from `/workspace/specs/ec2-alb-nginx-gh29/`  
+**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/
+
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+
+## Format: `- [ ] [ID] [P?] [Story] Description`
+
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3, US4)
+- Include exact file paths in descriptions
+
+## Path Conventions
+
+This is a Terraform infrastructure project at repository root:
+- Root Terraform files: `main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`, `versions.tf`, `locals.tf`, `data.tf`, `backend.tf`
+- Feature specifications: `specs/ec2-alb-nginx-gh29/`
+
+---
+
+## Phase 1: Setup (Shared Infrastructure)
+
+**Purpose**: Project initialization, validation, and HCP Terraform configuration
+
+**Duration**: ~30 minutes
+
+- [ ] T001 Validate AWS credentials and ap-southeast-1 region access via AWS CLI
+- [ ] T002 Verify default VPC exists with 2+ availability zones in ap-southeast-1 using `aws ec2 describe-vpcs`
+- [ ] T003 [P] Verify HCP Terraform workspace access: ravi-panchal-org/Default Project/sandbox_workspace
+- [ ] T004 [P] Verify ACM certificate exists or create self-signed certificate for HTTPS listener
+- [ ] T005 Configure backend.tf with HCP Terraform organization and workspace configuration
+- [ ] T006 Initialize Terraform with `terraform init` to configure HCP Terraform backend
+
+**Checkpoint**: Environment validated, HCP Terraform connected, SSL certificate ready
+
+---
+
+## Phase 2: Foundational (Blocking Prerequisites)
+
+**Purpose**: Core Terraform configuration that MUST be complete before ANY user story can be implemented
+
+**⚠️ CRITICAL**: No user story work can begin until this phase is complete
+
+**Duration**: ~45 minutes
+
+- [ ] T007 Create versions.tf with Terraform >= 1.5.7 and AWS provider >= 6.0 constraints
+- [ ] T008 [P] Create providers.tf with AWS provider configuration for ap-southeast-1 region
+- [ ] T009 [P] Create data.tf with default VPC lookup and availability zone data sources
+- [ ] T010 [P] Create locals.tf with common tags, nginx user_data script, and computed values
+- [ ] T011 Create variables.tf with all input variables defined in data-model.md
+- [ ] T012 Create outputs.tf with ALB DNS, EC2 instance IDs, and security group outputs
+- [ ] T013 Verify private module access: ec2-instance (v6.1.4), alb (v10.2.0), security-group (v5.3.1)
+- [ ] T014 Run `terraform fmt` and `terraform validate` to ensure configuration syntax is correct
+
+**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+
+---
+
+## Phase 3: User Story 1 - Deploy Web Infrastructure (Priority: P1) 🎯 MVP
+
+**Goal**: Provision highly available EC2 instances across 2 availability zones with proper IAM roles and security groups
+
+**Independent Test**: EC2 instances successfully provisioned in 2 different AZs, both in running state, accessible within VPC
+
+**Duration**: ~1 hour
+
+**Mapped to**: FR-001 (2 AZs), FR-002 (default VPC), FR-010 (security groups), FR-011 (IAM roles), FR-012 (cost-optimized)
+
+### Implementation for User Story 1
+
+- [ ] T015 [P] [US1] Create IAM role for EC2 instances in main.tf using aws_iam_role resource
+- [ ] T016 [P] [US1] Attach IAM policies for SSM Session Manager and CloudWatch in main.tf
+- [ ] T017 [P] [US1] Create EC2 instance profile and associate IAM role in main.tf
+- [ ] T018 [US1] Create security group for EC2 instances using security-group module (v5.3.1) in main.tf
+- [ ] T019 [US1] Configure security group ingress rules: allow HTTP (80) from ALB security group in main.tf
+- [ ] T020 [US1] Configure security group egress rules: allow HTTPS (443) for package updates in main.tf
+- [ ] T021 [US1] Lookup latest Amazon Linux 2023 x86_64 AMI via SSM parameter in data.tf
+- [ ] T022 [US1] Create EC2 instance in AZ1 using ec2-instance module (v6.1.4) with t3.micro, IMDSv2, user_data in main.tf
+- [ ] T023 [US1] Create EC2 instance in AZ2 using ec2-instance module (v6.1.4) with t3.micro, IMDSv2, user_data in main.tf
+- [ ] T024 [US1] Add common tags to all EC2 resources (Environment, Project, ManagedBy) in locals.tf
+- [ ] T025 [US1] Configure CPU credit specification as unlimited for burstable instances in main.tf
+- [ ] T026 [US1] Add outputs for EC2 instance IDs, private IPs, and availability zones in outputs.tf
+- [ ] T027 [US1] Run `terraform plan` to validate EC2 infrastructure configuration
+- [ ] T028 [US1] Run `terraform apply` to provision EC2 instances and verify both instances reach running state
+
+**Checkpoint**: User Story 1 complete - EC2 instances running in 2 AZs with proper security and IAM configuration
+
+**Estimated Effort**: 8 tasks (T015-T022) can run in parallel initially, then 6 sequential tasks = ~1 hour total
+
+
+---
+
+## Phase 4: User Story 2 - Secure HTTPS Access (Priority: P2)
+
+**Goal**: Configure Application Load Balancer with HTTPS listener and SSL certificate to encrypt all web traffic
+
+**Independent Test**: ALB accepts HTTPS connections on port 443, certificate is valid, HTTP connections are rejected or redirected
+
+**Duration**: ~45 minutes
+
+**Mapped to**: FR-003 (ALB creation), FR-004 (HTTPS listener), FR-005 (HTTP rejection), NFR-004 (100 concurrent connections)
+
+### Implementation for User Story 2
+
+- [ ] T029 [US2] Create security group for ALB using security-group module (v5.3.1) in main.tf
+- [ ] T030 [US2] Configure ALB security group ingress rules: allow HTTPS (443) from 0.0.0.0/0 in main.tf
+- [ ] T031 [US2] Configure ALB security group egress rules: allow traffic to EC2 security group on port 80 in main.tf
+- [ ] T032 [US2] Lookup ACM certificate ARN via data source or use variable for certificate_arn in data.tf
+- [ ] T033 [US2] Create Application Load Balancer using alb module (v10.2.0) with internet-facing scheme in main.tf
+- [ ] T034 [US2] Configure ALB to span 2 public subnets from default VPC in both availability zones in main.tf
+- [ ] T035 [US2] Create HTTPS listener (port 443) with ACM certificate and security policy ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09 in main.tf
+- [ ] T036 [US2] Configure HTTP listener (port 80) to redirect to HTTPS (permanent 301 redirect) in main.tf
+- [ ] T037 [US2] Enable deletion protection and cross-zone load balancing on ALB in main.tf
+- [ ] T038 [US2] Add ALB access logs configuration (optional, S3 bucket required) in main.tf
+- [ ] T039 [US2] Add outputs for ALB DNS name, ARN, and zone ID in outputs.tf
+- [ ] T040 [US2] Run `terraform plan` to validate ALB and HTTPS configuration
+- [ ] T041 [US2] Run `terraform apply` to provision ALB and verify HTTPS listener is active
+
+**Checkpoint**: User Story 2 complete - ALB accepting HTTPS traffic, HTTP redirected to HTTPS
+
+**Estimated Effort**: 4 tasks (T029-T032) can run in parallel initially, then 9 sequential tasks = ~45 minutes total
+
+---
+
+## Phase 5: User Story 3 - Load Balanced Traffic Distribution (Priority: P3)
+
+**Goal**: Configure target groups with health checks to distribute traffic evenly across EC2 instances
+
+**Independent Test**: Send requests through ALB, verify traffic distributes across both healthy instances, unhealthy instances automatically removed
+
+**Duration**: ~45 minutes
+
+**Mapped to**: FR-008 (health checks), FR-009 (remove unhealthy), FR-016 (instance communication), FR-017 (target group routing)
+
+### Implementation for User Story 3
+
+- [ ] T042 [US3] Create target group for EC2 instances with target_type=instance and protocol=HTTP in main.tf
+- [ ] T043 [US3] Configure target group health check: path="/", interval=30s, timeout=5s, healthy_threshold=2, unhealthy_threshold=2 in main.tf
+- [ ] T044 [US3] Configure target group stickiness settings (optional, disabled for round-robin) in main.tf
+- [ ] T045 [US3] Configure target group deregistration delay to 30 seconds for faster failover in main.tf
+- [ ] T046 [US3] Register EC2 instance from AZ1 to target group with port 80 in main.tf
+- [ ] T047 [US3] Register EC2 instance from AZ2 to target group with port 80 in main.tf
+- [ ] T048 [US3] Attach target group to ALB HTTPS listener as default action with forward rule in main.tf
+- [ ] T049 [US3] Configure listener rule for host-header routing (optional for future expansion) in main.tf
+- [ ] T050 [US3] Add outputs for target group ARN and health check configuration in outputs.tf
+- [ ] T051 [US3] Run `terraform plan` to validate target group and health check configuration
+- [ ] T052 [US3] Run `terraform apply` to create target group and register instances
+- [ ] T053 [US3] Wait 2-3 minutes for instances to pass health checks and become healthy
+- [ ] T054 [US3] Verify target health status using AWS console or CLI `aws elbv2 describe-target-health`
+
+**Checkpoint**: User Story 3 complete - Traffic distributing across both healthy EC2 instances via ALB
+
+**Estimated Effort**: Most tasks sequential due to dependencies, ~45 minutes total
+
+---
+
+## Phase 6: User Story 4 - Serve Static Web Content (Priority: P4)
+
+**Goal**: Install and configure Nginx web servers on EC2 instances to serve static HTML content
+
+**Independent Test**: Access ALB HTTPS endpoint, verify Nginx returns static content with instance metadata
+
+**Duration**: ~30 minutes
+
+**Mapped to**: FR-006 (install Nginx), FR-007 (serve static content), NFR-005 (500ms response time)
+
+### Implementation for User Story 4
+
+- [ ] T055 [US4] Embed Nginx installation script from contracts/nginx-user-data.sh into locals.tf user_data variable
+- [ ] T056 [US4] Configure user_data in EC2 instances to execute Nginx installation script via cloud-init in main.tf
+- [ ] T057 [US4] Verify user_data script includes instance metadata retrieval (instance ID, AZ, IP) in locals.tf
+- [ ] T058 [US4] Verify user_data script creates enhanced HTML with instance information in locals.tf
+- [ ] T059 [US4] Verify user_data script enables Nginx service to start on boot in locals.tf
+- [ ] T060 [US4] Run `terraform plan` to verify user_data changes (will recreate instances if already provisioned)
+- [ ] T061 [US4] Run `terraform apply` to update EC2 instances with Nginx user_data
+- [ ] T062 [US4] Wait 3-5 minutes for user_data script execution and Nginx installation to complete
+- [ ] T063 [US4] Verify Nginx installation by SSH/SSM into instance and check `systemctl status nginx`
+- [ ] T064 [US4] Test local Nginx response: `curl http://localhost/` from within EC2 instance
+- [ ] T065 [US4] Test ALB endpoint: `curl -k https://<ALB-DNS-NAME>/` and verify HTML content returned
+- [ ] T066 [US4] Verify load balancing by making multiple requests and confirming different instance IDs in response
+
+**Checkpoint**: User Story 4 complete - Full infrastructure functional, serving static content via HTTPS through ALB
+
+**Estimated Effort**: Tasks T055-T059 can run in parallel (reviewing script), then 7 sequential tasks = ~30 minutes total
+
+---
+
+## Phase 7: Polish & Cross-Cutting Concerns
+
+**Purpose**: Security hardening, cost optimization, documentation, and final validation
+
+**Duration**: ~1 hour
+
+### Security Hardening
+
+- [ ] T067 [P] Verify IMDSv2 is required (hop_limit=1) on all EC2 instances in main.tf
+- [ ] T068 [P] Verify EBS volumes are encrypted with AWS managed keys in main.tf
+- [ ] T069 [P] Audit security group rules to ensure least-privilege access (no 0.0.0.0/0 except ALB:443)
+- [ ] T070 [P] Verify IAM role has only minimum required permissions (SSM, CloudWatch)
+- [ ] T071 Validate SSL/TLS policy is post-quantum ready: ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09 in main.tf
+
+### Cost Optimization Validation
+
+- [ ] T072 [P] Verify instance types are t3.micro or t3.small (cost-optimized) in variables.tf
+- [ ] T073 [P] Verify instance count is exactly 2 (1 per AZ, minimum for HA) in main.tf
+- [ ] T074 [P] Confirm no unnecessary resources provisioned (NAT gateways, Elastic IPs, etc.)
+- [ ] T075 Review AWS Cost Explorer to validate monthly cost is <$50 for development environment
+
+### Documentation & Compliance
+
+- [ ] T076 [P] Document infrastructure architecture diagram in specs/ec2-alb-nginx-gh29/ARCHITECTURE.md
+- [ ] T077 [P] Document deployment runbook with terraform commands in specs/ec2-alb-nginx-gh29/RUNBOOK.md
+- [ ] T078 [P] Document rollback procedure in case of infrastructure issues in specs/ec2-alb-nginx-gh29/RUNBOOK.md
+- [ ] T079 Update README.md in repository root with infrastructure overview and quick start
+- [ ] T080 Verify all resources have required tags (Project, Environment, ManagedBy) in locals.tf
+
+### Final Validation & Testing
+
+- [ ] T081 Run complete end-to-end validation: provision from scratch, verify all user stories work
+- [ ] T082 Test edge case: Stop one EC2 instance, verify ALB routes traffic only to healthy instance
+- [ ] T083 Test edge case: Restart both instances, verify they pass health checks and rejoin target group
+- [ ] T084 Test HTTPS enforcement: Attempt HTTP connection, verify redirect to HTTPS
+- [ ] T085 Test concurrent connections: Use load testing tool (ab, wrk) to send 100+ concurrent requests
+- [ ] T086 Verify response time meets NFR-005: 95% of requests respond within 500ms
+- [ ] T087 Run `terraform plan` and verify zero drift between state and actual infrastructure
+- [ ] T088 Export Terraform outputs to JSON for integration with monitoring/automation tools
+
+**Checkpoint**: All user stories validated, security hardened, cost optimized, documentation complete
+
+**Estimated Effort**: Many tasks can run in parallel, ~1 hour total
