@@ -9,8 +9,9 @@ Using the **github-speckit-tester** skill non-interactively.
 Provision using Terraform:
 - EC2 instances across 2 AZs
 - HTTPS and Nginx
+- Self-signed certificate, DNS: web.demo.com, imported into AWS ACM, no domain validation required 
 - ALB (Application Load Balancer)
-- AWS Region: `ap-southeast-2`
+- AWS Region: `ap-southeast-1`
 - Use existing default VPC
 - enviromnment development minimal cost
 
