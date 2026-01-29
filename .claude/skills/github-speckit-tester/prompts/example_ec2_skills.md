@@ -24,7 +24,6 @@ Provision using Terraform:
 
 ## Workflow Instructions
 
-- Follow best practice
-- Use subagents to make best practice decisions if you need clarity
-- Don't prompt the user - make decisions yourself
-- If you hit issues, resolve them without prompting
+- Use terraform-consumer-design skill to plan, design and create tasks based on infrastructure requirements. 
+- Prompt user to review and approve the design (human-in-the-loop) before proceeding to the implementation stage.
+- Upon approval, use terraform-consumer-implemet skill to provision infrastructure based on the approved design.

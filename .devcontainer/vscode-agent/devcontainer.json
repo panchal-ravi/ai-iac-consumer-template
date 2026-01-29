@@ -3,9 +3,10 @@
 {
 	"name": "Vscode Sandbox",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"build": {
-    "dockerfile": "Dockerfile"
-  },
+	// "build": {
+  //   "dockerfile": "Dockerfile"
+  // },
+  "image": "panchalravi/agent-sandbox:github-copilot",
   // "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
@@ -23,12 +24,10 @@
     "vscode": {
       "extensions": [
 				"GitHub.copilot",
-				"GitHub.copilot-chat",
         "hashicorp.terraform",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "hashicorp.terraform",
-        "redhat.vscode-yaml",
         "HashiCorp.HCL"
       ],
       "mcp": {
