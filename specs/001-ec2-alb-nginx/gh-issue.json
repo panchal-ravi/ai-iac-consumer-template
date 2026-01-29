@@ -1,0 +1,33 @@
+{
+  "issue_number": 27,
+  "issue_url": "https://github.com/panchal-ravi/ai-iac-consumer-template/issues/27",
+  "title": "[AGENT PROVISION] EC2 Instance with ALB and Nginx in ap-southeast-1",
+  "branch": "001-ec2-alb-nginx",
+  "hcp_org": "ravi-panchal-org",
+  "hcp_project": "Default Project",
+  "workspace_name": "sandbox_ec2_ai-iac-consumer-template",
+  "terraform_version": "latest",
+  "project_name": "ec2-alb-nginx-demo",
+  "cloud_provider": "AWS",
+  "cloud_region": "ap-southeast-1",
+  "environment": "development",
+  "created_at": "2026-01-29T04:53:29Z",
+  "status": "design_complete",
+  "phase": "ready_for_implementation",
+  "artifacts": {
+    "spec": "specs/001-ec2-alb-nginx/spec.md",
+    "plan": "specs/001-ec2-alb-nginx/plan.md",
+    "data_model": "specs/001-ec2-alb-nginx/data-model.md",
+    "tasks": "specs/001-ec2-alb-nginx/tasks.md",
+    "design_review": "specs/001-ec2-alb-nginx/DESIGN-REVIEW-SUMMARY.md",
+    "security_review": "specs/001-ec2-alb-nginx/evaluations/aws-security-review.md"
+  },
+  "approval": {
+    "status": "pending_user_review",
+    "design_score": 8.9,
+    "security_risk": "MEDIUM",
+    "cost_estimate": "$51-63/month",
+    "budget_target": "$100/month",
+    "budget_compliance": true
+  }
+}
