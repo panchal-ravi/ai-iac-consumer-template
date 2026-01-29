@@ -1,0 +1,47 @@
+# .terraformignore - Exclude files from Terraform Cloud/Enterprise uploads
+# Documentation and development files
+README.md
+RUNBOOK.md
+CHANGELOG.md
+*.md
+.git/
+.github/
+.gitignore
+
+# Development and testing files
+.tflint.hcl
+.terraform-docs.yml
+.pre-commit-config.yaml
+tests/
+examples/
+
+# Specification and design documents
+specs/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# CI/CD files
+.gitlab-ci.yml
+.circleci/
+azure-pipelines.yml
+Jenkinsfile
+
+# Local environment files
+.env*
+*.local
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak

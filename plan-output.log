@@ -1,0 +1,68 @@
+[0m[33mRunning plan in HCP Terraform. Output will stream here. Pressing Ctrl-C
+will stop streaming the logs, but will not stop the plan running remotely.[0m
+
+Preparing the remote plan...
+[0m
+[0m[33mTo view this run in a browser, visit:[0m
+[0m[33mhttps://app.terraform.io/app/ravi-panchal-org/sandbox_workspace/runs/run-JzjTtn1oGDAkCsAp[0m
+[0m
+Waiting for the plan to start...
+
+Terraform v1.13.5
+on linux_amd64
+Initializing plugins and modules...
+[1mdata.aws_iam_policy_document.ec2_session_manager: Refreshing...[0m[0m
+[1mdata.aws_availability_zones.available: Refreshing...[0m[0m
+[1mdata.aws_ssm_parameter.al2023_ami: Refreshing...[0m[0m
+[1mmodule.ec2_instance_1.data.aws_partition.current: Refreshing...[0m[0m
+[1mdata.aws_vpc.default: Refreshing...[0m[0m
+[1mmodule.alb.data.aws_partition.current[0]: Refreshing...[0m[0m
+[1mmodule.ec2_instance_2.data.aws_partition.current: Refreshing...[0m[0m
+[1mdata.aws_iam_policy_document.ec2_session_manager: Refresh complete after 0s [id=4275466510][0m[0m
+[1mmodule.alb.data.aws_partition.current[0]: Refresh complete after 0s [id=aws][0m[0m
+[1mmodule.ec2_instance_1.data.aws_partition.current: Refresh complete after 0s [id=aws][0m[0m
+[1mmodule.ec2_instance_2.data.aws_partition.current: Refresh complete after 0s [id=aws][0m[0m
+[1mdata.aws_ssm_parameter.al2023_ami: Refresh complete after 1s [id=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64][0m[0m
+[1mdata.aws_availability_zones.available: Refresh complete after 1s [id=ap-southeast-1][0m[0m
+[1mdata.aws_ami.amazon_linux_2023: Refreshing...[0m[0m
+[1mdata.aws_ami.amazon_linux_2023: Refresh complete after 1s [id=ami-039a8ebebdd2a1def][0m[0m
+[1mdata.aws_vpc.default: Refresh complete after 2s [id=vpc-0fb658b91e2113ece][0m[0m
+[1mdata.aws_subnets.default: Refreshing...[0m[0m
+[1mdata.aws_subnets.default: Refresh complete after 1s [id=ap-southeast-1][0m[0m
+[1mmodule.ec2_instance_2.data.aws_subnet.this[0]: Refreshing...[0m[0m
+[1mmodule.ec2_instance_1.data.aws_subnet.this[0]: Refreshing...[0m[0m
+[1mmodule.ec2_instance_2.data.aws_subnet.this[0]: Refresh complete after 0s [id=subnet-0a055259d09584073][0m[0m
+[1mmodule.ec2_instance_1.data.aws_subnet.this[0]: Refresh complete after 0s [id=subnet-0dce35448b161a8ca][0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1m"certificate_arn" (REPLACE_WITH_YOUR_ACM_CERTIFICATE_ARN) is an invalid ARN: arn: invalid prefix[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  with aws_lb_listener.https,
+[31m│[0m [0m  on main.tf line 441, in resource "aws_lb_listener" "https":
+[31m│[0m [0m 441:   certificate_arn   = [4mvar.acm_certificate_arn[0m[0m
+[31m│[0m [0m
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mMissing required argument[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  with module.alb.aws_lb_target_group_attachment.this["nginx"],
+[31m│[0m [0m  on .terraform/modules/alb/main.tf line 703, in resource "aws_lb_target_group_attachment" "this":
+[31m│[0m [0m 703:   target_id         = [4meach.value.target_id[0m[0m
+[31m│[0m [0m
+[31m│[0m [0mThe argument "target_id" is required, but no definition was found.
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1m"certificate_arn" (REPLACE_WITH_YOUR_ACM_CERTIFICATE_ARN) is an invalid ARN: arn: invalid prefix[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  with module.alb.aws_lb_listener.this["https"],
+[31m│[0m [0m  on .terraform/modules/alb/main.tf line 122, in resource "aws_lb_listener" "this":
+[31m│[0m [0m 122:   certificate_arn = [4meach.value.certificate_arn[0m[0m
+[31m│[0m [0m
+[31m╵[0m[0m
+Operation failed: failed running terraform plan (exit 1)
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Saved the plan to: tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan"
