@@ -25,12 +25,12 @@
 
 **Critical**: This phase establishes the foundation for all infrastructure deployment
 
-- [ ] T001 Generate self-signed SSL certificate using OpenSSL and import to ACM in ap-southeast-1 region
-- [ ] T002 Verify AWS prerequisites: default VPC exists in ap-southeast-1 with subnets in ap-southeast-1a and ap-southeast-1b
-- [ ] T003 [P] Search private registry for ALB module (app.terraform.io/ravi-panchal-org/alb/aws) and validate version 10.2.0 compatibility
-- [ ] T004 [P] Search private registry for EC2 module (app.terraform.io/ravi-panchal-org/ec2-instance/aws) and validate version 6.1.4 compatibility
-- [ ] T005 Create Terraform project structure: main.tf, variables.tf, outputs.tf, locals.tf, providers.tf, versions.tf, override.tf at repository root
-- [ ] T006 Configure HCP Terraform backend in override.tf with organization ravi-panchal-org and appropriate workspace
+- [X] T001 Generate self-signed SSL certificate using OpenSSL and import to ACM in ap-southeast-1 region
+- [X] T002 Verify AWS prerequisites: default VPC exists in ap-southeast-1 with subnets in ap-southeast-1a and ap-southeast-1b
+- [X] T003 [P] Search private registry for ALB module (app.terraform.io/ravi-panchal-org/alb/aws) and validate version 10.2.0 compatibility
+- [X] T004 [P] Search private registry for EC2 module (app.terraform.io/ravi-panchal-org/ec2-instance/aws) and validate version 6.1.4 compatibility
+- [X] T005 Create Terraform project structure: main.tf, variables.tf, outputs.tf, locals.tf, providers.tf, versions.tf, override.tf at repository root
+- [X] T006 Configure HCP Terraform backend in override.tf with organization ravi-panchal-org and appropriate workspace
 
 **Checkpoint**: Prerequisites validated, certificates ready, project structure created
 
@@ -42,16 +42,16 @@
 
 **⚠️ CRITICAL**: No infrastructure can be deployed until this phase is complete
 
-- [ ] T007 Configure AWS provider in providers.tf with region ap-southeast-1 and required version >= 6.0
-- [ ] T008 Define Terraform and provider version constraints in versions.tf (terraform >= 1.5.7, aws >= 6.0)
-- [ ] T009 [P] Create data source for default VPC lookup in main.tf
-- [ ] T010 [P] Create data source for default subnets in ap-southeast-1a and ap-southeast-1b in main.tf
-- [ ] T011 [P] Define common_tags local in locals.tf (Environment, Project, ManagedBy, Terraform, CostCenter, Purpose)
-- [ ] T012 [P] Create user_data_script local in locals.tf using contracts/user-data.sh content
-- [ ] T013 [P] Define input variables in variables.tf: environment, region, instance_type, acm_certificate_arn, common_tags
-- [ ] T014 [P] Create outputs in outputs.tf: alb_dns_name, alb_arn, target_group_arn, instance_ids (map), security_group_ids
-- [ ] T015 Create sandbox.auto.tfvars with development environment values (env=dev, instance_type=t3.micro, region=ap-southeast-1)
-- [ ] T016 Initialize Terraform and validate configuration syntax (terraform init && terraform validate)
+- [X] T007 Configure AWS provider in providers.tf with region ap-southeast-1 and required version >= 6.0
+- [X] T008 Define Terraform and provider version constraints in versions.tf (terraform >= 1.5.7, aws >= 6.0)
+- [X] T009 [P] Create data source for default VPC lookup in main.tf
+- [X] T010 [P] Create data source for default subnets in ap-southeast-1a and ap-southeast-1b in main.tf
+- [X] T011 [P] Define common_tags local in locals.tf (Environment, Project, ManagedBy, Terraform, CostCenter, Purpose)
+- [X] T012 [P] Create user_data_script local in locals.tf using contracts/user-data.sh content
+- [X] T013 [P] Define input variables in variables.tf: environment, region, instance_type, acm_certificate_arn, common_tags
+- [X] T014 [P] Create outputs in outputs.tf: alb_dns_name, alb_arn, target_group_arn, instance_ids (map), security_group_ids
+- [X] T015 Create sandbox.auto.tfvars with development environment values (env=dev, instance_type=t3.micro, region=ap-southeast-1)
+- [X] T016 Initialize Terraform and validate configuration syntax (terraform init && terraform validate)
 
 **Checkpoint**: Foundation ready - infrastructure modules can now be configured
 
@@ -65,18 +65,18 @@
 
 ### Implementation for User Story 1
 
-- [ ] T017 [P] [US1] Configure ALB module in main.tf with name, vpc_id, subnets, and internal=false
-- [ ] T018 [P] [US1] Configure ALB security group ingress rules in main.tf: allow ports 80 and 443 from 0.0.0.0/0
-- [ ] T019 [P] [US1] Configure ALB HTTP listener in main.tf with port 80 redirect to HTTPS (status_code HTTP_301)
-- [ ] T020 [P] [US1] Configure ALB HTTPS listener in main.tf with port 443, certificate_arn variable, forward to target group
-- [ ] T021 [P] [US1] Configure target group in ALB module in main.tf with name, port 80, protocol HTTP, vpc_id
-- [ ] T022 [US1] Configure target group health check in main.tf: path="/", interval=30, timeout=5, healthy_threshold=2, unhealthy_threshold=2, matcher="200"
-- [ ] T023 [P] [US1] Configure EC2 instance module for ap-southeast-1a in main.tf using for_each pattern
-- [ ] T024 [P] [US1] Configure EC2 instance module for ap-southeast-1b in main.tf using for_each pattern
-- [ ] T025 [US1] Configure EC2 instance properties in main.tf: ami_ssm_parameter, instance_type, subnet_id, availability_zone, user_data, key_name=null
-- [ ] T026 [US1] Configure EC2 IAM role in main.tf: create_iam_instance_profile=true, iam_role_policies with AmazonSSMManagedInstanceCore
-- [ ] T027 [US1] Configure EC2 security group in main.tf: create_security_group=true, allow port 80 from ALB security group only
-- [ ] T028 [US1] Create target group attachment resources in main.tf for both EC2 instances to ALB target group
+- [X] T017 [P] [US1] Configure ALB module in main.tf with name, vpc_id, subnets, and internal=false
+- [X] T018 [P] [US1] Configure ALB security group ingress rules in main.tf: allow ports 80 and 443 from 0.0.0.0/0
+- [X] T019 [P] [US1] Configure ALB HTTP listener in main.tf with port 80 redirect to HTTPS (status_code HTTP_301)
+- [X] T020 [P] [US1] Configure ALB HTTPS listener in main.tf with port 443, certificate_arn variable, forward to target group
+- [X] T021 [P] [US1] Configure target group in ALB module in main.tf with name, port 80, protocol HTTP, vpc_id
+- [X] T022 [US1] Configure target group health check in main.tf: path="/", interval=30, timeout=5, healthy_threshold=2, unhealthy_threshold=2, matcher="200"
+- [X] T023 [P] [US1] Configure EC2 instance module for ap-southeast-1a in main.tf using for_each pattern
+- [X] T024 [P] [US1] Configure EC2 instance module for ap-southeast-1b in main.tf using for_each pattern
+- [X] T025 [US1] Configure EC2 instance properties in main.tf: ami_ssm_parameter, instance_type, subnet_id, availability_zone, user_data, key_name=null
+- [X] T026 [US1] Configure EC2 IAM role in main.tf: create_iam_instance_profile=true, iam_role_policies with AmazonSSMManagedInstanceCore
+- [X] T027 [US1] Configure EC2 security group in main.tf: create_security_group=true, allow port 80 from ALB security group only
+- [X] T028 [US1] Create target group attachment resources in main.tf for both EC2 instances to ALB target group
 - [ ] T029 [US1] Run terraform plan and verify all resources: 2 EC2 instances, 1 ALB, 2 security groups, 2 IAM roles, 1 target group, 2 listeners, 2 attachments
 - [ ] T030 [US1] Apply Terraform configuration (requires user approval before terraform apply)
 - [ ] T031 [US1] Verify ALB DNS name resolves and returns valid response (may take 2-3 minutes for resources to stabilize)
@@ -144,10 +144,10 @@
 - [ ] T058 [P] Add cost monitoring section to quickstart.md: monthly estimates, cost breakdown, shutdown procedures
 - [ ] T059 [P] Document cleanup procedures in quickstart.md: terraform destroy, ACM certificate deletion, verification
 - [ ] T060 [P] Verify all resources are tagged correctly: Environment, Project, ManagedBy, Terraform, CostCenter, Purpose
-- [ ] T061 [P] Run terraform fmt to ensure consistent code formatting
+- [X] T061 [P] Run terraform fmt to ensure consistent code formatting
 - [ ] T062 [P] Validate specification compliance: review all FR-001 through FR-024 functional requirements
 - [ ] T063 [P] Validate success criteria: verify SC-001 through SC-010 measurable outcomes
-- [ ] T064 [P] Update README.md at repository root with project overview, architecture diagram, and quickstart link
+- [X] T064 [P] Update README.md at repository root with project overview, architecture diagram, and quickstart link
 - [ ] T065 Run complete quickstart.md validation from end to end: certificate creation through cleanup
 - [ ] T066 Verify monthly cost estimate is under $100 USD using AWS Cost Explorer or Pricing Calculator
 - [ ] T067 Document edge cases and limitations in quickstart.md: certificate expiration, simultaneous AZ failures, cost controls

@@ -1120,4 +1120,3 @@ With proper documentation and risk acceptance, this infrastructure is suitable f
 **Generated**: 2025-01-29  
 **Review Validity**: 90 days (re-review required if infrastructure design changes)  
 **Contact**: AWS Security Advisor Agent
-

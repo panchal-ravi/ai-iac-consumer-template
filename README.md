@@ -1,324 +1,241 @@
-# AI IaC Consumer Template
+# EC2 ALB Nginx Development Environment
 
-A prescriptive agent workflow template for AI-assisted Infrastructure as Code development, powered by **Claude Code** and **HCP Terraform**.
+**Infrastructure as Code** project for deploying a highly available web application using AWS Application Load Balancer and EC2 instances running Nginx across multiple availability zones.
 
-## Overview
+## 🚀 Quick Start
 
-This template provides an opinionated, end-to-end workflow for generating, validating, and deploying Terraform infrastructure using AI agents. It leverages the [**GitHub Spec Kit**](https://github.com/github/spec-kit) methodology - a structured approach to specification-driven development that guides AI agents through:
+See the complete deployment guide: [specs/001-ec2-alb-nginx/quickstart.md](specs/001-ec2-alb-nginx/quickstart.md)
 
-1. **Specification** - Defining infrastructure requirements in natural language
-2. **Planning** - Generating detailed implementation plans with architecture decisions
-3. **Task Generation** - Breaking down plans into actionable, dependency-ordered tasks
-4. **Implementation** - Executing tasks to produce production-ready Terraform code
-5. **Deployment** - Applying infrastructure via HCP Terraform with remote state management
+## 📋 Overview
 
-### Key Features
+This project deploys a cost-optimized development environment with the following components:
 
-- **Devcontainer-based Development** - Fully configured development environment with all tools pre-installed
-- **HCP Terraform Integration** - Remote execution, state management, and workspace automation
-- **SpecKit Workflow** - Structured AI agent workflow for consistent, high-quality infrastructure code
-- **Non-interactive Testing** - Automated end-to-end testing capability using the `github-speckit-tester` skill
-- **Best Practice Defaults** - Pre-configured for AWS with security and cost optimization in mind
-- **Pre-configured MCP Servers** - Model Context Protocol servers for enhanced AI capabilities
+- **Application Load Balancer (ALB)**: Internet-facing load balancer with HTTPS support
+- **EC2 Instances**: 2x t3.micro instances running Nginx (one per availability zone)
+- **Security**: HTTPS with ACM certificate, Systems Manager Session Manager access (no SSH)
+- **High Availability**: Multi-AZ deployment with automatic health checks and failover
+- **Cost**: Estimated $36-48/month for 24/7 operation
 
-### MCP Servers
+## 🏗️ Architecture
 
-This template includes pre-configured [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) servers that extend Claude's capabilities:
+```
+┌────────────────────────────────────────────┐
+│         VPC (Default - ap-southeast-1)     │
+│  ┌──────────────────────────────────────┐ │
+│  │  Application Load Balancer (Public)  │ │
+│  │  ├─ HTTP Listener (80) → Redirect    │ │
+│  │  └─ HTTPS Listener (443) → Forward   │ │
+│  └──────────────┬───────────────────────┘ │
+│                 │                          │
+│         ┌───────▼──────────┐              │
+│         │  Target Group    │              │
+│         │  - Health Checks │              │
+│         └───────┬──────────┘              │
+│                 │                          │
+│      ┌──────────┴──────────┐              │
+│      │                     │              │
+│  ┌───▼─────────┐  ┌────────▼────┐        │
+│  │ EC2 (1a)    │  │ EC2 (1b)    │        │
+│  │ - Nginx     │  │ - Nginx     │        │
+│  │ - Public IP │  │ - Public IP │        │
+│  │ - SSM Agent │  │ - SSM Agent │        │
+│  └─────────────┘  └─────────────┘        │
+└────────────────────────────────────────────┘
+```
 
-| Server | Description |
-|--------|-------------|
-| **terraform** | [HCP Terraform MCP Server](https://github.com/hashicorp/terraform-mcp-server) - Workspace management, run execution, registry lookups, and provider documentation |
-| **aws-knowledge-mcp-server** | [AWS Knowledge MCP](https://awslabs.github.io/mcp/) - AWS documentation search, best practices, and service recommendations |
+## 📁 Project Structure
 
-MCP servers are automatically configured via `.mcp.json` and available when running in the devcontainer.
+```
+.
+├── main.tf              # Module instantiations (ALB, EC2, data sources)
+├── variables.tf         # Input variable declarations
+├── outputs.tf           # Output definitions (ALB DNS, instance IDs)
+├── locals.tf            # Local values (tags, user data script)
+├── providers.tf         # AWS provider configuration
+├── versions.tf          # Terraform and provider version constraints
+├── override.tf          # HCP Terraform backend configuration
+├── sandbox.auto.tfvars  # Development environment variable values
+├── README.md            # This file
+└── specs/001-ec2-alb-nginx/
+    ├── spec.md          # Feature specification
+    ├── plan.md          # Implementation plan
+    ├── tasks.md         # Task breakdown
+    ├── quickstart.md    # Deployment guide
+    ├── data-model.md    # Infrastructure entities
+    └── contracts/       # API/interface definitions
+```
 
-## Prerequisites
+## 🔧 Prerequisites
 
-Before using this template, ensure you have the following installed and configured:
+- **AWS Account** with appropriate permissions
+- **Terraform** >= 1.5.7
+- **AWS CLI** v2.x or later
+- **OpenSSL** (for certificate generation)
+- **HCP Terraform Account** (organization: `ravi-panchal-org`)
 
-### Required Software
+## 📝 Configuration
 
-- **Docker Desktop** - Required for running the devcontainer
-  - [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+### Required Variables
 
-- **VS Code** - Recommended IDE with devcontainer support
-  - [Download VS Code](https://code.visualstudio.com/)
-  - Install the "Dev Containers" extension
+Update `sandbox.auto.tfvars` with your values:
 
-### Required Environment Variables
+```hcl
+region              = "ap-southeast-1"
+environment         = "dev"
+instance_type       = "t3.micro"
+acm_certificate_arn = "arn:aws:acm:ap-southeast-1:ACCOUNT_ID:certificate/CERT_ID"
+```
 
-Set these in your local environment before opening the devcontainer.
+### HCP Terraform Workspace
 
-| Variable | Description |
-|----------|-------------|
-| `GITHUB_TOKEN` | GitHub Personal Access Token with repo permissions. **Branch protection recommended** for production repositories. |
-| `TEAM_TFE_TOKEN` | **HCP Terraform Team Token** - Must be a Team API Token (not user/org token) associated with a dedicated project for workspace management |
+Configured in `override.tf`:
+- **Organization**: `ravi-panchal-org`
+- **Workspace**: `sandbox_ec2_ai-iac-consumer-template`
+- **Project**: `Default Project`
 
-> **Important:** The `TEAM_TFE_TOKEN` must be a **Team API Token**, not a user or organization token. Create one in HCP Terraform under **Settings > Teams > [Your Team] > Team API Token**. The team should have access to a dedicated project where workspaces will be created.
+## 🚢 Deployment Steps
 
-### HCP Terraform Setup (Pre-requisite)
+1. **Generate SSL Certificate**
+   ```bash
+   openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+     -keyout alb-private-key.pem -out alb-certificate.pem \
+     -subj "/C=SG/ST=Singapore/L=Singapore/O=Development/CN=*.elb.amazonaws.com"
+   
+   aws acm import-certificate \
+     --certificate fileb://alb-certificate.pem \
+     --private-key fileb://alb-private-key.pem \
+     --region ap-southeast-1
+   ```
 
-Before using this template, you must configure HCP Terraform with an isolated environment for testing:
+2. **Update Configuration**
+   ```bash
+   # Update sandbox.auto.tfvars with your ACM certificate ARN
+   vi sandbox.auto.tfvars
+   ```
 
-1. **Create a Dedicated Project**
-   - Navigate to **Projects** in HCP Terraform
-   - Create a new project (e.g., `sandbox`)
-   - This isolates test workspaces from production infrastructure
+3. **Initialize Terraform**
+   ```bash
+   terraform init
+   terraform validate
+   ```
 
-2. **Create a Dedicated Team**
-   - Go to **Settings > Teams**
-   - Create a new team and assign it to the dedicated project
-   - Configure **Project Team Access** with the following permissions:
+4. **Deploy Infrastructure**
+   ```bash
+   terraform plan -out=tfplan
+   terraform apply tfplan
+   ```
 
-     **Project Access:**
-     - **Read** - Baseline permission for reading the project record
-     - **Create Workspaces** - Create workspaces in the project (grants read access on all workspaces)
-     - **Delete Workspaces** - Delete workspaces in the project
+5. **Access Application**
+   ```bash
+   ALB_DNS=$(terraform output -raw alb_dns_name)
+   echo "Access via: https://${ALB_DNS}/"
+   ```
 
-     **Workspace Permissions:**
-     - **Read Variables** - Access existing variable values for validation
-     - **Read State** - View Terraform state for existing resources
-     - **Write State** - Update state during apply operations
-     - **Download Sentinel Mocks** - Download Sentinel mock data for policy testing
-     - **Manage Workspace Run Tasks** - Assign and unassign run tasks on workspaces
-     - **Lock/Unlock Workspaces** - Control workspace locking for safe operations
+## 🔍 Testing & Validation
 
-3. **Generate Team API Token**
-   - In **Settings > Teams > [Your Team]**
-   - Click **"Create a team token"**
-   - Save this as your `TEAM_TFE_TOKEN`
+### Test HTTPS Endpoint
+```bash
+curl -k https://$(terraform output -raw alb_dns_name)/
+```
 
-4. **Configure Credential Inheritance**
-   - Create a Variable Set with AWS credentials (see below)
-   - Attach the Variable Set to your dedicated project
-   - All workspaces created in the project will inherit credentials automatically
+### Test HTTP Redirect
+```bash
+curl -I http://$(terraform output -raw alb_dns_name)/
+# Expected: 301 redirect to HTTPS
+```
 
-### AWS Credentials
+### Test Multi-AZ Load Balancing
+```bash
+for i in {1..10}; do
+  curl -k -s https://$(terraform output -raw alb_dns_name)/ | grep "Availability Zone"
+done
+# Expected: Mix of responses from ap-southeast-1a and ap-southeast-1b
+```
 
-AWS credentials should **not** be set locally. Instead, they are inherited from an HCP Terraform Variable Set attached to your project or workspace.
+### Connect via Systems Manager
+```bash
+# Get instance IDs
+INSTANCE_A=$(terraform output -json instance_ids | jq -r '.az_a')
+INSTANCE_B=$(terraform output -json instance_ids | jq -r '.az_b')
 
-**Recommended approaches (in order of preference):**
+# Connect to instance
+aws ssm start-session --target ${INSTANCE_A} --region ap-southeast-1
+```
 
-1. **Dynamic Provider Credentials** (Recommended) - Use OIDC federation between HCP Terraform and AWS for short-lived, automatically rotated credentials. See [Dynamic Provider Credentials](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/aws-configuration).
+## 💰 Cost Estimate
 
-2. **Variable Set with Environment Variables** - Create a Variable Set in HCP Terraform containing:
-   - `AWS_ACCESS_KEY_ID` (environment variable, sensitive)
-   - `AWS_SECRET_ACCESS_KEY` (environment variable, sensitive)
-   - `AWS_REGION` (environment variable)
+**Monthly cost for 24/7 operation in ap-southeast-1:**
 
-   Attach the Variable Set to your project so all workspaces inherit the credentials.
+| Component | Quantity | Unit Cost | Monthly Cost |
+|-----------|----------|-----------|--------------|
+| EC2 t3.micro | 2 | $0.0104/hour | ~$15.12 |
+| Application Load Balancer | 1 | $0.0252/hour | ~$18.40 |
+| ALB LCU (minimal) | 0.25 | $0.008/LCU-hour | ~$1.46 |
+| Data Transfer | 10 GB | $0.12/GB | ~$1.20 |
+| **Total** | | | **~$36-48/month** |
 
-> **Note:** Variable Sets can be configured at **Settings > Variable Sets** in HCP Terraform. Attach them to projects for automatic inheritance by all workspaces in that project.
+**Cost Optimization:**
+- Stop EC2 instances when not in use: Saves ~70% on instance costs
+- Destroy entire stack after testing: Zero ongoing charges
+- No NAT Gateway: Saves ~$32/month
+- No CloudWatch Logs: Saves ~$5-10/month
 
-**For Bash** - Add to `~/.bashrc` or `~/.bash_profile`:
+## 🧹 Cleanup
 
 ```bash
-# GitHub Personal Access Token with repo permissions
-export GITHUB_TOKEN="ghp_your_token_here"
+# Destroy all infrastructure
+terraform destroy -auto-approve
 
-# HCP Terraform Team Token - MUST be a Team Token with a dedicated project
-# Create at: HCP Terraform > Settings > Teams > [Your Team] > Team API Token
-export TEAM_TFE_TOKEN="your_terraform_team_token_here"
+# Delete ACM certificate
+aws acm delete-certificate --certificate-arn ${ACM_CERT_ARN} --region ap-southeast-1
+
+# Remove local files
+rm -f tfplan *.pem cert-arn.txt
 ```
 
-**For Zsh** - Add to `~/.zshrc`:
+## 📚 Documentation
 
-```zsh
-# GitHub Personal Access Token with repo permissions
-export GITHUB_TOKEN="ghp_your_token_here"
+- **[Specification](specs/001-ec2-alb-nginx/spec.md)**: Feature requirements and success criteria
+- **[Quick Start Guide](specs/001-ec2-alb-nginx/quickstart.md)**: Detailed deployment instructions
+- **[Implementation Plan](specs/001-ec2-alb-nginx/plan.md)**: Technical design and architecture
+- **[Tasks](specs/001-ec2-alb-nginx/tasks.md)**: Implementation task breakdown
+- **[Data Model](specs/001-ec2-alb-nginx/data-model.md)**: Infrastructure entities and relationships
 
-# HCP Terraform Team Token - MUST be a Team Token with a dedicated project
-# Create at: HCP Terraform > Settings > Teams > [Your Team] > Team API Token
-export TEAM_TFE_TOKEN="your_terraform_team_token_here"
-```
+## 🔐 Security Features
 
-After adding, reload your shell configuration:
+- ✅ HTTPS-only access with TLS 1.3 support
+- ✅ Systems Manager Session Manager (no SSH keys required)
+- ✅ Security groups with least-privilege access
+- ✅ IAM roles with managed policies only
+- ✅ Encrypted EBS volumes
+- ✅ No hardcoded credentials
 
-```bash
-# Bash
-source ~/.bashrc
+## 🎯 Key Features
 
-# Zsh
-source ~/.zshrc
-```
+- **High Availability**: Multi-AZ deployment with automatic failover
+- **Auto-Healing**: Health checks detect failures within 60 seconds
+- **Secure Access**: Session Manager for troubleshooting (no SSH)
+- **Cost-Optimized**: t3.micro instances, minimal data transfer
+- **Production-Ready Patterns**: Load balancing, health checks, encryption
 
-## Getting Started
+## 📄 License
 
-### 1. Create Repository from Template
+This project is part of the AI IaC Consumer Template repository.
 
-1. Navigate to this repository on GitHub
-2. Click **"Use this template"** button
-3. Select **"Create a new repository"**
-4. Name your repository and configure settings
-5. Click **"Create repository"**
+## 🤝 Contributing
 
-### 2. Clone and Open in VS Code
+This infrastructure is managed through Terraform Cloud with automated planning and manual approval for applies.
 
-```bash
-# Clone your new repository
-git clone https://github.com/YOUR_ORG/your-new-repo.git
+## 📞 Support
 
-# Open in VS Code
-code your-new-repo
-```
-
-### 3. Open in Devcontainer
-
-When VS Code opens the repository, you should see a prompt:
-
-> **"Folder contains a Dev Container configuration file. Reopen folder to develop in a container?"**
-
-Click **"Reopen in Container"** to launch the devcontainer with all tools pre-configured.
-
-If the prompt doesn't appear, use the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and select:
-> **"Dev Containers: Reopen in Container"**
-
-## Example Test Prompts
-
-The following example prompts demonstrate various infrastructure patterns. These are designed for use with the `github-speckit-tester` skill for non-interactive, end-to-end testing.
-
-**To run a test prompt**, invoke the skill first then provide the infrastructure requirements:
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-[Your infrastructure requirements here]
-
-HCP Terraform: Organization: [org], Project: [project]
-Workspace: [prefix]_<GITHUB_REPO_NAME>
-```
-
-> **Workspace Naming:** Use `<GITHUB_REPO_NAME>` as a placeholder - it will be automatically replaced with your repository name to ensure unique workspace names across template instances.
->
-> **Organization:** Replace `<YOUR_TFC_ORG>` with your HCP Terraform organization name. If your token only has access to a single organization, this can be omitted.
->
-> **Testing Only:** The non-interactive approach shown in these examples is **recommended for testing and evaluation only**. For production use, remove the non-interactive directive to enable human-in-the-loop review of plans before applying infrastructure changes.
-
-### EC2 Instance with ALB and Nginx
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-Provision using Terraform:
-- EC2 instances across 2 AZs
-- HTTPS and Nginx with basic static content
-- ALB (Application Load Balancer)
-- AWS Region: ap-southeast-2
-- Use existing default VPC
-- Environment: Development (minimal cost)
-
-HCP Terraform: Organization: <YOUR_TFC_ORG>, Project: sandbox
-Workspace: sandbox_ec2_<GITHUB_REPO_NAME>
-```
-
-### Serverless Application
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-Provision using Terraform:
-- Lambda functions with API Gateway
-- DynamoDB tables
-- S3 buckets for static assets
-- CloudWatch Logs and alarms
-- AWS Region: ap-southeast-2
-- Environment: Development (minimal cost)
-
-HCP Terraform: Organization: <YOUR_TFC_ORG>, Project: sandbox
-Workspace: sandbox_serverless_<GITHUB_REPO_NAME>
-```
-
-### CloudFront with Static Content
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-Provision using Terraform:
-- S3 bucket for static content storage
-- CloudFront distribution with OAI
-- SSL/TLS certificate via ACM
-- CloudWatch metrics and alarms
-- AWS Region: us-east-1 (ACM certs), S3 bucket: ap-southeast-2
-- Environment: Development (minimal cost)
-
-HCP Terraform: Organization: <YOUR_TFC_ORG>, Project: sandbox
-Workspace: sandbox_cloudfront_<GITHUB_REPO_NAME>
-```
-
-### Auto-Scaling Group with ALB
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-Provision using Terraform:
-- Auto-scaling group with launch template
-- Target tracking policies
-- ALB with health checks across 2 AZs
-- CloudWatch dashboards
-- AWS Region: ap-southeast-2
-- Environment: Development (minimal cost)
-
-HCP Terraform: Organization: <YOUR_TFC_ORG>, Project: sandbox
-Workspace: sandbox_asg_<GITHUB_REPO_NAME>
-```
-
-### ElastiCache Redis with Application Tier
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-Provision using Terraform:
-- ElastiCache Redis cluster in private subnets
-- ECS across 2 AZs for application tier
-- ALB with HTTPS
-- AWS Region: ap-southeast-2
-- Environment: Development (minimal cost)
-
-HCP Terraform: Organization: <YOUR_TFC_ORG>, Project: sandbox
-Workspace: sandbox_elasticache_<GITHUB_REPO_NAME>
-```
-
-### SQS with Lambda and SNS
-
-```text
-Using the github-speckit-tester skill non-interactively.
-
-Provision using Terraform:
-- SQS queue with dead letter queue
-- Lambda function triggered by SQS messages
-- SNS topic for notifications
-- CloudWatch alarms
-- AWS Region: ap-southeast-2
-- Environment: Development (minimal cost)
-
-HCP Terraform: Organization: <YOUR_TFC_ORG>, Project: sandbox
-Workspace: sandbox_sqs_<GITHUB_REPO_NAME>
-```
+For issues or questions:
+1. Check the [Quick Start Guide](specs/001-ec2-alb-nginx/quickstart.md) troubleshooting section
+2. Review the [Specification](specs/001-ec2-alb-nginx/spec.md) for requirements
+3. Consult the [Implementation Plan](specs/001-ec2-alb-nginx/plan.md) for technical details
 
 ---
 
-<!-- BEGIN_TF_DOCS -->
-## Requirements
-
-No requirements.
-
-## Providers
-
-No providers.
-
-## Modules
-
-No modules.
-
-## Resources
-
-No resources.
-
-## Inputs
-
-No inputs.
-
-## Outputs
-
-No outputs.
-<!-- END_TF_DOCS -->
+**Generated**: 2025-01-29  
+**Terraform**: >= 1.5.7  
+**AWS Provider**: >= 6.0  
+**Target Region**: ap-southeast-1 (Singapore)

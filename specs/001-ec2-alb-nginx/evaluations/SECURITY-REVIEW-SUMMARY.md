@@ -130,4 +130,3 @@ Choose one option before running `terraform apply`:
 **Report Generated**: 2025-01-29  
 **Valid Until**: 2025-04-29 (90 days)  
 **Re-review Required If**: Design changes or production promotion planned
-
