@@ -37,22 +37,22 @@ work on the GitHub issue autonomously
 
 Workflow - autonomously complete the tasks. All speckit stages should be run as subagents. At each stage, commit changes and update the GitHub issue with progress comments. 
 
-For each task use concurrent agents to speed up the process.
+For each task use concurrent subagents to speed up the process.
 Allocate subtask efficiently, some tasks like writing a file should only be created once, I will task breakdown to you.
 
 
 0. Create and configure tracking GitHub issue from template. Github issue should be created and labeled appropriately. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
-2. Use 2 concurrent agents `speckit.specify` as subagent - Create feature specification from the issue details and continue to next stage. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
+2. Use 2 concurrent subagents `speckit.specify` - Create feature specification from the issue details and continue to next stage. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
 3. commit and update Git issue and continue to next stage
-4. Use multiple concurrent `speckit.plan` agent as subagent - Design technical architecture with data model
+4. Use multiple concurrent subagents `speckit.plan` - Design technical architecture with data model
 5. commit and update Git issue and continue to next stage
-6. Use 2 concurrent `review-tf-design` agent as subagent - Review and approve Terraform design
+6. Use 2 concurrent subagents `review-tf-design` - Review and approve Terraform design
 7. commit and update Git issue and continue to next stage
-8. Use multiple concurrent `speckit.tasks` agent as subagent - Generate actionable implementation task list
+8. Use multiple concurrent subagents `speckit.tasks` - Generate actionable implementation task list
 9. commit and update Git issue and continue to next stage
 10. Request user to review and approve design (human-in-the-loop) before implementation phase
-11. Update Git issue with user detailis and approval status.
+11. Update Git issue with user details and approval status.
 12. Ensure that `specs/{FEATURE}/gh-issue.json` contains all necessary details for implementation agent to proceed.
 
 ### GitHub Issue Template Mapping
