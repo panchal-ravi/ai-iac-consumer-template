@@ -1,9 +1,5 @@
 # Example: EC2 Instance with ALB and Nginx
 
-**IMPORTANT**: Do not prompt me - make best practice decisions independently (this is for prompt eval)
-
-Using the **github-speckit-tester** skill non-interactively.
-
 ## Infrastructure Requirements
 
 Provision using Terraform:
@@ -11,7 +7,7 @@ Provision using Terraform:
 - create basic static content page for testing
 - HTTPS and Nginx
 - ALB (Application Load Balancer)
-- AWS Region: `ap-southeast-2`
+- AWS Region: `ap-southeast-1`
 - Use existing default VPC
 - enviromnment development minimal cost
 - Use existing default VPC always
