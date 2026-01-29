@@ -45,11 +45,11 @@ Allocate subtask efficiently, some tasks like writing a file should only be crea
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
 2. Use 2 concurrent subagents `speckit.specify` - Create feature specification from the issue details and continue to next stage. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
 3. commit and update Git issue and continue to next stage
-4. Use multiple concurrent subagents `speckit.plan` - Design technical architecture with data model
+4. Use 2 concurrent subagents `speckit.plan` - Design technical architecture with data model
 5. commit and update Git issue and continue to next stage
-6. Use 2 concurrent subagents `review-tf-design` - Review and approve Terraform design
+6. Use 2 concurrent subagents `aws-security-advisor` and `code-quality-judge` - Review and approve Terraform design
 7. commit and update Git issue and continue to next stage
-8. Use multiple concurrent subagents `speckit.tasks` - Generate actionable implementation task list
+8. Use 3 concurrent subagents `speckit.tasks` - Generate actionable implementation task list
 9. commit and update Git issue and continue to next stage
 10. Request user to review and approve design (human-in-the-loop) before implementation phase
 11. Update Git issue with user details and approval status.

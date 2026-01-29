@@ -38,12 +38,11 @@ Allocate subtask efficiently, some tasks like writing a file should only be crea
 
 0. Read GitHub issue from `gh-issue.json` file and use `gh issue view` command to retrieve the issue details. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
-2. Use multiple concurrent subagents `speckit.implement` - Generate Terraform code and test in sandbox workspace (init, plan only)
+2. Use 2 concurrent subagents `speckit.implement` - Generate Terraform code and test in sandbox workspace (init, plan only)
 3. commit and update Git issue and continue to next stage
 4. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
 5. Verify successful apply
 6. commit and update Git issue and continue to next stage
-7. Use multiple concurrent subagents `report-tf-deployment` - Generate comprehensive deployment report
+7. Use 2 concurrent subagents `report-tf-deployment` - Generate comprehensive deployment report
 8. Cleanup - Queue destroy plan only if confirmed
-9. Close GitHub Issue - Add final summary comment and close issue with completed label
-10. Create a PR with all committed changes for review
+9. Create a PR linked to this GH issue with all committed changes for review.
