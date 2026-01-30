@@ -1,6 +1,6 @@
 ---
+name: speckit.taskstoissues
 description: Convert existing tasks into actionable, dependency-ordered GitHub issues for the feature based on available design artifacts.
-tools: ['github/github-mcp-server/create_issue']
 ---
 
 ## User Input

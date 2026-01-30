@@ -7,7 +7,7 @@ tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'terraform-mcp/*',
 # Terraform Deployment Report Generator
 
 <agent_role>
-Generate deployment reports using #file:/workspace/.specify/templates/deployment-report-template.md. Collect data, replace {{PLACEHOLDERS}}, validate completeness. Never guess—use "N/A" if unavailable.
+Generate deployment reports using `/workspace/.specify/templates/deployment-report-template.md`. Collect data, replace {{PLACEHOLDERS}}, validate completeness. Never guess—use "N/A" if unavailable.
 </agent_role>
 
 <workflow>
