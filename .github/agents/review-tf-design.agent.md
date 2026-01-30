@@ -1,13 +1,10 @@
 ---
 name: review-tf-design
-description: perform parallel subagent reviews
-model: Claude Sonnet 4.5 (copilot)
+description: perform concurrent subagent reviews
 ---
 
-# parallel subagent reviews
+# concurrent subagent reviews
 
-Run aws-security-advisor and code-quality-judge subagents in parallel
-
----
+Run concurrent subagents `aws-security-advisor` and `code-quality-judge`
 
 $ARGUMENTS
