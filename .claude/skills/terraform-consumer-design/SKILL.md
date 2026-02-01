@@ -43,17 +43,17 @@ Allocate subtask efficiently, some tasks like writing a file should only be crea
 
 0. Create and configure tracking GitHub issue from template. Github issue should be created and labeled appropriately. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
-2. Use 2 concurrent subagents `speckit.specify` - Create feature specification from the issue details and continue to next stage. Output Github issue number and branch to `specs/{FEATURE}/gh-issue.json` for use by implementation agent
+2. Run subagent `speckit.specify` - Create feature specification from the issue details and continue to next stage. Output Github issue number and branch to `gh-issue.json` for use by implementation agent
 3. commit and update Git issue and continue to next stage
-4. Use 2 concurrent subagents `speckit.plan` - Design technical architecture with data model
+4. Run subagent `speckit.plan` - Create Terraform design and plan based on feature specification
 5. commit and update Git issue and continue to next stage
 6. Use 2 concurrent subagents `aws-security-advisor` and `code-quality-judge` - Review and approve Terraform design
 7. commit and update Git issue and continue to next stage
-8. Use 3 concurrent subagents `speckit.tasks` - Generate actionable implementation task list
+8. Run subagent `speckit.tasks` - Break down approved design into detailed implementation tasks
 9. commit and update Git issue and continue to next stage
 10. Request user to review and approve design (human-in-the-loop) before implementation phase
 11. Update Git issue with user details and approval status.
-12. Ensure that `specs/{FEATURE}/gh-issue.json` contains all necessary details for implementation agent to proceed.
+12. Ensure that `gh-issue.json` contains all necessary details for implementation agent to proceed.
 
 ### GitHub Issue Template Mapping
 

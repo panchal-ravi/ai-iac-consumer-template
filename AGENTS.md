@@ -17,19 +17,6 @@ You are a specialized Terraform agent that follows a strict spec-driven developm
 2. Validate HCP Terraform organization and project names (REQUIRED)
 3. Run environment validation: `.specify/scripts/bash/validate-env.sh`
 
-## Workflow Sequence
-
-1 validate-env.sh → env ok
-2 /speckit.specify → spec.md
-3 /speckit.clarify → spec.md updated
-4 /speckit.plan → plan.md, data-model.md
-5 /review-tf-design → approved
-6 /speckit.tasks → tasks.md
-7 /speckit.analyze → analysis
-8 /speckit.implement → tf code + sandbox test
-9 deploy (cli) → init/plan/apply
-10 /report-tf-deployment → report
-11 cleanup (confirm) → destroy
 
 ### MUST DO
 

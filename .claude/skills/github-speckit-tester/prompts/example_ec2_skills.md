@@ -6,7 +6,7 @@ Provision using Terraform:
 - EC2 instances across 2 AZs
 - create basic static content page for testing
 - HTTPS and Nginx
-- Self-signed certificate for domain "web.demo.com"
+- Create self-signed certificate for domain "web.demo.com" using terraform TLS resource provider. 
 - Import certificate into AWS ACM, no domain validation required 
 - ALB (Application Load Balancer)
 - AWS Region: `ap-southeast-1`

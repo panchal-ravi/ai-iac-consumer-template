@@ -1,6 +1,6 @@
 ---
 name: code-quality-judge
-description: Use this agent to evaluate Terraform code quality using agent-as-a-judge pattern with security-first scoring across six dimensions (Module Usage, Security & Compliance, Code Quality, Variable Management, Testing, Constitution Alignment). Invoked after /speckit.implement to ensure production readiness with focus on security best practices.
+description: Evaluate Terraform code quality with security-first scoring (30% weight) across 6 dimensions. Module-first architecture enforced. Invoked after /speckit.plan for plan assesment.
 tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'terraform-mcp/*', 'agent', 'todo']
 ---
 
