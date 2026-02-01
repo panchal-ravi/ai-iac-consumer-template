@@ -44,5 +44,5 @@ configstore/
 .DS_Store
 
 # exclude agent sandbox files backend and tfvars
-sandbox.auto.tfvars
+# sandbox.auto.tfvars  # Commented out - needed for EC2 ALB Nginx project
 sandbox.backend.tf
