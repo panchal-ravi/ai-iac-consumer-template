@@ -1,0 +1,62 @@
+# =============================================================================
+# Sandbox Configuration Template
+# Feature: 002-ec2-alb-nginx - EC2 Infrastructure with ALB and Nginx
+# Purpose: Template for sandbox workspace deployment configuration
+# =============================================================================
+# 
+# USAGE:
+# 1. Copy this file to sandbox.auto.tfvars
+# 2. Update values as needed for your sandbox environment
+# 3. Deploy with: terraform plan / terraform apply
+#
+# NOTE: sandbox.auto.tfvars is excluded from version control (.gitignore)
+#
+# =============================================================================
+
+# =============================================================================
+# Core Configuration
+# =============================================================================
+
+project_name = "nginx-alb"
+environment  = "development"
+region       = "ap-southeast-1"
+
+availability_zones = [
+  "ap-southeast-1a",
+  "ap-southeast-1b"
+]
+
+# =============================================================================
+# Domain and Certificate Configuration
+# =============================================================================
+
+domain_name = "web.demo.com"
+
+# NOTE: TLS certificate will be auto-generated as self-signed certificate
+# No manual certificate configuration required
+
+# =============================================================================
+# Compute Configuration
+# =============================================================================
+
+instance_type = "t3a.micro"
+
+# =============================================================================
+# Optional: Additional Configuration
+# =============================================================================
+
+# Uncomment and customize as needed:
+
+# alb_internal = false
+# enable_deletion_protection = false
+# idle_timeout = 60
+# enable_http2 = true
+# ssl_policy = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+
+# health_check_path = "/"
+# health_check_interval = 30
+# health_check_timeout = 5
+# healthy_threshold = 2
+# unhealthy_threshold = 2
+# health_check_matcher = "200"
+# deregistration_delay = 30
