@@ -1,0 +1,11 @@
+{
+  "issue_number": 35,
+  "branch": "feature/issue-35-ec2-alb-nginx",
+  "title": "[AGENT PROVISION] EC2 Instance with ALB and Nginx",
+  "hcp_org": "ravi-panchal-org",
+  "hcp_project": "Default Project",
+  "workspace_name": "sandbox_workspace",
+  "cloud_provider": "AWS",
+  "cloud_region": "ap-southeast-1",
+  "environment": "development"
+}
