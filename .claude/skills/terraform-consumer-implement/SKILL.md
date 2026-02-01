@@ -28,13 +28,8 @@ All speckit scripts are located in `/workspace/.specify/scripts/bash` directory.
 You should not require to change to any other directory.
 
 ### Execution Workflow
-
-work on the GitHub issue autonomously
-
-Workflow - autonomously complete the tasks. All speckit stages should be run as subagents. At each stage, commit changes and update the GitHub issue with progress comments. 
-
-For each task use concurrent subagents to speed up the process.
-Allocate subtask efficiently, some tasks like writing a file should only be created once, I will task breakdown to you.
+For each task use concurrent subagents to speed up the process. 
+Allocate subtask efficiently, some tasks like writing a file should only be created once, I will breakdown tasks to you.
 
 0. Read GitHub issue from `gh-issue.json` file and use `gh issue view` command to retrieve the issue details. Confirm the gh issue is valid, when you start mark the issue to in-progress using the label in-progress, update the github issue with comments when you start and finish each speckit stage with a short summary
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
