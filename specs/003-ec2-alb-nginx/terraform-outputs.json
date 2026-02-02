@@ -1,0 +1,149 @@
+{
+  "access_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://web.demo.com"
+  },
+  "acm_certificate_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:acm:ap-southeast-1:475368203962:certificate/3e347815-dcce-4a1e-bdda-4103cfc95666"
+  },
+  "alb_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:loadbalancer/app/ec2-alb-nginx-development-alb/9b607ada34bc0ef2"
+  },
+  "alb_direct_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://ec2-alb-nginx-development-alb-2132343157.ap-southeast-1.elb.amazonaws.com"
+  },
+  "alb_dns_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ec2-alb-nginx-development-alb-2132343157.ap-southeast-1.elb.amazonaws.com"
+  },
+  "alb_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:loadbalancer/app/ec2-alb-nginx-development-alb/9b607ada34bc0ef2"
+  },
+  "alb_security_group_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0b335beadf8a4befe"
+  },
+  "alb_zone_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "Z1LMS91P8CMLE5"
+  },
+  "availability_zones": {
+    "sensitive": false,
+    "type": [
+      "list",
+      "string"
+    ],
+    "value": [
+      "ap-southeast-1a",
+      "ap-southeast-1b"
+    ]
+  },
+  "certificate_domain": {
+    "sensitive": false,
+    "type": "string",
+    "value": "web.demo.com"
+  },
+  "certificate_validity_end": {
+    "sensitive": false,
+    "type": "string",
+    "value": "2026-05-03T01:58:54.129681396Z"
+  },
+  "deployment_timestamp": {
+    "sensitive": false,
+    "type": "string",
+    "value": "2026-02-02T01:58:53Z"
+  },
+  "ec2_instance_availability_zones": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "ap-southeast-1a": "string",
+        "ap-southeast-1b": "string"
+      }
+    ],
+    "value": {
+      "ap-southeast-1a": "ap-southeast-1a",
+      "ap-southeast-1b": "ap-southeast-1b"
+    }
+  },
+  "ec2_instance_ids": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "i-02ffb5b9554eaf14a",
+      "i-08269c1910d85851a"
+    ]
+  },
+  "ec2_instance_private_ips": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "172.31.22.199",
+      "172.31.39.174"
+    ]
+  },
+  "ec2_security_group_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0c97a517431396c3b"
+  },
+  "https_listener_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:listener/app/ec2-alb-nginx-development-alb/9b607ada34bc0ef2/48cbbb19d1056758"
+  },
+  "subnet_ids": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "subnet-0dce35448b161a8ca",
+      "subnet-0a055259d09584073"
+    ]
+  },
+  "target_group_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:targetgroup/ec2-alb-nginx-development-tg/b39066cba528262a"
+  },
+  "terraform_workspace": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sandbox_workspace"
+  },
+  "vpc_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vpc-0fb658b91e2113ece"
+  }
+}
