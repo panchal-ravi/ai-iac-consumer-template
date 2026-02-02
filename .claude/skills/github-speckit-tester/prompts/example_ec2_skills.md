@@ -10,7 +10,6 @@ Provision using Terraform:
 - Import certificate into AWS ACM, no domain validation required 
 - ALB (Application Load Balancer)
 - AWS Region: `ap-southeast-1`
-- Use existing default VPC
 - enviromnment development minimal cost
 - Use existing default VPC always
 

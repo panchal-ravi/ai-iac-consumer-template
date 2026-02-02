@@ -21,17 +21,17 @@
 
 **Purpose**: Create Terraform project structure and configuration files
 
-- [ ] T001 Create project directory structure (root, user-data/, docs/)
-- [ ] T002 [P] Create versions.tf with Terraform version constraints (>= 1.6.0) and required providers (AWS ~> 6.0, TLS ~> 4.0)
-- [ ] T003 [P] Create backend.tf with HCP Terraform Cloud configuration (organization: ravi-panchal-org, workspace: sandbox_workspace)
-- [ ] T004 [P] Create providers.tf with AWS provider (region: ap-southeast-1) and TLS provider configuration
-- [ ] T005 [P] Create variables.tf with 9 input variables (aws_region, project_name, environment, domain_name, instance_type, instance_count_per_az, certificate_validity_days, health_check_interval, health_check_path)
-- [ ] T006 [P] Create outputs.tf stub file (outputs will be added incrementally)
-- [ ] T007 [P] Create locals.tf with common_tags definition (Project, Environment, ManagedBy, Feature, GitHubIssue, Workspace, CostCenter, CreatedDate, Region)
-- [ ] T008 [P] Create data.tf stub file (data sources will be added incrementally)
-- [ ] T009 [P] Create main.tf stub file with file organization comments
-- [ ] T010 [P] Create README.md with quick start instructions and link to quickstart.md
-- [ ] T011 [P] Create .gitignore file for Terraform (.terraform/, *.tfstate, *.tfvars, .terraform.lock.hcl)
+- [X] T001 Create project directory structure (root, user-data/, docs/)
+- [X] T002 [P] Create versions.tf with Terraform version constraints (>= 1.6.0) and required providers (AWS ~> 6.0, TLS ~> 4.0)
+- [X] T003 [P] Create backend.tf with HCP Terraform Cloud configuration (organization: ravi-panchal-org, workspace: sandbox_workspace)
+- [X] T004 [P] Create providers.tf with AWS provider (region: ap-southeast-1) and TLS provider configuration
+- [X] T005 [P] Create variables.tf with 9 input variables (aws_region, project_name, environment, domain_name, instance_type, instance_count_per_az, certificate_validity_days, health_check_interval, health_check_path)
+- [X] T006 [P] Create outputs.tf stub file (outputs will be added incrementally)
+- [X] T007 [P] Create locals.tf with common_tags definition (Project, Environment, ManagedBy, Feature, GitHubIssue, Workspace, CostCenter, CreatedDate, Region)
+- [X] T008 [P] Create data.tf stub file (data sources will be added incrementally)
+- [X] T009 [P] Create main.tf stub file with file organization comments
+- [X] T010 [P] Create README.md with quick start instructions and link to quickstart.md
+- [X] T011 [P] Create .gitignore file for Terraform (.terraform/, *.tfstate, *.tfvars, .terraform.lock.hcl)
 
 ---
 
@@ -43,18 +43,18 @@
 
 ### Network Discovery (Required for ALL stories)
 
-- [ ] T012 Add aws_vpc data source to data.tf (query default VPC in ap-southeast-1)
-- [ ] T013 Add aws_subnets data source to data.tf (filter by vpc-id and default-for-az)
-- [ ] T014 Add aws_subnet data source to data.tf (for_each over subnet IDs to get AZ details)
-- [ ] T015 Add subnet selection logic to locals.tf (extract availability zones, select first 2 AZs, map AZ to subnet IDs)
-- [ ] T016 Add network outputs to outputs.tf (vpc_id, subnet_ids, availability_zones)
+- [X] T012 Add aws_vpc data source to data.tf (query default VPC in ap-southeast-1)
+- [X] T013 Add aws_subnets data source to data.tf (filter by vpc-id and default-for-az)
+- [X] T014 Add aws_subnet data source to data.tf (for_each over subnet IDs to get AZ details)
+- [X] T015 Add subnet selection logic to locals.tf (extract availability zones, select first 2 AZs, map AZ to subnet IDs)
+- [X] T016 Add network outputs to outputs.tf (vpc_id, subnet_ids, availability_zones)
 
 ### Certificate Generation (Required for User Story 1 - HTTPS access)
 
-- [ ] T017 [P] Create tls_private_key resource in main.tf (algorithm: RSA, rsa_bits: 2048)
-- [ ] T018 Create tls_self_signed_cert resource in main.tf (validity_period_hours from variable, subject CN: domain_name, dns_names: [domain_name], allowed_uses: key_encipherment, digital_signature, server_auth)
-- [ ] T019 Create aws_acm_certificate resource in main.tf (import private key and certificate from TLS resources, lifecycle: create_before_destroy)
-- [ ] T020 Add certificate outputs to outputs.tf (acm_certificate_arn, certificate_domain, certificate_validity_end)
+- [X] T017 [P] Create tls_private_key resource in main.tf (algorithm: RSA, rsa_bits: 2048)
+- [X] T018 Create tls_self_signed_cert resource in main.tf (validity_period_hours from variable, subject CN: domain_name, dns_names: [domain_name], allowed_uses: key_encipherment, digital_signature, server_auth)
+- [X] T019 Create aws_acm_certificate resource in main.tf (import private key and certificate from TLS resources, lifecycle: create_before_destroy)
+- [X] T020 Add certificate outputs to outputs.tf (acm_certificate_arn, certificate_domain, certificate_validity_end)
 
 **Checkpoint**: Foundation ready - VPC/subnets discovered, certificate generated, user story implementation can now begin
 
@@ -70,47 +70,47 @@
 
 ### Security Groups (Foundation for EC2 and ALB)
 
-- [ ] T021 [P] [US2] Add module.security_group_alb to main.tf (source: app.terraform.io/ravi-panchal-org/security-group/aws ~> 5.3.1, name: ${project_name}-${environment}-sg-alb, ingress: 443 from 0.0.0.0/0, egress: 80 to EC2 SG, tags)
-- [ ] T022 [P] [US2] Add module.security_group_ec2 to main.tf (source: app.terraform.io/ravi-panchal-org/security-group/aws ~> 5.3.1, name: ${project_name}-${environment}-sg-ec2, ingress: 80 from ALB SG, egress: all, tags)
-- [ ] T023 [US2] Add security group outputs to outputs.tf (alb_security_group_id, ec2_security_group_id)
+- [X] T021 [P] [US2] Add module.security_group_alb to main.tf (source: app.terraform.io/ravi-panchal-org/security-group/aws ~> 5.3.1, name: ${project_name}-${environment}-sg-alb, ingress: 443 from 0.0.0.0/0, egress: 80 to EC2 SG, tags)
+- [X] T022 [P] [US2] Add module.security_group_ec2 to main.tf (source: app.terraform.io/ravi-panchal-org/security-group/aws ~> 5.3.1, name: ${project_name}-${environment}-sg-ec2, ingress: 80 from ALB SG, egress: all, tags)
+- [X] T023 [US2] Add security group outputs to outputs.tf (alb_security_group_id, ec2_security_group_id)
 
 ### Nginx Bootstrap Script
 
-- [ ] T024 [US2] Create user-data/nginx-bootstrap.sh with template variables (domain_name, environment)
-- [ ] T025 [US2] Implement system update and Nginx installation section in nginx-bootstrap.sh (yum update, amazon-linux-extras install nginx1)
-- [ ] T026 [US2] Implement instance metadata extraction in nginx-bootstrap.sh (INSTANCE_ID, AVAILABILITY_ZONE, PRIVATE_IP using ec2-metadata or IMDSv2)
-- [ ] T027 [US2] Implement custom index.html generation in nginx-bootstrap.sh (write to /usr/share/nginx/html/index.html with instance metadata)
-- [ ] T028 [US2] Implement Nginx configuration in nginx-bootstrap.sh (create /etc/nginx/conf.d/webapp.conf with / endpoint, /health endpoint, /nginx_status endpoint)
-- [ ] T029 [US2] Implement service management in nginx-bootstrap.sh (systemctl start/enable nginx, disable firewalld)
-- [ ] T030 [US2] Add error handling and logging to nginx-bootstrap.sh (set -e, exit codes, debug output)
+- [X] T024 [US2] Create user-data/nginx-bootstrap.sh with template variables (domain_name, environment)
+- [X] T025 [US2] Implement system update and Nginx installation section in nginx-bootstrap.sh (yum update, amazon-linux-extras install nginx1)
+- [X] T026 [US2] Implement instance metadata extraction in nginx-bootstrap.sh (INSTANCE_ID, AVAILABILITY_ZONE, PRIVATE_IP using ec2-metadata or IMDSv2)
+- [X] T027 [US2] Implement custom index.html generation in nginx-bootstrap.sh (write to /usr/share/nginx/html/index.html with instance metadata)
+- [X] T028 [US2] Implement Nginx configuration in nginx-bootstrap.sh (create /etc/nginx/conf.d/webapp.conf with / endpoint, /health endpoint, /nginx_status endpoint)
+- [X] T029 [US2] Implement service management in nginx-bootstrap.sh (systemctl start/enable nginx, disable firewalld)
+- [X] T030 [US2] Add error handling and logging to nginx-bootstrap.sh (set -e, exit codes, debug output)
 
 ### EC2 Instances
 
-- [ ] T031 [US2] Add instance_configs local to locals.tf (for_each over selected_azs, generate instance names and subnet mappings)
-- [ ] T032 [US2] Add nginx_user_data local to locals.tf (templatefile for user-data/nginx-bootstrap.sh)
-- [ ] T033 [US2] Add module.ec2_instances to main.tf (source: app.terraform.io/ravi-panchal-org/ec2-instance/aws ~> 6.1.4, for_each over instance_configs, instance_type from variable, ami_ssm_parameter: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64, user_data: nginx_user_data, vpc_security_group_ids: [ec2_sg_id], create_security_group: false, tags)
-- [ ] T034 [US2] Add EC2 instance outputs to outputs.tf (ec2_instance_ids, ec2_instance_private_ips, ec2_instance_availability_zones)
+- [X] T031 [US2] Add instance_configs local to locals.tf (for_each over selected_azs, generate instance names and subnet mappings)
+- [X] T032 [US2] Add nginx_user_data local to locals.tf (templatefile for user-data/nginx-bootstrap.sh)
+- [X] T033 [US2] Add module.ec2_instances to main.tf (source: app.terraform.io/ravi-panchal-org/ec2-instance/aws ~> 6.1.4, for_each over instance_configs, instance_type from variable, ami_ssm_parameter: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64, user_data: nginx_user_data, vpc_security_group_ids: [ec2_sg_id], create_security_group: false, tags)
+- [X] T034 [US2] Add EC2 instance outputs to outputs.tf (ec2_instance_ids, ec2_instance_private_ips, ec2_instance_availability_zones)
 
 ### Application Load Balancer
 
-- [ ] T035 [US2] Add module.alb to main.tf (source: app.terraform.io/ravi-panchal-org/alb/aws ~> 10.2.0, name: ${project_name}-${environment}-alb, load_balancer_type: application, internal: false, vpc_id, subnets: selected_subnet_ids, security_groups: [alb_sg_id], tags)
-- [ ] T036 [US2] Add target_groups configuration to module.alb in main.tf (name: ${project_name}-${environment}-tg, backend_protocol: HTTP, backend_port: 80, target_type: instance, health_check with /health path and 30s interval, targets: EC2 instance IDs)
-- [ ] T037 [US2] Add listeners configuration to module.alb in main.tf (port: 443, protocol: HTTPS, certificate_arn: acm_certificate_arn, default_action: forward to target group)
-- [ ] T038 [US2] Add ALB outputs to outputs.tf (alb_id, alb_arn, alb_dns_name, alb_zone_id, target_group_arn, https_listener_arn)
+- [X] T035 [US2] Add module.alb to main.tf (source: app.terraform.io/ravi-panchal-org/alb/aws ~> 10.2.0, name: ${project_name}-${environment}-alb, load_balancer_type: application, internal: false, vpc_id, subnets: selected_subnet_ids, security_groups: [alb_sg_id], tags)
+- [X] T036 [US2] Add target_groups configuration to module.alb in main.tf (name: ${project_name}-${environment}-tg, backend_protocol: HTTP, backend_port: 80, target_type: instance, health_check with /health path and 30s interval, targets: EC2 instance IDs)
+- [X] T037 [US2] Add listeners configuration to module.alb in main.tf (port: 443, protocol: HTTPS, certificate_arn: acm_certificate_arn, default_action: forward to target group)
+- [X] T038 [US2] Add ALB outputs to outputs.tf (alb_id, alb_arn, alb_dns_name, alb_zone_id, target_group_arn, https_listener_arn)
 
 ### Connectivity Outputs
 
-- [ ] T039 [US2] Add access_url output to outputs.tf (value: https://${domain_name})
-- [ ] T040 [US2] Add alb_direct_url output to outputs.tf (value: https://${alb_dns_name})
-- [ ] T041 [US2] Add deployment_timestamp output to outputs.tf (value: timestamp())
-- [ ] T042 [US2] Add terraform_workspace output to outputs.tf (value: sandbox_workspace)
+- [X] T039 [US2] Add access_url output to outputs.tf (value: https://${domain_name})
+- [X] T040 [US2] Add alb_direct_url output to outputs.tf (value: https://${alb_dns_name})
+- [X] T041 [US2] Add deployment_timestamp output to outputs.tf (value: timestamp())
+- [X] T042 [US2] Add terraform_workspace output to outputs.tf (value: sandbox_workspace)
 
 ### Deployment and Validation
 
-- [ ] T043 [US2] Run terraform init in project root (authenticate to HCP Terraform, download providers and modules)
-- [ ] T044 [US2] Run terraform validate to verify configuration syntax
-- [ ] T045 [US2] Run terraform fmt -recursive to format all .tf files
-- [ ] T046 [US2] Run terraform plan and review resource creation (expect ~15-20 resources)
+- [X] T043 [US2] Run terraform init in project root (authenticate to HCP Terraform, download providers and modules)
+- [X] T044 [US2] Run terraform validate to verify configuration syntax
+- [X] T045 [US2] Run terraform fmt -recursive to format all .tf files
+- [X] T046 [US2] Run terraform plan and review resource creation (expect ~15-20 resources)
 - [ ] T047 [US2] Run terraform apply to provision infrastructure (wait 5-8 minutes)
 - [ ] T048 [US2] Verify all resources created with consistent tags in AWS Console (check Environment=development, Project=web-demo, ManagedBy=terraform)
 - [ ] T049 [US2] Run terraform plan again to verify idempotency (should show no changes)
