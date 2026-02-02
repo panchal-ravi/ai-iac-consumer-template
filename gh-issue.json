@@ -1,0 +1,11 @@
+{
+  "issue_number": 39,
+  "branch": "003-ec2-alb-nginx",
+  "project_name": "ec2-alb-nginx",
+  "hcp_org": "ravi-panchal-org",
+  "hcp_project": "Default Project",
+  "workspace_name": "sandbox_workspace",
+  "cloud_provider": "AWS",
+  "cloud_region": "ap-southeast-1",
+  "environment": "development"
+}
