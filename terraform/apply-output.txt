@@ -1,0 +1,127 @@
+[0m[33mRunning apply in HCP Terraform. Output will stream here. Pressing Ctrl-C
+will stop streaming the logs, but will not stop the apply running remotely.[0m
+
+Preparing the remote apply...[0m
+[0m[33mTo view this run in a browser, visit:[0m
+[0m[33mhttps://app.terraform.io/app/ravi-panchal-org/sandbox_workspace/runs/run-LFYetqrRW6beQNMq[0m
+[0m
+[1mtls_self_signed_cert.cert: Destroying... [id=223356438183868122335696973957931043523][0m[0m
+[1mtls_self_signed_cert.cert: Destruction complete after 0s[0m[0m
+[1mtls_private_key.main: Creating...[0m[0m
+[1mtls_private_key.cert_key: Destroying... [id=366557a7a0c063d3d19abcce391c9619c1b65943][0m[0m
+[1mtls_private_key.cert_key: Destruction complete after 0s[0m[0m
+[1mtls_private_key.main: Creation complete after 0s [id=4ec30be76b5cc37ab93fb47e53aa5458354bbecb][0m[0m
+[1mtls_self_signed_cert.main: Creating...[0m[0m
+[1mtls_self_signed_cert.main: Creation complete after 0s [id=75254138861271289059950356179939828659][0m[0m
+[1mmodule.ec2_instance[1].aws_security_group.this[0]: Creating...[0m[0m
+[1mmodule.ec2_instance[0].aws_security_group.this[0]: Creating...[0m[0m
+[1maws_security_group.ec2: Creating...[0m[0m
+[1maws_lb_target_group.main: Creating...[0m[0m
+[1maws_security_group.alb: Creating...[0m[0m
+[1maws_acm_certificate.self_signed: Creating...[0m[0m
+[1maws_acm_certificate.self_signed: Creation complete after 2s [id=arn:aws:acm:ap-southeast-1:475368203962:certificate/ffa67f3c-f644-4cab-bacd-e12815694d65][0m[0m
+[1maws_lb_target_group.main: Creation complete after 4s [id=arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:targetgroup/ec2-alb-nginx-tg/5328e47345fdca29][0m[0m
+[1maws_security_group.ec2: Creation complete after 4s [id=sg-0414c1ec7190fd281][0m[0m
+[1maws_security_group_rule.ec2_egress_https: Creating...[0m[0m
+[1maws_security_group_rule.ec2_egress_http: Creating...[0m[0m
+[1mmodule.ec2_instance[0].aws_security_group.this[0]: Creation complete after 4s [id=sg-0fc2ba44c3893348b][0m[0m
+[1maws_security_group.alb: Creation complete after 4s [id=sg-0b8dbb2a817288ca4][0m[0m
+[1maws_security_group_rule.alb_egress_http_to_ec2: Creating...[0m[0m
+[1maws_security_group_rule.ec2_ingress_http_from_alb: Creating...[0m[0m
+[1maws_security_group_rule.alb_ingress_https: Creating...[0m[0m
+[1maws_lb.main: Creating...[0m[0m
+[1mmodule.ec2_instance[1].aws_security_group.this[0]: Creation complete after 4s [id=sg-04b2d614c68a9a3b2][0m[0m
+[1mmodule.ec2_instance[0].aws_vpc_security_group_egress_rule.this["ipv6_default"]: Creating...[0m[0m
+[1mmodule.ec2_instance[0].aws_vpc_security_group_egress_rule.this["ipv4_default"]: Creating...[0m[0m
+[1mmodule.ec2_instance[1].aws_vpc_security_group_egress_rule.this["ipv4_default"]: Creating...[0m[0m
+[1mmodule.ec2_instance[1].aws_vpc_security_group_egress_rule.this["ipv6_default"]: Creating...[0m[0m
+[1mmodule.ec2_instance[0].aws_vpc_security_group_egress_rule.this["ipv6_default"]: Creation complete after 1s [id=sgr-026bb2961416741f2][0m[0m
+[1mmodule.ec2_instance[1].aws_instance.this[0]: Creating...[0m[0m
+[1mmodule.ec2_instance[0].aws_vpc_security_group_egress_rule.this["ipv4_default"]: Creation complete after 1s [id=sgr-0a7a6ba32579602c4][0m[0m
+[1mmodule.ec2_instance[0].aws_instance.this[0]: Creating...[0m[0m
+[1mmodule.ec2_instance[1].aws_vpc_security_group_egress_rule.this["ipv4_default"]: Creation complete after 1s [id=sgr-08749f658b2cba51d][0m[0m
+[1mmodule.ec2_instance[1].aws_vpc_security_group_egress_rule.this["ipv6_default"]: Creation complete after 1s [id=sgr-0f6b33a6b93bfdc01][0m[0m
+[1maws_security_group_rule.ec2_egress_http: Creation complete after 2s [id=sgrule-3748230855][0m[0m
+[1maws_security_group_rule.alb_egress_http_to_ec2: Creation complete after 2s [id=sgrule-3440662371][0m[0m
+[1maws_security_group_rule.ec2_egress_https: Creation complete after 3s [id=sgrule-3300646356][0m[0m
+[1maws_security_group_rule.alb_ingress_https: Creation complete after 3s [id=sgrule-1535285315][0m[0m
+[1maws_security_group_rule.ec2_ingress_http_from_alb: Creation complete after 4s [id=sgrule-1212821253][0m[0m
+aws_lb.main: Still creating... [10s elapsed]
+module.ec2_instance[1].aws_instance.this[0]: Still creating... [10s elapsed]
+module.ec2_instance[0].aws_instance.this[0]: Still creating... [10s elapsed]
+[1mmodule.ec2_instance[0].aws_instance.this[0]: Creation complete after 16s [id=i-06278fa2148155ab5][0m[0m
+[1mmodule.ec2_instance[1].aws_instance.this[0]: Creation complete after 16s [id=i-0b417b9bb061d3182][0m[0m
+[1maws_lb_target_group_attachment.instances[1]: Creating...[0m[0m
+[1maws_lb_target_group_attachment.instances[0]: Creating...[0m[0m
+[1maws_lb_target_group_attachment.instances[1]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:targetgroup/ec2-alb-nginx-tg/5328e47345fdca29-20260201054456541600000007][0m[0m
+[1maws_lb_target_group_attachment.instances[0]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:targetgroup/ec2-alb-nginx-tg/5328e47345fdca29-20260201054456877600000008][0m[0m
+aws_lb.main: Still creating... [20s elapsed]
+aws_lb.main: Still creating... [30s elapsed]
+aws_lb.main: Still creating... [40s elapsed]
+aws_lb.main: Still creating... [50s elapsed]
+aws_lb.main: Still creating... [1m0s elapsed]
+aws_lb.main: Still creating... [1m10s elapsed]
+aws_lb.main: Still creating... [1m20s elapsed]
+aws_lb.main: Still creating... [1m30s elapsed]
+aws_lb.main: Still creating... [1m40s elapsed]
+aws_lb.main: Still creating... [1m50s elapsed]
+aws_lb.main: Still creating... [2m0s elapsed]
+aws_lb.main: Still creating... [2m10s elapsed]
+aws_lb.main: Still creating... [2m20s elapsed]
+aws_lb.main: Still creating... [2m30s elapsed]
+[1maws_lb.main: Creation complete after 2m36s [id=arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:loadbalancer/app/ec2-alb-nginx-alb/211220233e3e1492][0m[0m
+[1maws_lb_listener.https: Creating...[0m[0m
+[1maws_lb_listener.https: Creation complete after 2s [id=arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:listener/app/ec2-alb-nginx-alb/211220233e3e1492/e97a5c2782fc625b][0m[0m
+
+[1m[32mApply complete! Resources: 23 added, 0 changed, 2 destroyed.[0m[0m
+
+[1m[32mOutputs:[0m[0m
+alb_arn = "arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:loadbalancer/app/ec2-alb-nginx-alb/211220233e3e1492"
+alb_security_group_id = "sg-0b8dbb2a817288ca4"
+certificate_domain = "web.demo.com"
+certificate_subject = "web.demo.com"
+ec2_security_group_id = "sg-0414c1ec7190fd281"
+target_group_targets = [
+        "i-06278fa2148155ab5",
+        "i-0b417b9bb061d3182",
+    ]
+verification_commands = {
+        check_certificate   = "openssl s_client -connect ec2-alb-nginx-alb-1693047407.ap-southeast-1.elb.amazonaws.com:443 -servername web.demo.com"
+        check_target_health = "aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:targetgroup/ec2-alb-nginx-tg/5328e47345fdca29 --region ap-southeast-1"
+        test_https_endpoint = "curl -k ec2-alb-nginx-alb-1693047407.ap-southeast-1.elb.amazonaws.com"
+    }
+acm_certificate_arn = "arn:aws:acm:ap-southeast-1:475368203962:certificate/ffa67f3c-f644-4cab-bacd-e12815694d65"
+alb_dns_name = "ec2-alb-nginx-alb-1693047407.ap-southeast-1.elb.amazonaws.com"
+alb_endpoint = "https://ec2-alb-nginx-alb-1693047407.ap-southeast-1.elb.amazonaws.com"
+alb_zone_id = "Z1LMS91P8CMLE5"
+certificate_expiry = "2031-01-31T05:44:32Z"
+ec2_instance_ids = [
+        "i-06278fa2148155ab5",
+        "i-0b417b9bb061d3182",
+    ]
+ec2_instance_private_ips = [
+        "172.31.27.69",
+        "172.31.38.57",
+    ]
+health_check_configuration = {
+        healthy_threshold   = 2
+        interval            = 30
+        path                = "/"
+        timeout             = 5
+        unhealthy_threshold = 2
+    }
+ec2_availability_zones = [
+        "ap-southeast-1a",
+        "ap-southeast-1b",
+    ]
+ec2_instance_public_ips = [
+        "54.169.147.198",
+        "18.143.116.98",
+    ]
+subnet_ids = [
+        "subnet-0dce35448b161a8ca",
+        "subnet-0a055259d09584073",
+    ]
+target_group_arn = "arn:aws:elasticloadbalancing:ap-southeast-1:475368203962:targetgroup/ec2-alb-nginx-tg/5328e47345fdca29"
+target_group_name = "ec2-alb-nginx-tg"
+vpc_id = "vpc-0fb658b91e2113ece"

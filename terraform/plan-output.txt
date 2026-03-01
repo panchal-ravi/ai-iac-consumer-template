@@ -1,0 +1,1331 @@
+[0m[33mRunning plan in HCP Terraform. Output will stream here. Pressing Ctrl-C
+will stop streaming the logs, but will not stop the plan running remotely.[0m
+
+Preparing the remote plan...
+[0m
+[0m[33mTo view this run in a browser, visit:[0m
+[0m[33mhttps://app.terraform.io/app/ravi-panchal-org/sandbox_workspace/runs/run-LFYetqrRW6beQNMq[0m
+[0m
+Waiting for the plan to start...
+
+Terraform v1.13.5
+on linux_amd64
+Initializing plugins and modules...
+[1mtls_private_key.cert_key: Refreshing state... [id=366557a7a0c063d3d19abcce391c9619c1b65943][0m[0m
+[1mtls_self_signed_cert.cert: Refreshing state... [id=223356438183868122335696973957931043523][0m[0m
+[1mdata.aws_vpc.default: Refreshing...[0m[0m
+[1mdata.aws_availability_zones.available: Refreshing...[0m[0m
+[1mdata.aws_ssm_parameter.amazon_linux_2023: Refreshing...[0m[0m
+[1mmodule.ec2_instance[1].data.aws_partition.current: Refreshing...[0m[0m
+[1mmodule.ec2_instance[0].data.aws_partition.current: Refreshing...[0m[0m
+[1mmodule.ec2_instance[0].data.aws_partition.current: Refresh complete after 0s [id=aws][0m[0m
+[1mmodule.ec2_instance[1].data.aws_partition.current: Refresh complete after 0s [id=aws][0m[0m
+[1mdata.aws_ssm_parameter.amazon_linux_2023: Refresh complete after 1s [id=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64][0m[0m
+[1mdata.aws_availability_zones.available: Refresh complete after 1s [id=ap-southeast-1][0m[0m
+[1mdata.aws_vpc.default: Refresh complete after 2s [id=vpc-0fb658b91e2113ece][0m[0m
+[1mdata.aws_subnets.default: Refreshing...[0m[0m
+[1mdata.aws_subnets.default: Refresh complete after 0s [id=ap-southeast-1][0m[0m
+[1mmodule.ec2_instance[1].data.aws_subnet.this[0]: Refreshing...[0m[0m
+[1mmodule.ec2_instance[0].data.aws_subnet.this[0]: Refreshing...[0m[0m
+[1mmodule.ec2_instance[1].data.aws_subnet.this[0]: Refresh complete after 1s [id=subnet-0a055259d09584073][0m[0m
+[1mmodule.ec2_instance[0].data.aws_subnet.this[0]: Refresh complete after 1s [id=subnet-0dce35448b161a8ca][0m[0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+  [31m-[0m destroy[0m
+
+Terraform will perform the following actions:
+
+[1m  # aws_acm_certificate.self_signed[0m will be created
+[0m  [32m+[0m[0m resource "aws_acm_certificate" "self_signed" {
+      [32m+[0m[0m arn                       = (known after apply)
+      [32m+[0m[0m certificate_body          = (known after apply)
+      [32m+[0m[0m domain_name               = (known after apply)
+      [32m+[0m[0m domain_validation_options = (known after apply)
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m key_algorithm             = (known after apply)
+      [32m+[0m[0m not_after                 = (known after apply)
+      [32m+[0m[0m not_before                = (known after apply)
+      [32m+[0m[0m pending_renewal           = (known after apply)
+      [32m+[0m[0m private_key               = (sensitive value)
+      [32m+[0m[0m region                    = "ap-southeast-1"
+      [32m+[0m[0m renewal_eligibility       = (known after apply)
+      [32m+[0m[0m renewal_summary           = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m subject_alternative_names = (known after apply)
+      [32m+[0m[0m tags                      = {
+          [32m+[0m[0m "Name" = "ec2-alb-nginx-certificate"
+        }
+      [32m+[0m[0m tags_all                  = {
+          [32m+[0m[0m "Environment" = "development"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "ec2-alb-nginx-certificate"
+          [32m+[0m[0m "Owner"       = "devops-team"
+          [32m+[0m[0m "Project"     = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m type                      = (known after apply)
+      [32m+[0m[0m validation_emails         = (known after apply)
+      [32m+[0m[0m validation_method         = (known after apply)
+
+      [32m+[0m[0m options (known after apply)
+    }
+
+[1m  # aws_lb.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb" "main" {
+      [32m+[0m[0m arn                                                          = (known after apply)
+      [32m+[0m[0m arn_suffix                                                   = (known after apply)
+      [32m+[0m[0m client_keep_alive                                            = 3600
+      [32m+[0m[0m desync_mitigation_mode                                       = "defensive"
+      [32m+[0m[0m dns_name                                                     = (known after apply)
+      [32m+[0m[0m drop_invalid_header_fields                                   = false
+      [32m+[0m[0m enable_deletion_protection                                   = false
+      [32m+[0m[0m enable_http2                                                 = true
+      [32m+[0m[0m enable_tls_version_and_cipher_suite_headers                  = false
+      [32m+[0m[0m enable_waf_fail_open                                         = false
+      [32m+[0m[0m enable_xff_client_port                                       = false
+      [32m+[0m[0m enable_zonal_shift                                           = false
+      [32m+[0m[0m enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      [32m+[0m[0m id                                                           = (known after apply)
+      [32m+[0m[0m idle_timeout                                                 = 60
+      [32m+[0m[0m internal                                                     = false
+      [32m+[0m[0m ip_address_type                                              = (known after apply)
+      [32m+[0m[0m load_balancer_type                                           = "application"
+      [32m+[0m[0m name                                                         = "ec2-alb-nginx-alb"
+      [32m+[0m[0m name_prefix                                                  = (known after apply)
+      [32m+[0m[0m preserve_host_header                                         = false
+      [32m+[0m[0m region                                                       = "ap-southeast-1"
+      [32m+[0m[0m secondary_ips_auto_assigned_per_subnet                       = (known after apply)
+      [32m+[0m[0m security_groups                                              = (known after apply)
+      [32m+[0m[0m subnets                                                      = [
+          [32m+[0m[0m "subnet-0a055259d09584073",
+          [32m+[0m[0m "subnet-0dce35448b161a8ca",
+        ]
+      [32m+[0m[0m tags                                                         = {
+          [32m+[0m[0m "Name" = "ec2-alb-nginx-alb"
+        }
+      [32m+[0m[0m tags_all                                                     = {
+          [32m+[0m[0m "Environment" = "development"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "ec2-alb-nginx-alb"
+          [32m+[0m[0m "Owner"       = "devops-team"
+          [32m+[0m[0m "Project"     = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m vpc_id                                                       = (known after apply)
+      [32m+[0m[0m xff_header_processing_mode                                   = "append"
+      [32m+[0m[0m zone_id                                                      = (known after apply)
+
+      [32m+[0m[0m subnet_mapping (known after apply)
+    }
+
+[1m  # aws_lb_listener.https[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "https" {
+      [32m+[0m[0m arn                                                                   = (known after apply)
+      [32m+[0m[0m certificate_arn                                                       = (known after apply)
+      [32m+[0m[0m id                                                                    = (known after apply)
+      [32m+[0m[0m load_balancer_arn                                                     = (known after apply)
+      [32m+[0m[0m port                                                                  = 443
+      [32m+[0m[0m protocol                                                              = "HTTPS"
+      [32m+[0m[0m region                                                                = "ap-southeast-1"
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_header_name               = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_tls_cipher_suite_header_name              = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_tls_version_header_name                   = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_credentials_header_value   = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_headers_header_value       = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_methods_header_value       = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_origin_header_value        = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_expose_headers_header_value      = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_max_age_header_value             = (known after apply)
+      [32m+[0m[0m routing_http_response_content_security_policy_header_value            = (known after apply)
+      [32m+[0m[0m routing_http_response_server_enabled                                  = (known after apply)
+      [32m+[0m[0m routing_http_response_strict_transport_security_header_value          = (known after apply)
+      [32m+[0m[0m routing_http_response_x_content_type_options_header_value             = (known after apply)
+      [32m+[0m[0m routing_http_response_x_frame_options_header_value                    = (known after apply)
+      [32m+[0m[0m ssl_policy                                                            = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+      [32m+[0m[0m tags                                                                  = {
+          [32m+[0m[0m "Name" = "ec2-alb-nginx-https-listener"
+        }
+      [32m+[0m[0m tags_all                                                              = {
+          [32m+[0m[0m "Environment" = "development"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "ec2-alb-nginx-https-listener"
+          [32m+[0m[0m "Owner"       = "devops-team"
+          [32m+[0m[0m "Project"     = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m tcp_idle_timeout_seconds                                              = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = (known after apply)
+          [32m+[0m[0m type             = "forward"
+        }
+
+      [32m+[0m[0m mutual_authentication (known after apply)
+    }
+
+[1m  # aws_lb_target_group.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group" "main" {
+      [32m+[0m[0m arn                                = (known after apply)
+      [32m+[0m[0m arn_suffix                         = (known after apply)
+      [32m+[0m[0m connection_termination             = (known after apply)
+      [32m+[0m[0m deregistration_delay               = "30"
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m ip_address_type                    = (known after apply)
+      [32m+[0m[0m lambda_multi_value_headers_enabled = false
+      [32m+[0m[0m load_balancer_arns                 = (known after apply)
+      [32m+[0m[0m load_balancing_algorithm_type      = (known after apply)
+      [32m+[0m[0m load_balancing_anomaly_mitigation  = (known after apply)
+      [32m+[0m[0m load_balancing_cross_zone_enabled  = (known after apply)
+      [32m+[0m[0m name                               = "ec2-alb-nginx-tg"
+      [32m+[0m[0m name_prefix                        = (known after apply)
+      [32m+[0m[0m port                               = 80
+      [32m+[0m[0m preserve_client_ip                 = (known after apply)
+      [32m+[0m[0m protocol                           = "HTTP"
+      [32m+[0m[0m protocol_version                   = (known after apply)
+      [32m+[0m[0m proxy_protocol_v2                  = false
+      [32m+[0m[0m region                             = "ap-southeast-1"
+      [32m+[0m[0m slow_start                         = 0
+      [32m+[0m[0m tags                               = {
+          [32m+[0m[0m "Name" = "ec2-alb-nginx-target-group"
+        }
+      [32m+[0m[0m tags_all                           = {
+          [32m+[0m[0m "Environment" = "development"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "ec2-alb-nginx-target-group"
+          [32m+[0m[0m "Owner"       = "devops-team"
+          [32m+[0m[0m "Project"     = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m target_type                        = "instance"
+      [32m+[0m[0m vpc_id                             = "vpc-0fb658b91e2113ece"
+
+      [32m+[0m[0m health_check {
+          [32m+[0m[0m enabled             = true
+          [32m+[0m[0m healthy_threshold   = 2
+          [32m+[0m[0m interval            = 30
+          [32m+[0m[0m matcher             = "200"
+          [32m+[0m[0m path                = "/"
+          [32m+[0m[0m port                = "traffic-port"
+          [32m+[0m[0m protocol            = "HTTP"
+          [32m+[0m[0m timeout             = 5
+          [32m+[0m[0m unhealthy_threshold = 2
+        }
+
+      [32m+[0m[0m stickiness (known after apply)
+
+      [32m+[0m[0m target_failover (known after apply)
+
+      [32m+[0m[0m target_group_health (known after apply)
+
+      [32m+[0m[0m target_health_state (known after apply)
+    }
+
+[1m  # aws_lb_target_group_attachment.instances[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group_attachment" "instances" {
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m port             = 80
+      [32m+[0m[0m region           = "ap-southeast-1"
+      [32m+[0m[0m target_group_arn = (known after apply)
+      [32m+[0m[0m target_id        = (known after apply)
+    }
+
+[1m  # aws_lb_target_group_attachment.instances[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group_attachment" "instances" {
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m port             = 80
+      [32m+[0m[0m region           = "ap-southeast-1"
+      [32m+[0m[0m target_group_arn = (known after apply)
+      [32m+[0m[0m target_id        = (known after apply)
+    }
+
+[1m  # aws_security_group.alb[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "alb" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for Application Load Balancer - Allow HTTPS from internet"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = (known after apply)
+      [32m+[0m[0m name_prefix            = "ec2-alb-nginx-alb-"
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "ec2-alb-nginx-alb-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Environment" = "development"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "ec2-alb-nginx-alb-sg"
+          [32m+[0m[0m "Owner"       = "devops-team"
+          [32m+[0m[0m "Project"     = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m vpc_id                 = "vpc-0fb658b91e2113ece"
+    }
+
+[1m  # aws_security_group.ec2[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "ec2" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for EC2 instances - Allow HTTP from ALB only"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = (known after apply)
+      [32m+[0m[0m name_prefix            = "ec2-alb-nginx-ec2-"
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "ec2-alb-nginx-ec2-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Environment" = "development"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "ec2-alb-nginx-ec2-sg"
+          [32m+[0m[0m "Owner"       = "devops-team"
+          [32m+[0m[0m "Project"     = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m vpc_id                 = "vpc-0fb658b91e2113ece"
+    }
+
+[1m  # aws_security_group_rule.alb_egress_http_to_ec2[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "alb_egress_http_to_ec2" {
+      [32m+[0m[0m description              = "HTTP to EC2 instances"
+      [32m+[0m[0m from_port                = 80
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m region                   = "ap-southeast-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 80
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # aws_security_group_rule.alb_ingress_https[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "alb_ingress_https" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "HTTPS from internet"
+      [32m+[0m[0m from_port                = 443
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m region                   = "ap-southeast-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 443
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # aws_security_group_rule.ec2_egress_http[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ec2_egress_http" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "HTTP for package updates"
+      [32m+[0m[0m from_port                = 80
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m region                   = "ap-southeast-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 80
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # aws_security_group_rule.ec2_egress_https[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ec2_egress_https" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "HTTPS for package updates"
+      [32m+[0m[0m from_port                = 443
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m region                   = "ap-southeast-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 443
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # aws_security_group_rule.ec2_ingress_http_from_alb[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ec2_ingress_http_from_alb" {
+      [32m+[0m[0m description              = "HTTP from ALB"
+      [32m+[0m[0m from_port                = 80
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m region                   = "ap-southeast-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 80
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # tls_private_key.cert_key[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "tls_private_key" "cert_key" {
+      [31m-[0m[0m algorithm                     = "RSA" [90m-> null[0m[0m
+      [31m-[0m[0m ecdsa_curve                   = "P224" [90m-> null[0m[0m
+      [31m-[0m[0m id                            = "366557a7a0c063d3d19abcce391c9619c1b65943" [90m-> null[0m[0m
+      [31m-[0m[0m private_key_openssh           = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m private_key_pem               = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m private_key_pem_pkcs8         = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m public_key_fingerprint_md5    = "03:35:cc:54:c9:e7:97:aa:4e:18:8b:2c:67:97:55:09" [90m-> null[0m[0m
+      [31m-[0m[0m public_key_fingerprint_sha256 = "SHA256:BXvrvUXpF3Tv+RMkpj8RBHfYhZWkGGQQPc5zgKUqSws" [90m-> null[0m[0m
+      [31m-[0m[0m public_key_openssh            = <<-EOT
+            ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCa427SIgjtu7zEOAFK83zXWJ3B5cpC4lXMbUDVie+faEjELJff/+8+SFSRivKemADsAWhJf3k8VmqgIxH010q2WpTqVSPISeO2LC3V62tffSL3jh2G0A1wTPEWVDFSpIEKmZK5/Izg0AzdlmvXL8IcSGWsBKzr7hiQMDZAY/tsJhayEqw2tn7ts7t9Fu9qvnBEYOnsWkH7gO30q7wLJIcTKDZ0ZBuaAUp3W30Hwmk+uIsoV/ZAVTjZcdfsvhxXmldtsEEYf71afcRsU8JcJBIq9OWb226edR0ggFelIGBTU+pTX7P6JYsttPHj8htazN+OK1Ug3YRroXd3Q04HdCo5pwC/0lEj3TPHNt8kBryzvo90wcgJGTxO7wgmUxhamU5l/sfqrU+COPDY0bG7IoBr8ob9RFy3PyxBMxaol1wm6Zla4T8Hw7M0buY5QRO3punE49fnFZOlyFyUHFgkWQgMNZaK8FSKIF18NZOwhW2nMw8pc5vOCV30YIokC8yajn0uyMFf+iH+wlOvk284yLmrN2Q6pT9N5TjszLNTdL3BcFF9o37M4et2wWyM9pbgAKdU6Pm4n6AyRm7e7M5RuQbsEKWX5F0EtdAUq23OF7K4gDtG26CiHC1dP03V/ODSQxXLMX8tUXztXCLhJuS72VBzA1c7qPCrzcWVwwb+ZU5Piw==
+        EOT [90m-> null[0m[0m
+      [31m-[0m[0m public_key_pem                = <<-EOT
+            -----BEGIN PUBLIC KEY-----
+            MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAmuNu0iII7bu8xDgBSvN8
+            11idweXKQuJVzG1A1Ynvn2hIxCyX3//vPkhUkYrynpgA7AFoSX95PFZqoCMR9NdK
+            tlqU6lUjyEnjtiwt1etrX30i944dhtANcEzxFlQxUqSBCpmSufyM4NAM3ZZr1y/C
+            HEhlrASs6+4YkDA2QGP7bCYWshKsNrZ+7bO7fRbvar5wRGDp7FpB+4Dt9Ku8CySH
+            Eyg2dGQbmgFKd1t9B8JpPriLKFf2QFU42XHX7L4cV5pXbbBBGH+9Wn3EbFPCXCQS
+            KvTlm9tunnUdIIBXpSBgU1PqU1+z+iWLLbTx4/IbWszfjitVIN2Ea6F3d0NOB3Qq
+            OacAv9JRI90zxzbfJAa8s76PdMHICRk8Tu8IJlMYWplOZf7H6q1Pgjjw2NGxuyKA
+            a/KG/URctz8sQTMWqJdcJumZWuE/B8OzNG7mOUETt6bpxOPX5xWTpchclBxYJFkI
+            DDWWivBUiiBdfDWTsIVtpzMPKXObzgld9GCKJAvMmo59LsjBX/oh/sJTr5NvOMi5
+            qzdkOqU/TeU47MyzU3S9wXBRfaN+zOHrdsFsjPaW4ACnVOj5uJ+gMkZu3uzOUbkG
+            7BCll+RdBLXQFKttzheyuIA7RtugohwtXT9N1fzg0kMVyzF/LVF87Vwi4Sbku9lQ
+            cwNXO6jwq83FlcMG/mVOT4sCAwEAAQ==
+            -----END PUBLIC KEY-----
+        EOT [90m-> null[0m[0m
+      [31m-[0m[0m rsa_bits                      = 4096 [90m-> null[0m[0m
+    }
+
+[1m  # tls_private_key.main[0m will be created
+[0m  [32m+[0m[0m resource "tls_private_key" "main" {
+      [32m+[0m[0m algorithm                     = "RSA"
+      [32m+[0m[0m ecdsa_curve                   = "P224"
+      [32m+[0m[0m id                            = (known after apply)
+      [32m+[0m[0m private_key_openssh           = (sensitive value)
+      [32m+[0m[0m private_key_pem               = (sensitive value)
+      [32m+[0m[0m private_key_pem_pkcs8         = (sensitive value)
+      [32m+[0m[0m public_key_fingerprint_md5    = (known after apply)
+      [32m+[0m[0m public_key_fingerprint_sha256 = (known after apply)
+      [32m+[0m[0m public_key_openssh            = (known after apply)
+      [32m+[0m[0m public_key_pem                = (known after apply)
+      [32m+[0m[0m rsa_bits                      = 2048
+    }
+
+[1m  # tls_self_signed_cert.cert[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "tls_self_signed_cert" "cert" {
+      [31m-[0m[0m allowed_uses          = [
+          [31m-[0m[0m "key_encipherment",
+          [31m-[0m[0m "digital_signature",
+          [31m-[0m[0m "server_auth",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m cert_pem              = <<-EOT
+            -----BEGIN CERTIFICATE-----
+            MIIF7jCCA9agAwIBAgIRAKgI4qAz4n5fA+PEZJxJisMwDQYJKoZIhvcNAQELBQAw
+            gZYxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1T
+            YW4gRnJhbmNpc2NvMSEwHwYDVQQKExhFeGFtcGxlIERldmVsb3BtZW50IENvcnAx
+            HTAbBgNVBAsTFFBsYXRmb3JtIEVuZ2luZWVyaW5nMRgwFgYDVQQDEw9kZXYuZXhh
+            bXBsZS5jb20wHhcNMjYwMTI5MTQxODE2WhcNMjcwMTI5MTQxODE2WjCBljELMAkG
+            A1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFu
+            Y2lzY28xITAfBgNVBAoTGEV4YW1wbGUgRGV2ZWxvcG1lbnQgQ29ycDEdMBsGA1UE
+            CxMUUGxhdGZvcm0gRW5naW5lZXJpbmcxGDAWBgNVBAMTD2Rldi5leGFtcGxlLmNv
+            bTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAJrjbtIiCO27vMQ4AUrz
+            fNdYncHlykLiVcxtQNWJ759oSMQsl9//7z5IVJGK8p6YAOwBaEl/eTxWaqAjEfTX
+            SrZalOpVI8hJ47YsLdXra199IveOHYbQDXBM8RZUMVKkgQqZkrn8jODQDN2Wa9cv
+            whxIZawErOvuGJAwNkBj+2wmFrISrDa2fu2zu30W72q+cERg6exaQfuA7fSrvAsk
+            hxMoNnRkG5oBSndbfQfCaT64iyhX9kBVONlx1+y+HFeaV22wQRh/vVp9xGxTwlwk
+            Eir05Zvbbp51HSCAV6UgYFNT6lNfs/oliy208ePyG1rM344rVSDdhGuhd3dDTgd0
+            KjmnAL/SUSPdM8c23yQGvLO+j3TByAkZPE7vCCZTGFqZTmX+x+qtT4I48NjRsbsi
+            gGvyhv1EXLc/LEEzFqiXXCbpmVrhPwfDszRu5jlBE7em6cTj1+cVk6XIXJQcWCRZ
+            CAw1lorwVIogXXw1k7CFbaczDylzm84JXfRgiiQLzJqOfS7IwV/6If7CU6+TbzjI
+            uas3ZDqlP03lOOzMs1N0vcFwUX2jfszh63bBbIz2luAAp1To+bifoDJGbt7szlG5
+            BuwQpZfkXQS10BSrbc4XsriAO0bboKIcLV0/TdX84NJDFcsxfy1RfO1cIuEm5LvZ
+            UHMDVzuo8KvNxZXDBv5lTk+LAgMBAAGjNTAzMA4GA1UdDwEB/wQEAwIFoDATBgNV
+            HSUEDDAKBggrBgEFBQcDATAMBgNVHRMBAf8EAjAAMA0GCSqGSIb3DQEBCwUAA4IC
+            AQAMnQ+C0muRV12tpCO2WrwAuQPh3rpJp9MUNSOkqSqEAC3L2DtPFtlqTcrJppMR
+            Y2i+sn/GcKTzaojtIDwPnaaqcq2A61qKTOrqkrOzuVctWpohfpstnGHNyp18/yHB
+            ArCUxebp49XPbTMHb/zQ+8ePZKbdJSMxHPyLqd/mwXf2+IICCtJPYLGlpxE9KRaD
+            51o26pIqp5Oy2DRgkidcLN16ZMYgYyUw15lt16MVRJnVmClvvBNkpmvHyoSujTWV
+            jL6RfISSfkpJK6Dz0T4Dqo1DlXMndII01p8ZUaB2PU8Exex1Qjtsg6kpuDhZ4GBS
+            O3YeeP/mkU+XaX2Pe1VqgXfTQ5Yl+ObUbrJBoURf8kTdFmHGYQmSNCGiEBzCbgYY
+            MSiUz35wo4rUoXOwkGV2QXQ/8o5nHyZuYAe0LJlsQjj9ip4YdcvFQDOqA/7FKRbx
+            P6/GqbYoSKyxuTvDf9Y+mMJMQBagAmZw/bNAPuy6BivBQarIwmeu8MkISirNfeLx
+            azgyYRPEsZCVS4/OB0Z4J+xFFoB5984tygWHlp1/8F8LXMxyjVa6tVCqY5YTdbg0
+            oduDJ7zpZ4viPS/mPp+7Ur9bPwCysDFoP2S9vrpja64cWnscyitO9ZxqgzDtYIaX
+            2IKFkkm8tk6eNZug+8YJyAFJlfMhsUgssQs+AXAJBaYpSQ==
+            -----END CERTIFICATE-----
+        EOT [90m-> null[0m[0m
+      [31m-[0m[0m early_renewal_hours   = 0 [90m-> null[0m[0m
+      [31m-[0m[0m id                    = "223356438183868122335696973957931043523" [90m-> null[0m[0m
+      [31m-[0m[0m is_ca_certificate     = false [90m-> null[0m[0m
+      [31m-[0m[0m key_algorithm         = "RSA" [90m-> null[0m[0m
+      [31m-[0m[0m max_path_length       = -1 [90m-> null[0m[0m
+      [31m-[0m[0m private_key_pem       = (sensitive value) [90m-> null[0m[0m
+      [31m-[0m[0m ready_for_renewal     = false [90m-> null[0m[0m
+      [31m-[0m[0m set_authority_key_id  = false [90m-> null[0m[0m
+      [31m-[0m[0m set_subject_key_id    = false [90m-> null[0m[0m
+      [31m-[0m[0m validity_end_time     = "2027-01-29T14:18:16.593505264Z" [90m-> null[0m[0m
+      [31m-[0m[0m validity_period_hours = 8760 [90m-> null[0m[0m
+      [31m-[0m[0m validity_start_time   = "2026-01-29T14:18:16.593505264Z" [90m-> null[0m[0m
+
+      [31m-[0m[0m subject {
+          [31m-[0m[0m common_name         = "dev.example.com" [90m-> null[0m[0m
+          [31m-[0m[0m country             = "US" [90m-> null[0m[0m
+          [31m-[0m[0m locality            = "San Francisco" [90m-> null[0m[0m
+          [31m-[0m[0m organization        = "Example Development Corp" [90m-> null[0m[0m
+          [31m-[0m[0m organizational_unit = "Platform Engineering" [90m-> null[0m[0m
+          [31m-[0m[0m province            = "California" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # tls_self_signed_cert.main[0m will be created
+[0m  [32m+[0m[0m resource "tls_self_signed_cert" "main" {
+      [32m+[0m[0m allowed_uses          = [
+          [32m+[0m[0m "key_encipherment",
+          [32m+[0m[0m "digital_signature",
+          [32m+[0m[0m "server_auth",
+        ]
+      [32m+[0m[0m cert_pem              = (known after apply)
+      [32m+[0m[0m dns_names             = [
+          [32m+[0m[0m "web.demo.com",
+          [32m+[0m[0m "*.web.demo.com",
+        ]
+      [32m+[0m[0m early_renewal_hours   = 0
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m is_ca_certificate     = false
+      [32m+[0m[0m key_algorithm         = (known after apply)
+      [32m+[0m[0m max_path_length       = (known after apply)
+      [32m+[0m[0m private_key_pem       = (sensitive value)
+      [32m+[0m[0m ready_for_renewal     = false
+      [32m+[0m[0m set_authority_key_id  = false
+      [32m+[0m[0m set_subject_key_id    = false
+      [32m+[0m[0m validity_end_time     = (known after apply)
+      [32m+[0m[0m validity_period_hours = 43800
+      [32m+[0m[0m validity_start_time   = (known after apply)
+
+      [32m+[0m[0m subject {
+          [32m+[0m[0m common_name  = "web.demo.com"
+          [32m+[0m[0m organization = "ec2-alb-nginx"
+        }
+    }
+
+[1m  # module.ec2_instance[0].aws_instance.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_instance" "this" {
+      [32m+[0m[0m ami                                  = (sensitive value)
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m associate_public_ip_address          = (known after apply)
+      [32m+[0m[0m availability_zone                    = (known after apply)
+      [32m+[0m[0m disable_api_stop                     = (known after apply)
+      [32m+[0m[0m disable_api_termination              = (known after apply)
+      [32m+[0m[0m ebs_optimized                        = (known after apply)
+      [32m+[0m[0m enable_primary_ipv6                  = (known after apply)
+      [32m+[0m[0m force_destroy                        = false
+      [32m+[0m[0m get_password_data                    = false
+      [32m+[0m[0m host_id                              = (known after apply)
+      [32m+[0m[0m host_resource_group_arn              = (known after apply)
+      [32m+[0m[0m iam_instance_profile                 = (known after apply)
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_initiated_shutdown_behavior = (known after apply)
+      [32m+[0m[0m instance_lifecycle                   = (known after apply)
+      [32m+[0m[0m instance_state                       = (known after apply)
+      [32m+[0m[0m instance_type                        = "t3.micro"
+      [32m+[0m[0m ipv6_address_count                   = (known after apply)
+      [32m+[0m[0m ipv6_addresses                       = (known after apply)
+      [32m+[0m[0m key_name                             = (known after apply)
+      [32m+[0m[0m monitoring                           = false
+      [32m+[0m[0m outpost_arn                          = (known after apply)
+      [32m+[0m[0m password_data                        = (known after apply)
+      [32m+[0m[0m placement_group                      = (known after apply)
+      [32m+[0m[0m placement_group_id                   = (known after apply)
+      [32m+[0m[0m placement_partition_number           = (known after apply)
+      [32m+[0m[0m primary_network_interface_id         = (known after apply)
+      [32m+[0m[0m private_dns                          = (known after apply)
+      [32m+[0m[0m private_ip                           = (known after apply)
+      [32m+[0m[0m public_dns                           = (known after apply)
+      [32m+[0m[0m public_ip                            = (known after apply)
+      [32m+[0m[0m region                               = "ap-southeast-1"
+      [32m+[0m[0m secondary_private_ips                = (known after apply)
+      [32m+[0m[0m security_groups                      = (known after apply)
+      [32m+[0m[0m source_dest_check                    = true
+      [32m+[0m[0m spot_instance_request_id             = (known after apply)
+      [32m+[0m[0m subnet_id                            = "subnet-0dce35448b161a8ca"
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m tenancy                              = (known after apply)
+      [32m+[0m[0m user_data                            = <<-EOT
+            #!/bin/bash
+            # ==============================================================================
+            # EC2 User Data Script - Nginx Installation and Configuration
+            # ==============================================================================
+            # This script runs at instance launch to install and configure Nginx web server
+            # with a test HTML page showing instance metadata.
+            # ==============================================================================
+            
+            set -e  # Exit on any error
+            
+            # Log all output to file for debugging
+            exec > >(tee /var/log/user-data.log)
+            exec 2>&1
+            
+            echo "=========================================="
+            echo "Starting Nginx installation and configuration"
+            echo "=========================================="
+            
+            # Update system packages
+            echo "Updating system packages..."
+            dnf update -y
+            
+            # Install Nginx
+            echo "Installing Nginx..."
+            dnf install -y nginx
+            
+            # Enable Nginx to start on boot
+            echo "Enabling Nginx service..."
+            systemctl enable nginx
+            
+            # Get instance metadata
+            echo "Fetching instance metadata..."
+            INSTANCE_ID=$(ec2-metadata --instance-id | cut -d " " -f 2)
+            AVAILABILITY_ZONE=$(ec2-metadata --availability-zone | cut -d " " -f 2)
+            INSTANCE_TYPE=$(ec2-metadata --instance-type | cut -d " " -f 2)
+            LOCAL_IPV4=$(ec2-metadata --local-ipv4 | cut -d " " -f 2)
+            PUBLIC_IPV4=$(ec2-metadata --public-ipv4 | cut -d " " -f 2 || echo "N/A")
+            
+            # Create HTML test page
+            echo "Creating test HTML page..."
+            cat > /usr/share/nginx/html/index.html <<EOF
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>EC2 ALB Nginx Test Page</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        max-width: 800px;
+                        margin: 50px auto;
+                        padding: 20px;
+                        background-color: #f5f5f5;
+                    }
+                    .container {
+                        background-color: white;
+                        padding: 30px;
+                        border-radius: 10px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    }
+                    h1 {
+                        color: #232f3e;
+                        border-bottom: 3px solid #ff9900;
+                        padding-bottom: 10px;
+                    }
+                    .metadata {
+                        background-color: #f8f9fa;
+                        padding: 15px;
+                        border-left: 4px solid #007bff;
+                        margin: 20px 0;
+                    }
+                    .metadata-item {
+                        margin: 10px 0;
+                        font-family: monospace;
+                    }
+                    .label {
+                        font-weight: bold;
+                        color: #495057;
+                    }
+                    .value {
+                        color: #007bff;
+                    }
+                    .success {
+                        color: #28a745;
+                        font-size: 1.2em;
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>🚀 EC2 ALB Nginx Infrastructure</h1>
+                    <p class="success">✅ Nginx is running successfully!</p>
+                    
+                    <h2>Instance Metadata</h2>
+                    <div class="metadata">
+                        <div class="metadata-item">
+                            <span class="label">Instance ID:</span>
+                            <span class="value">${INSTANCE_ID}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Availability Zone:</span>
+                            <span class="value">${AVAILABILITY_ZONE}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Instance Type:</span>
+                            <span class="value">${INSTANCE_TYPE}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Private IP:</span>
+                            <span class="value">${LOCAL_IPV4}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Public IP:</span>
+                            <span class="value">${PUBLIC_IPV4}</span>
+                        </div>
+                    </div>
+            
+                    <h2>Infrastructure Details</h2>
+                    <ul>
+                        <li>Load Balancer: Application Load Balancer (ALB)</li>
+                        <li>Protocol: HTTPS → HTTP (TLS termination at ALB)</li>
+                        <li>High Availability: Multi-AZ deployment</li>
+                        <li>Health Checks: Enabled with automatic failover</li>
+                    </ul>
+            
+                    <p style="text-align: center; color: #6c757d; margin-top: 30px;">
+                        <small>Deployed via Terraform | Managed by HCP Terraform</small>
+                    </p>
+                </div>
+            </body>
+            </html>
+            EOF
+            
+            # Set proper permissions
+            chmod 644 /usr/share/nginx/html/index.html
+            
+            # Start Nginx service
+            echo "Starting Nginx service..."
+            systemctl start nginx
+            
+            # Verify Nginx is running
+            if systemctl is-active --quiet nginx; then
+                echo "✅ Nginx is running successfully!"
+            else
+                echo "❌ Failed to start Nginx"
+                exit 1
+            fi
+            
+            # Display final status
+            echo "=========================================="
+            echo "✅ User data script completed successfully"
+            echo "=========================================="
+            echo "Instance ID: ${INSTANCE_ID}"
+            echo "Availability Zone: ${AVAILABILITY_ZONE}"
+            echo "Nginx Status: $(systemctl is-active nginx)"
+            echo "=========================================="
+        EOT
+      [32m+[0m[0m user_data_base64                     = (known after apply)
+      [32m+[0m[0m user_data_replace_on_change          = false
+      [32m+[0m[0m volume_tags                          = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1"
+        }
+      [32m+[0m[0m vpc_security_group_ids               = (known after apply)
+
+      [32m+[0m[0m capacity_reservation_specification (known after apply)
+
+      [32m+[0m[0m cpu_options (known after apply)
+
+      [32m+[0m[0m credit_specification {}
+
+      [32m+[0m[0m ebs_block_device (known after apply)
+
+      [32m+[0m[0m enclave_options {
+          [32m+[0m[0m enabled = (known after apply)
+        }
+
+      [32m+[0m[0m ephemeral_block_device (known after apply)
+
+      [32m+[0m[0m instance_market_options (known after apply)
+
+      [32m+[0m[0m maintenance_options (known after apply)
+
+      [32m+[0m[0m metadata_options {
+          [32m+[0m[0m http_endpoint               = "enabled"
+          [32m+[0m[0m http_protocol_ipv6          = "disabled"
+          [32m+[0m[0m http_put_response_hop_limit = 1
+          [32m+[0m[0m http_tokens                 = "required"
+          [32m+[0m[0m instance_metadata_tags      = "enabled"
+        }
+
+      [32m+[0m[0m network_interface (known after apply)
+
+      [32m+[0m[0m primary_network_interface (known after apply)
+
+      [32m+[0m[0m private_dns_name_options (known after apply)
+
+      [32m+[0m[0m root_block_device {
+          [32m+[0m[0m delete_on_termination = true
+          [32m+[0m[0m device_name           = (known after apply)
+          [32m+[0m[0m encrypted             = true
+          [32m+[0m[0m iops                  = (known after apply)
+          [32m+[0m[0m kms_key_id            = (known after apply)
+          [32m+[0m[0m tags_all              = (known after apply)
+          [32m+[0m[0m throughput            = (known after apply)
+          [32m+[0m[0m volume_id             = (known after apply)
+          [32m+[0m[0m volume_size           = 8
+          [32m+[0m[0m volume_type           = "gp3"
+        }
+    }
+
+[1m  # module.ec2_instance[0].aws_security_group.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "this" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Managed by Terraform"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = (known after apply)
+      [32m+[0m[0m name_prefix            = "ec2-alb-nginx-instance-1-"
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m vpc_id                 = "vpc-0fb658b91e2113ece"
+    }
+
+[1m  # module.ec2_instance[0].aws_vpc_security_group_egress_rule.this["ipv4_default"][0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "this" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv4              = "0.0.0.0/0"
+      [32m+[0m[0m description            = "Allow all IPv4 traffic"
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "-1"
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1-ipv4_default"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1-ipv4_default"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+    }
+
+[1m  # module.ec2_instance[0].aws_vpc_security_group_egress_rule.this["ipv6_default"][0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "this" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv6              = "::/0"
+      [32m+[0m[0m description            = "Allow all IPv6 traffic"
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "-1"
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1-ipv6_default"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1a"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-1-ipv6_default"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+    }
+
+[1m  # module.ec2_instance[1].aws_instance.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_instance" "this" {
+      [32m+[0m[0m ami                                  = (sensitive value)
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m associate_public_ip_address          = (known after apply)
+      [32m+[0m[0m availability_zone                    = (known after apply)
+      [32m+[0m[0m disable_api_stop                     = (known after apply)
+      [32m+[0m[0m disable_api_termination              = (known after apply)
+      [32m+[0m[0m ebs_optimized                        = (known after apply)
+      [32m+[0m[0m enable_primary_ipv6                  = (known after apply)
+      [32m+[0m[0m force_destroy                        = false
+      [32m+[0m[0m get_password_data                    = false
+      [32m+[0m[0m host_id                              = (known after apply)
+      [32m+[0m[0m host_resource_group_arn              = (known after apply)
+      [32m+[0m[0m iam_instance_profile                 = (known after apply)
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_initiated_shutdown_behavior = (known after apply)
+      [32m+[0m[0m instance_lifecycle                   = (known after apply)
+      [32m+[0m[0m instance_state                       = (known after apply)
+      [32m+[0m[0m instance_type                        = "t3.micro"
+      [32m+[0m[0m ipv6_address_count                   = (known after apply)
+      [32m+[0m[0m ipv6_addresses                       = (known after apply)
+      [32m+[0m[0m key_name                             = (known after apply)
+      [32m+[0m[0m monitoring                           = false
+      [32m+[0m[0m outpost_arn                          = (known after apply)
+      [32m+[0m[0m password_data                        = (known after apply)
+      [32m+[0m[0m placement_group                      = (known after apply)
+      [32m+[0m[0m placement_group_id                   = (known after apply)
+      [32m+[0m[0m placement_partition_number           = (known after apply)
+      [32m+[0m[0m primary_network_interface_id         = (known after apply)
+      [32m+[0m[0m private_dns                          = (known after apply)
+      [32m+[0m[0m private_ip                           = (known after apply)
+      [32m+[0m[0m public_dns                           = (known after apply)
+      [32m+[0m[0m public_ip                            = (known after apply)
+      [32m+[0m[0m region                               = "ap-southeast-1"
+      [32m+[0m[0m secondary_private_ips                = (known after apply)
+      [32m+[0m[0m security_groups                      = (known after apply)
+      [32m+[0m[0m source_dest_check                    = true
+      [32m+[0m[0m spot_instance_request_id             = (known after apply)
+      [32m+[0m[0m subnet_id                            = "subnet-0a055259d09584073"
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m tenancy                              = (known after apply)
+      [32m+[0m[0m user_data                            = <<-EOT
+            #!/bin/bash
+            # ==============================================================================
+            # EC2 User Data Script - Nginx Installation and Configuration
+            # ==============================================================================
+            # This script runs at instance launch to install and configure Nginx web server
+            # with a test HTML page showing instance metadata.
+            # ==============================================================================
+            
+            set -e  # Exit on any error
+            
+            # Log all output to file for debugging
+            exec > >(tee /var/log/user-data.log)
+            exec 2>&1
+            
+            echo "=========================================="
+            echo "Starting Nginx installation and configuration"
+            echo "=========================================="
+            
+            # Update system packages
+            echo "Updating system packages..."
+            dnf update -y
+            
+            # Install Nginx
+            echo "Installing Nginx..."
+            dnf install -y nginx
+            
+            # Enable Nginx to start on boot
+            echo "Enabling Nginx service..."
+            systemctl enable nginx
+            
+            # Get instance metadata
+            echo "Fetching instance metadata..."
+            INSTANCE_ID=$(ec2-metadata --instance-id | cut -d " " -f 2)
+            AVAILABILITY_ZONE=$(ec2-metadata --availability-zone | cut -d " " -f 2)
+            INSTANCE_TYPE=$(ec2-metadata --instance-type | cut -d " " -f 2)
+            LOCAL_IPV4=$(ec2-metadata --local-ipv4 | cut -d " " -f 2)
+            PUBLIC_IPV4=$(ec2-metadata --public-ipv4 | cut -d " " -f 2 || echo "N/A")
+            
+            # Create HTML test page
+            echo "Creating test HTML page..."
+            cat > /usr/share/nginx/html/index.html <<EOF
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>EC2 ALB Nginx Test Page</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        max-width: 800px;
+                        margin: 50px auto;
+                        padding: 20px;
+                        background-color: #f5f5f5;
+                    }
+                    .container {
+                        background-color: white;
+                        padding: 30px;
+                        border-radius: 10px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    }
+                    h1 {
+                        color: #232f3e;
+                        border-bottom: 3px solid #ff9900;
+                        padding-bottom: 10px;
+                    }
+                    .metadata {
+                        background-color: #f8f9fa;
+                        padding: 15px;
+                        border-left: 4px solid #007bff;
+                        margin: 20px 0;
+                    }
+                    .metadata-item {
+                        margin: 10px 0;
+                        font-family: monospace;
+                    }
+                    .label {
+                        font-weight: bold;
+                        color: #495057;
+                    }
+                    .value {
+                        color: #007bff;
+                    }
+                    .success {
+                        color: #28a745;
+                        font-size: 1.2em;
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>🚀 EC2 ALB Nginx Infrastructure</h1>
+                    <p class="success">✅ Nginx is running successfully!</p>
+                    
+                    <h2>Instance Metadata</h2>
+                    <div class="metadata">
+                        <div class="metadata-item">
+                            <span class="label">Instance ID:</span>
+                            <span class="value">${INSTANCE_ID}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Availability Zone:</span>
+                            <span class="value">${AVAILABILITY_ZONE}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Instance Type:</span>
+                            <span class="value">${INSTANCE_TYPE}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Private IP:</span>
+                            <span class="value">${LOCAL_IPV4}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">Public IP:</span>
+                            <span class="value">${PUBLIC_IPV4}</span>
+                        </div>
+                    </div>
+            
+                    <h2>Infrastructure Details</h2>
+                    <ul>
+                        <li>Load Balancer: Application Load Balancer (ALB)</li>
+                        <li>Protocol: HTTPS → HTTP (TLS termination at ALB)</li>
+                        <li>High Availability: Multi-AZ deployment</li>
+                        <li>Health Checks: Enabled with automatic failover</li>
+                    </ul>
+            
+                    <p style="text-align: center; color: #6c757d; margin-top: 30px;">
+                        <small>Deployed via Terraform | Managed by HCP Terraform</small>
+                    </p>
+                </div>
+            </body>
+            </html>
+            EOF
+            
+            # Set proper permissions
+            chmod 644 /usr/share/nginx/html/index.html
+            
+            # Start Nginx service
+            echo "Starting Nginx service..."
+            systemctl start nginx
+            
+            # Verify Nginx is running
+            if systemctl is-active --quiet nginx; then
+                echo "✅ Nginx is running successfully!"
+            else
+                echo "❌ Failed to start Nginx"
+                exit 1
+            fi
+            
+            # Display final status
+            echo "=========================================="
+            echo "✅ User data script completed successfully"
+            echo "=========================================="
+            echo "Instance ID: ${INSTANCE_ID}"
+            echo "Availability Zone: ${AVAILABILITY_ZONE}"
+            echo "Nginx Status: $(systemctl is-active nginx)"
+            echo "=========================================="
+        EOT
+      [32m+[0m[0m user_data_base64                     = (known after apply)
+      [32m+[0m[0m user_data_replace_on_change          = false
+      [32m+[0m[0m volume_tags                          = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2"
+        }
+      [32m+[0m[0m vpc_security_group_ids               = (known after apply)
+
+      [32m+[0m[0m capacity_reservation_specification (known after apply)
+
+      [32m+[0m[0m cpu_options (known after apply)
+
+      [32m+[0m[0m credit_specification {}
+
+      [32m+[0m[0m ebs_block_device (known after apply)
+
+      [32m+[0m[0m enclave_options {
+          [32m+[0m[0m enabled = (known after apply)
+        }
+
+      [32m+[0m[0m ephemeral_block_device (known after apply)
+
+      [32m+[0m[0m instance_market_options (known after apply)
+
+      [32m+[0m[0m maintenance_options (known after apply)
+
+      [32m+[0m[0m metadata_options {
+          [32m+[0m[0m http_endpoint               = "enabled"
+          [32m+[0m[0m http_protocol_ipv6          = "disabled"
+          [32m+[0m[0m http_put_response_hop_limit = 1
+          [32m+[0m[0m http_tokens                 = "required"
+          [32m+[0m[0m instance_metadata_tags      = "enabled"
+        }
+
+      [32m+[0m[0m network_interface (known after apply)
+
+      [32m+[0m[0m primary_network_interface (known after apply)
+
+      [32m+[0m[0m private_dns_name_options (known after apply)
+
+      [32m+[0m[0m root_block_device {
+          [32m+[0m[0m delete_on_termination = true
+          [32m+[0m[0m device_name           = (known after apply)
+          [32m+[0m[0m encrypted             = true
+          [32m+[0m[0m iops                  = (known after apply)
+          [32m+[0m[0m kms_key_id            = (known after apply)
+          [32m+[0m[0m tags_all              = (known after apply)
+          [32m+[0m[0m throughput            = (known after apply)
+          [32m+[0m[0m volume_id             = (known after apply)
+          [32m+[0m[0m volume_size           = 8
+          [32m+[0m[0m volume_type           = "gp3"
+        }
+    }
+
+[1m  # module.ec2_instance[1].aws_security_group.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "this" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Managed by Terraform"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = (known after apply)
+      [32m+[0m[0m name_prefix            = "ec2-alb-nginx-instance-2-"
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+      [32m+[0m[0m vpc_id                 = "vpc-0fb658b91e2113ece"
+    }
+
+[1m  # module.ec2_instance[1].aws_vpc_security_group_egress_rule.this["ipv4_default"][0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "this" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv4              = "0.0.0.0/0"
+      [32m+[0m[0m description            = "Allow all IPv4 traffic"
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "-1"
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2-ipv4_default"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2-ipv4_default"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+    }
+
+[1m  # module.ec2_instance[1].aws_vpc_security_group_egress_rule.this["ipv6_default"][0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc_security_group_egress_rule" "this" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m cidr_ipv6              = "::/0"
+      [32m+[0m[0m description            = "Allow all IPv6 traffic"
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_protocol            = "-1"
+      [32m+[0m[0m region                 = "ap-southeast-1"
+      [32m+[0m[0m security_group_id      = (known after apply)
+      [32m+[0m[0m security_group_rule_id = (known after apply)
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2-ipv6_default"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "AvailabilityZone" = "ap-southeast-1b"
+          [32m+[0m[0m "Environment"      = "development"
+          [32m+[0m[0m "ManagedBy"        = "Terraform"
+          [32m+[0m[0m "Name"             = "ec2-alb-nginx-instance-2-ipv6_default"
+          [32m+[0m[0m "Owner"            = "devops-team"
+          [32m+[0m[0m "Project"          = "ec2-alb-nginx"
+        }
+    }
+
+[1mPlan:[0m 23 to add, 0 to change, 2 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m acm_certificate_arn             = (known after apply)
+  [32m+[0m[0m alb_arn                         = (known after apply)
+  [32m+[0m[0m alb_dns_name                    = (known after apply)
+  [32m+[0m[0m alb_endpoint                    = (known after apply)
+  [32m+[0m[0m alb_security_group_id           = (known after apply)
+  [32m+[0m[0m alb_zone_id                     = (known after apply)
+  [31m-[0m[0m certificate_algorithm           = "RSA" [90m-> null[0m[0m
+  [32m+[0m[0m certificate_domain              = "web.demo.com"
+  [32m+[0m[0m certificate_expiry              = (known after apply)
+  [31m-[0m[0m certificate_pem                 = <<-EOT
+        -----BEGIN CERTIFICATE-----
+        MIIF7jCCA9agAwIBAgIRAKgI4qAz4n5fA+PEZJxJisMwDQYJKoZIhvcNAQELBQAw
+        gZYxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1T
+        YW4gRnJhbmNpc2NvMSEwHwYDVQQKExhFeGFtcGxlIERldmVsb3BtZW50IENvcnAx
+        HTAbBgNVBAsTFFBsYXRmb3JtIEVuZ2luZWVyaW5nMRgwFgYDVQQDEw9kZXYuZXhh
+        bXBsZS5jb20wHhcNMjYwMTI5MTQxODE2WhcNMjcwMTI5MTQxODE2WjCBljELMAkG
+        A1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFu
+        Y2lzY28xITAfBgNVBAoTGEV4YW1wbGUgRGV2ZWxvcG1lbnQgQ29ycDEdMBsGA1UE
+        CxMUUGxhdGZvcm0gRW5naW5lZXJpbmcxGDAWBgNVBAMTD2Rldi5leGFtcGxlLmNv
+        bTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAJrjbtIiCO27vMQ4AUrz
+        fNdYncHlykLiVcxtQNWJ759oSMQsl9//7z5IVJGK8p6YAOwBaEl/eTxWaqAjEfTX
+        SrZalOpVI8hJ47YsLdXra199IveOHYbQDXBM8RZUMVKkgQqZkrn8jODQDN2Wa9cv
+        whxIZawErOvuGJAwNkBj+2wmFrISrDa2fu2zu30W72q+cERg6exaQfuA7fSrvAsk
+        hxMoNnRkG5oBSndbfQfCaT64iyhX9kBVONlx1+y+HFeaV22wQRh/vVp9xGxTwlwk
+        Eir05Zvbbp51HSCAV6UgYFNT6lNfs/oliy208ePyG1rM344rVSDdhGuhd3dDTgd0
+        KjmnAL/SUSPdM8c23yQGvLO+j3TByAkZPE7vCCZTGFqZTmX+x+qtT4I48NjRsbsi
+        gGvyhv1EXLc/LEEzFqiXXCbpmVrhPwfDszRu5jlBE7em6cTj1+cVk6XIXJQcWCRZ
+        CAw1lorwVIogXXw1k7CFbaczDylzm84JXfRgiiQLzJqOfS7IwV/6If7CU6+TbzjI
+        uas3ZDqlP03lOOzMs1N0vcFwUX2jfszh63bBbIz2luAAp1To+bifoDJGbt7szlG5
+        BuwQpZfkXQS10BSrbc4XsriAO0bboKIcLV0/TdX84NJDFcsxfy1RfO1cIuEm5LvZ
+        UHMDVzuo8KvNxZXDBv5lTk+LAgMBAAGjNTAzMA4GA1UdDwEB/wQEAwIFoDATBgNV
+        HSUEDDAKBggrBgEFBQcDATAMBgNVHRMBAf8EAjAAMA0GCSqGSIb3DQEBCwUAA4IC
+        AQAMnQ+C0muRV12tpCO2WrwAuQPh3rpJp9MUNSOkqSqEAC3L2DtPFtlqTcrJppMR
+        Y2i+sn/GcKTzaojtIDwPnaaqcq2A61qKTOrqkrOzuVctWpohfpstnGHNyp18/yHB
+        ArCUxebp49XPbTMHb/zQ+8ePZKbdJSMxHPyLqd/mwXf2+IICCtJPYLGlpxE9KRaD
+        51o26pIqp5Oy2DRgkidcLN16ZMYgYyUw15lt16MVRJnVmClvvBNkpmvHyoSujTWV
+        jL6RfISSfkpJK6Dz0T4Dqo1DlXMndII01p8ZUaB2PU8Exex1Qjtsg6kpuDhZ4GBS
+        O3YeeP/mkU+XaX2Pe1VqgXfTQ5Yl+ObUbrJBoURf8kTdFmHGYQmSNCGiEBzCbgYY
+        MSiUz35wo4rUoXOwkGV2QXQ/8o5nHyZuYAe0LJlsQjj9ip4YdcvFQDOqA/7FKRbx
+        P6/GqbYoSKyxuTvDf9Y+mMJMQBagAmZw/bNAPuy6BivBQarIwmeu8MkISirNfeLx
+        azgyYRPEsZCVS4/OB0Z4J+xFFoB5984tygWHlp1/8F8LXMxyjVa6tVCqY5YTdbg0
+        oduDJ7zpZ4viPS/mPp+7Ur9bPwCysDFoP2S9vrpja64cWnscyitO9ZxqgzDtYIaX
+        2IKFkkm8tk6eNZug+8YJyAFJlfMhsUgssQs+AXAJBaYpSQ==
+        -----END CERTIFICATE-----
+    EOT [90m-> null[0m[0m
+  [31m-[0m[0m certificate_ready_for_renewal   = false [90m-> null[0m[0m
+  [32m+[0m[0m certificate_subject             = "web.demo.com"
+  [31m-[0m[0m certificate_validity_end_time   = "2027-01-29T14:18:16.593505264Z" [90m-> null[0m[0m
+  [31m-[0m[0m certificate_validity_start_time = "2026-01-29T14:18:16.593505264Z" [90m-> null[0m[0m
+  [32m+[0m[0m ec2_availability_zones          = [
+      [32m+[0m[0m (known after apply),
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m ec2_instance_ids                = [
+      [32m+[0m[0m (known after apply),
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m ec2_instance_private_ips        = [
+      [32m+[0m[0m (known after apply),
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m ec2_instance_public_ips         = [
+      [32m+[0m[0m (known after apply),
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m ec2_security_group_id           = (known after apply)
+  [32m+[0m[0m health_check_configuration      = {
+      [32m+[0m[0m healthy_threshold   = 2
+      [32m+[0m[0m interval            = 30
+      [32m+[0m[0m path                = "/"
+      [32m+[0m[0m timeout             = 5
+      [32m+[0m[0m unhealthy_threshold = 2
+    }
+  [31m-[0m[0m private_key_pem                 = (sensitive value) [90m-> null[0m[0m
+  [31m-[0m[0m public_key_pem                  = <<-EOT
+        -----BEGIN PUBLIC KEY-----
+        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAmuNu0iII7bu8xDgBSvN8
+        11idweXKQuJVzG1A1Ynvn2hIxCyX3//vPkhUkYrynpgA7AFoSX95PFZqoCMR9NdK
+        tlqU6lUjyEnjtiwt1etrX30i944dhtANcEzxFlQxUqSBCpmSufyM4NAM3ZZr1y/C
+        HEhlrASs6+4YkDA2QGP7bCYWshKsNrZ+7bO7fRbvar5wRGDp7FpB+4Dt9Ku8CySH
+        Eyg2dGQbmgFKd1t9B8JpPriLKFf2QFU42XHX7L4cV5pXbbBBGH+9Wn3EbFPCXCQS
+        KvTlm9tunnUdIIBXpSBgU1PqU1+z+iWLLbTx4/IbWszfjitVIN2Ea6F3d0NOB3Qq
+        OacAv9JRI90zxzbfJAa8s76PdMHICRk8Tu8IJlMYWplOZf7H6q1Pgjjw2NGxuyKA
+        a/KG/URctz8sQTMWqJdcJumZWuE/B8OzNG7mOUETt6bpxOPX5xWTpchclBxYJFkI
+        DDWWivBUiiBdfDWTsIVtpzMPKXObzgld9GCKJAvMmo59LsjBX/oh/sJTr5NvOMi5
+        qzdkOqU/TeU47MyzU3S9wXBRfaN+zOHrdsFsjPaW4ACnVOj5uJ+gMkZu3uzOUbkG
+        7BCll+RdBLXQFKttzheyuIA7RtugohwtXT9N1fzg0kMVyzF/LVF87Vwi4Sbku9lQ
+        cwNXO6jwq83FlcMG/mVOT4sCAwEAAQ==
+        -----END PUBLIC KEY-----
+    EOT [90m-> null[0m[0m
+  [32m+[0m[0m subnet_ids                      = [
+      [32m+[0m[0m "subnet-0dce35448b161a8ca",
+      [32m+[0m[0m "subnet-0a055259d09584073",
+    ]
+  [32m+[0m[0m target_group_arn                = (known after apply)
+  [32m+[0m[0m target_group_name               = "ec2-alb-nginx-tg"
+  [32m+[0m[0m target_group_targets            = [
+      [32m+[0m[0m (known after apply),
+      [32m+[0m[0m (known after apply),
+    ]
+  [32m+[0m[0m verification_commands           = {
+      [32m+[0m[0m check_certificate   = (known after apply)
+      [32m+[0m[0m check_target_health = (known after apply)
+      [32m+[0m[0m test_https_endpoint = (known after apply)
+    }
+  [32m+[0m[0m vpc_id                          = "vpc-0fb658b91e2113ece"
+
+------------------------------------------------------------------------
+
+[1mCost Estimation:
+[0m
+Resources: 3 of 10 estimated
+           $30.377599999999999488/mo +$30.377599999999999488
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Saved the plan to: tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan"
