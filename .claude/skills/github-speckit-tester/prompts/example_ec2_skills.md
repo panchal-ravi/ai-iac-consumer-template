@@ -13,6 +13,7 @@ Provision using Terraform:
 - Use existing default VPC
 - enviromnment development minimal cost
 - Use existing default VPC always
+- This is for validation only
 
 ## HCP Terraform Configuration
 

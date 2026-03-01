@@ -44,15 +44,11 @@ Allocate subtask efficiently, some tasks like writing a file should only be crea
 5. commit and update Git issue and continue to next stage
 6. Use concurrent subagent `speckit.plan` and continue to next stage
 7. commit and update Git issue and continue to next stage
-8. Use 2 concurrent subagents `aws-security-advisor` and continue to next stage
+8. Use concurrent subagent `speckit.tasks` and continue to next stage
 9. commit and update Git issue and continue to next stage
-10. Use concurrent subagent `speckit.tasks` and continue to next stage
-11. commit and update Git issue and continue to next stage
-12. Use concurrent subagent `speckit.analyze` and continue to next stage
-13. commit and update Git issue and continue to next stage
-14. Request user to review and approve design (human-in-the-loop) before implementation phase
-15. Update Git issue with user details and approval status.
-16. Ensure that `gh-issue.json` contains all necessary details for implementation agent to proceed.
+10. Request user to review and approve design (human-in-the-loop) before implementation phase
+11. Update Git issue with user details and approval status.
+12. Ensure that `gh-issue.json` contains all necessary details for implementation agent to proceed.
 
 ### GitHub Issue Template Mapping
 

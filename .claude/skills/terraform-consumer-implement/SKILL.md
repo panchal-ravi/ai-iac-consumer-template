@@ -35,11 +35,8 @@ Allocate subtask efficiently, some tasks like writing a file should only be crea
 1. Validate environment and credentials by running `.specify/scripts/bash/validate-env.sh`
 2. Use 2 concurrent subagents `speckit.implement` - Generate Terraform code and test in sandbox workspace (init, plan only)
 3. commit and update Git issue and continue to next stage
-4. Use 2 concurrent subagents `code-quality-judge` - Evaluate generated Terraform code quality
-5. commit and update Git issue and continue to next stage
-6. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
-7. Verify successful apply
-8. commit and update Git issue and continue to next stage
-9. Use 2 concurrent subagents `report-tf-deployment` - Generate comprehensive deployment report
-10. Cleanup - Queue destroy plan only if confirmed
-11. Create a PR linked to this GH issue with all committed changes for review.
+4. Deploy to HCP Terraform - Run `terraform init/plan/apply` via CLI (NOT MCP create_run)
+5. Verify successful apply
+6. commit and update Git issue and continue to next stage
+7. Cleanup - Queue destroy plan only if confirmed
+8. Create a PR linked to this GH issue with all committed changes for review.
